@@ -13,7 +13,7 @@ TEMPLATE = os.path.expanduser("~/Desktop/副本Generation-AI 中期汇报模版.
 OUTPUT = os.path.join(os.path.dirname(__file__), "midterm-final.pptx")
 DESKTOP_OUT = os.path.expanduser("~/Desktop/Reframe-Destiny-Midterm.pptx")
 
-NAME = "Xinyun Zhang"
+NAME = "Xinyun Zhang (张馨云)"
 ADVISOR = "Lawted Wu"
 TITLE = (
     "Reframe Destiny: Detecting and Reframing Gendered "

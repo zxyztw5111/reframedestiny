@@ -1,6 +1,6 @@
 # 期中汇报前最后步骤（明天 9:00）
 
-> GitHub 暂时 push 失败**不影响**口头答辩。按下面顺序做。
+> GitHub 暂时 失败**不影响**口头答辩。按下面顺序做。
 
 ---
 
@@ -15,14 +15,16 @@ Reframe-Destiny-Midterm.pptx
 ```
 
 检查：
-- [ ] 背景和设计与官方模版一致（有 Stanford/北大风格图片）
-- [ ] 共 **9 页**（说明页已删除）
+
+- [x] 背景和设计与官方模版一致（有 Stanford/北大风格图片）
+- [x] 共 **9 页**（说明页已删除）
 - [ ] 第 1 页：项目标题 + 你的名字 Xinyun Zhang
 - [ ] 第 2 页：Research Question + Hypothesis
 - [ ] 第 7 页：标题含 **Expected Results — user study not yet run**
 - [ ] 全英文，Times New Roman
 
 **如果背景不对**，在终端运行重新生成：
+
 ```bash
 cd /Users/zhangxinyun/Projects/reframe-destiny
 python3 fill-template-pptx.py
@@ -33,6 +35,7 @@ python3 fill-template-pptx.py
 ## 优先级 2 — 练英文讲稿（30–45 分钟）
 
 打开讲稿：
+
 ```
 /Users/zhangxinyun/Projects/reframe-destiny/midterm-script.md
 ```
@@ -46,10 +49,10 @@ python3 fill-template-pptx.py
 ## 优先级 3 — 插入网站截图（15 分钟）
 
 1. 终端运行：
-   ```bash
+  ```bash
    cd /Users/zhangxinyun/Projects/reframe-destiny
    python3 -m http.server 8765
-   ```
+  ```
 2. Chrome 打开 `http://localhost:8765`
 3. 走一遍 Journey，到 **Bias Scanner** 页面
 4. 截图（Mac：`Cmd + Shift + 4`）
@@ -63,8 +66,9 @@ python3 fill-template-pptx.py
 详见 `GITHUB_TROUBLESHOOT.md`
 
 最短路径：
+
 1. 关 VPN
-2. https://github.com/settings/tokens 生成 Token
+2. [https://github.com/settings/tokens](https://github.com/settings/tokens) 生成 Token
 3. `git push` 时 Password 粘贴 Token
 
 **期中汇报不依赖 push 成功。**
@@ -73,11 +77,13 @@ python3 fill-template-pptx.py
 
 ## 优先级 5 — 答辩当天带什么
 
-| 物品 | 路径 |
-|------|------|
-| PPT | 桌面 `Reframe-Destiny-Midterm.pptx` |
-| 网站演示 | 本地 `http://localhost:8765` 或 U 盘里的项目文件夹 |
-| 讲稿 backup | `midterm-script.md` 打印或手机打开 |
+
+| 物品        | 路径                                      |
+| --------- | --------------------------------------- |
+| PPT       | 桌面 `Reframe-Destiny-Midterm.pptx`       |
+| 网站演示      | 本地 `http://localhost:8765` 或 U 盘里的项目文件夹 |
+| 讲稿 backup | `midterm-script.md` 打印或手机打开             |
+
 
 ---
 
