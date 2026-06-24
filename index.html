@@ -3,198 +3,320 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reframe Destiny</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      color: #e8e4f3;
-      background: linear-gradient(135deg, #0f0c29 0%, #302b63 45%, #24243e 100%);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(120, 80, 255, 0.25), transparent),
-        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(60, 140, 255, 0.2), transparent);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero {
-      text-align: center;
-      max-width: 640px;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #b8a9ff;
-      border: 1px solid rgba(184, 169, 255, 0.35);
-      border-radius: 999px;
-      padding: 0.35rem 1rem;
-      margin-bottom: 1.5rem;
-      background: rgba(120, 80, 255, 0.1);
-    }
-
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 3.75rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      background: linear-gradient(120deg, #ffffff 0%, #c4b5fd 50%, #93c5fd 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 1.25rem;
-      line-height: 1.15;
-    }
-
-    .tagline {
-      font-size: 1.125rem;
-      line-height: 1.75;
-      color: rgba(232, 228, 243, 0.85);
-      margin-bottom: 2.5rem;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.875rem 2.25rem;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #2563eb 100%);
-      box-shadow: 0 4px 24px rgba(124, 58, 237, 0.4);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(124, 58, 237, 0.55);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    #about {
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 3rem 2rem 4rem;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    #about h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #c4b5fd;
-      margin-bottom: 1.5rem;
-    }
-
-    #about ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      text-align: left;
-    }
-
-    #about li {
-      padding: 1rem 1.25rem;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(184, 169, 255, 0.15);
-      font-size: 0.9375rem;
-      line-height: 1.6;
-      color: rgba(232, 228, 243, 0.8);
-    }
-
-    #about li strong {
-      color: #e8e4f3;
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.8125rem;
-      color: rgba(232, 228, 243, 0.45);
-      position: relative;
-      z-index: 1;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
+  <meta name="description" content="Reframe Destiny — AI × Digital Humanities × Narrative Research">
+  <title>Reframe Destiny · 重塑命运</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-  <main>
-    <section class="hero">
-      <span class="badge">AI · 命理 · 重构叙事</span>
-      <h1>Reframe Destiny</h1>
-      <p class="tagline">
-        一款面向年轻女性的 AI 驱动命理互动体验。输入八字后，你将同时获得传统解读与重新解读——用 AI 识别并重构传统文化叙事中的性别偏见，让命运的故事由你自己书写。
-      </p>
-      <a
-        href="https://github.com/zxyztw5111/reframedestiny"
-        class="btn"
-        target="_blank"
-        rel="noopener noreferrer"
-      >了解更多</a>
-    </section>
-  </main>
 
-  <section id="about">
-    <h2>关于本项目</h2>
-    <ul>
-      <li>
-        <strong>核心理念</strong>
-        用 AI 识别并重构传统文化叙事中的性别偏见，让命理不再只是被动的预言。
-      </li>
-      <li>
-        <strong>双重解读</strong>
-        输入八字后，系统会并列呈现传统解读与重新解读两个版本，供你对比与思考。
-      </li>
-      <li>
-        <strong>目标用户</strong>
-        面向对自我探索与文化反思感兴趣的年轻女性。
-      </li>
-    </ul>
-  </section>
+  <canvas id="bg-canvas"></canvas>
+  <canvas id="sand-canvas"></canvas>
+  <div class="glow-orb glow-orb--1 parallax" data-depth="0.05"></div>
+  <div class="glow-orb glow-orb--2 parallax" data-depth="0.08"></div>
 
-  <footer>高中生研究项目</footer>
+  <!-- Intro -->
+  <div class="intro" id="intro">
+    <canvas id="intro-canvas"></canvas>
+    <div class="intro-text">
+      <h1 class="intro-title" data-i18n="intro.title">REFRAME DESTINY</h1>
+      <p class="intro-subtitle-cn" data-i18n="intro.subtitleCn">重塑命运</p>
+      <p class="intro-tagline" data-i18n="intro.tagline">Question the Story. Not Yourself.</p>
+      <p class="intro-tagline-cn" data-i18n="intro.taglineCn">质疑叙事，而非质疑自己。</p>
+    </div>
+    <button type="button" class="intro-skip" id="intro-skip">Skip · 跳过</button>
+  </div>
+
+  <div class="app hidden" id="app">
+
+    <header class="topbar">
+      <button class="logo-btn" data-nav="home">
+        <span class="logo-mark">✦</span>
+        <span data-i18n="brand">Reframe Destiny</span>
+      </button>
+      <nav class="nav">
+        <button class="nav-link active" data-nav="home" data-i18n="nav.home">首页</button>
+        <button class="nav-link" data-nav="journey" data-i18n="nav.journey">开始探索</button>
+        <button class="nav-link" data-nav="collection" data-i18n="nav.collection">偏见图鉴</button>
+        <button class="nav-link" data-nav="archive" data-i18n="nav.archive">个人档案</button>
+        <button class="nav-link" data-nav="about" data-i18n="nav.about">研究理念</button>
+      </nav>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="lang-toggle" aria-label="Switch language">
+          <span>🌐</span>
+          <span id="lang-label">中文 | EN</span>
+        </button>
+        <button class="icon-btn" id="music-toggle" aria-pressed="false" aria-label="Toggle music">
+          <span id="music-icon">🔇</span>
+        </button>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+      </div>
+    </header>
+
+    <main class="main">
+
+      <!-- Home -->
+      <section class="view active" id="view-home">
+        <div class="hero parallax" data-depth="0.02">
+          <p class="eyebrow" data-i18n="home.eyebrow">数字人文 · AI · 女性主义叙事研究</p>
+          <h1 class="hero-title">
+            <span data-i18n="home.title1">谁有权</span><br>
+            <span class="gold" data-i18n="home.title2">定义你的命运？</span>
+          </h1>
+          <p class="hero-desc" data-i18n="home.desc">同样一组命理信息，因性别、文化与社会期待的不同，会生出截然不同的故事。</p>
+          <button class="btn-primary" data-nav="journey" data-i18n="home.cta">进入探索</button>
+        </div>
+
+        <div class="daily-reflection glass-card parallax" data-depth="0.04">
+          <div class="card-header">
+            <span class="card-label" data-i18n="home.dailyLabel">今日箴言 · Daily Reflection</span>
+            <button class="text-btn" id="refresh-quote" data-i18n="home.refresh">换一条</button>
+          </div>
+          <blockquote class="quote-original" id="quote-original"></blockquote>
+          <p class="quote-en" id="quote-en"></p>
+          <div class="quote-practice">
+            <span data-i18n="home.practiceLabel">今日实践</span>
+            <p id="quote-practice"></p>
+          </div>
+          <button class="btn-secondary" id="save-quote" data-i18n="home.saveQuote">收藏此条</button>
+        </div>
+      </section>
+
+      <!-- Journey -->
+      <section class="view" id="view-journey">
+        <div class="journey-header">
+          <h2 data-i18n="journey.title">命运叙事探索</h2>
+          <span class="step-indicator"><span data-i18n="journey.step">步骤</span> <span id="step-num">1</span> / 7</span>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="journey-step active" data-step="1">
+          <h3 data-i18n="journey.s1.title">选择命理体系</h3>
+          <div class="card-grid">
+            <button class="system-card" data-system="bazi">
+              <span class="card-glow"></span>
+              <span class="card-icon">☯</span>
+              <span class="card-title" data-i18n="journey.s1.bazi">八字</span>
+              <span class="card-desc" data-i18n="journey.s1.baziDesc">四柱天干地支，观气运流转</span>
+            </button>
+            <button class="system-card" data-system="astrology">
+              <span class="card-glow"></span>
+              <span class="card-icon">✦</span>
+              <span class="card-title" data-i18n="journey.s1.astro">星盘</span>
+              <span class="card-desc" data-i18n="journey.s1.astroDesc">行星位置，映射性格与周期</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="journey-step" data-step="2">
+          <h3 data-i18n="journey.s2.title">选择叙事视角</h3>
+          <div class="card-grid card-grid--3">
+            <button class="lens-card" data-lens="traditional" data-i18n="journey.s2.trad">传统解读</button>
+            <button class="lens-card" data-lens="modern" data-i18n="journey.s2.modern">现代解读</button>
+            <button class="lens-card" data-lens="ai" data-i18n="journey.s2.ai">AI 重构解读</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="journey-step" data-step="3">
+          <h3 data-i18n="journey.s3.title">输入信息</h3>
+          <form class="birth-form" onsubmit="return false">
+            <label>
+              <span data-i18n="journey.s3.date">出生日期</span>
+              <input type="date" value="2000-06-15">
+            </label>
+            <label>
+              <span data-i18n="journey.s3.time">出生时间</span>
+              <input type="time" value="14:30">
+            </label>
+            <label>
+              <span data-i18n="journey.s3.place">出生地点</span>
+              <input type="text" data-i18n-placeholder="journey.s3.placePh" placeholder="例如：上海" value="上海">
+            </label>
+            <p class="form-note" data-i18n="journey.s3.note">* 本原型使用模拟数据，不会上传任何个人信息。</p>
+          </form>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="journey-step" data-step="4">
+          <h3 data-i18n="journey.s4.title">传统解读</h3>
+          <div class="glass-card reading-card" id="traditional-reading"></div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="journey-step" data-step="5">
+          <h3 data-i18n="journey.s5.title">偏见扫描器 · Bias Scanner</h3>
+          <div class="scanner-layout">
+            <canvas id="radar-canvas" width="320" height="320"></canvas>
+            <div class="scanner-results" id="scanner-results"></div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="journey-step" data-step="6">
+          <h3 data-i18n="journey.s6.title">命运法庭 · Court of Destiny</h3>
+          <div class="court-grid">
+            <div class="glass-card court-panel">
+              <h4 data-i18n="journey.s6.scholar">传统学者</h4>
+              <p id="court-scholar"></p>
+            </div>
+            <div class="glass-card court-panel court-panel--center">
+              <h4 data-i18n="journey.s6.ai">AI 分析师</h4>
+              <p id="court-ai"></p>
+            </div>
+            <div class="glass-card court-panel">
+              <h4 data-i18n="journey.s6.user">你的视角</h4>
+              <textarea id="court-user" rows="5" data-i18n-placeholder="journey.s6.userPh" placeholder="写下你的回应…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="journey-step" data-step="7">
+          <h3 data-i18n="journey.s7.title">AI 重构</h3>
+          <div class="reframe-layout">
+            <div class="glass-card reframe-col">
+              <h4 data-i18n="journey.s7.original">原文</h4>
+              <p class="reframe-text" id="reframe-original"></p>
+            </div>
+            <div class="reframe-divider">→</div>
+            <div class="glass-card reframe-col">
+              <h4 data-i18n="journey.s7.reframed">AI 重构</h4>
+              <p class="reframe-text reframe-text--animated" id="reframe-new"></p>
+            </div>
+          </div>
+          <div class="fragments-found" id="fragments-found"></div>
+        </div>
+
+        <div class="journey-nav">
+          <button class="btn-secondary" id="journey-prev" data-i18n="journey.prev">上一步</button>
+          <button class="btn-primary" id="journey-next" data-i18n="journey.next">下一步</button>
+        </div>
+      </section>
+
+      <!-- Bias Collection -->
+      <section class="view" id="view-collection">
+        <div class="collection-header">
+          <h2 data-i18n="collection.title">偏见图鉴 · Bias Collection</h2>
+          <p data-i18n="collection.desc">每完成一次探索，便可能在星空中点亮一颗偏见之星。</p>
+          <p class="collection-progress"><span id="collection-count">0</span> / 20 <span data-i18n="collection.unlocked">已解锁</span></p>
+        </div>
+        <div class="constellation-wrap">
+          <canvas id="constellation-canvas"></canvas>
+          <div class="constellation-tooltip hidden" id="constellation-tooltip"></div>
+        </div>
+        <div class="collection-list" id="collection-list"></div>
+      </section>
+
+      <!-- Archive -->
+      <section class="view" id="view-archive">
+        <h2 data-i18n="archive.title">个人档案 · Archive</h2>
+        <p class="archive-note" data-i18n="archive.note">所有数据仅保存在你的浏览器本地。</p>
+        <div class="archive-stats">
+          <div class="glass-card stat-card">
+            <span class="stat-num" id="stat-journeys">0</span>
+            <span class="stat-label" data-i18n="archive.journeys">探索次数</span>
+          </div>
+          <div class="glass-card stat-card">
+            <span class="stat-num" id="stat-biases">0</span>
+            <span class="stat-label" data-i18n="archive.biases">发现偏见</span>
+          </div>
+          <div class="glass-card stat-card">
+            <span class="stat-num" id="stat-badges">0</span>
+            <span class="stat-label" data-i18n="archive.badges">获得徽章</span>
+          </div>
+        </div>
+        <div class="archive-sections">
+          <div class="glass-card">
+            <h3 data-i18n="archive.reflections">个人反思</h3>
+            <textarea id="reflection-input" rows="4" data-i18n-placeholder="archive.reflectionPh" placeholder="记录你的思考…"></textarea>
+            <button class="btn-secondary" id="save-reflection" data-i18n="archive.save">保存</button>
+            <ul class="archive-list" id="reflections-list"></ul>
+          </div>
+          <div class="glass-card">
+            <h3 data-i18n="archive.savedQuotes">收藏语录</h3>
+            <ul class="archive-list" id="saved-quotes-list"></ul>
+          </div>
+          <div class="glass-card">
+            <h3 data-i18n="archive.badgeWall">徽章墙</h3>
+            <div class="badge-wall" id="badge-wall"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="view" id="view-about">
+        <div class="poster">
+          <div class="poster-header">
+            <p class="poster-tag" data-i18n="about.tag">高中生研究 · 数字人文 · AI 伦理</p>
+            <h2 data-i18n="about.title">研究理念 · About Research</h2>
+          </div>
+          <div class="poster-grid">
+            <div class="glass-card poster-block poster-block--wide">
+              <h3 data-i18n="about.rq.title">Research Question</h3>
+              <p data-i18n="about.rq.text">同样一组命理信息，为何会因性别、文化背景与社会期待而产生截然不同的解释？</p>
+            </div>
+            <div class="glass-card poster-block">
+              <h3 data-i18n="about.mot.title">Project Motivation</h3>
+              <p data-i18n="about.mot.text">命理语言承载千年文化，也隐含性别偏见与恐惧叙事。</p>
+            </div>
+            <div class="glass-card poster-block">
+              <h3 data-i18n="about.method.title">Methodology</h3>
+              <ol class="poster-list">
+                <li data-i18n="about.method.1">采集传统命理解读文本（模拟数据集）</li>
+                <li data-i18n="about.method.2">标注叙事偏见类别（七维框架）</li>
+                <li data-i18n="about.method.3">AI 辅助生成去偏见重构版本</li>
+                <li data-i18n="about.method.4">用户参与式三方对话（学者 / AI / 自我）</li>
+                <li data-i18n="about.method.5">渐进式偏见碎片收集机制</li>
+              </ol>
+            </div>
+            <div class="glass-card poster-block poster-block--wide">
+              <h3 data-i18n="about.bias.title">Bias Categories</h3>
+              <ul class="bias-tags">
+                <li data-i18n="about.bias.1">性别偏见</li>
+                <li data-i18n="about.bias.2">婚姻中心论</li>
+                <li data-i18n="about.bias.3">命运决定论</li>
+                <li data-i18n="about.bias.4">恐惧叙事</li>
+                <li data-i18n="about.bias.5">道德审判</li>
+                <li data-i18n="about.bias.6">异性恋默认</li>
+                <li data-i18n="about.bias.7">阶级叙事</li>
+              </ul>
+            </div>
+            <div class="glass-card poster-block poster-block--wide">
+              <h3 data-i18n="about.ref.title">References</h3>
+              <ul class="ref-list">
+                <li>Butler, J. (1990). <em>Gender Trouble</em>. Routledge.</li>
+                <li>Foucault, M. (1980). <em>Power/Knowledge</em>. Pantheon.</li>
+                <li>Haraway, D. (1988). Situated Knowledges. <em>Feminist Studies</em>, 14(3).</li>
+                <li>Adorno, T. & Horkheimer, M. (1944). <em>Dialectic of Enlightenment</em>.</li>
+                <li>Tu, W. (1985). Confucian Thought: Selfhood as Creative Transformation.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="poster-footer" data-i18n="about.footer">高中生研究项目 · Reframe Destiny © 2025</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Wanderer -->
+    <aside class="wanderer">
+      <canvas id="wanderer-canvas" width="60" height="90"></canvas>
+      <div class="wanderer-bubble">
+        <p class="wanderer-name" data-i18n="wanderer.name">无名旅人</p>
+        <p class="wanderer-text" id="wanderer-text"></p>
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
