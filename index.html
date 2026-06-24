@@ -302,6 +302,27 @@
 
     </main>
 
+    <!-- Research panel (Week 4 — mentor can read research story) -->
+    <button type="button" class="research-fab" id="research-fab" aria-expanded="false">
+      Research · 研究
+    </button>
+    <div class="research-panel hidden" id="research-panel" role="dialog" aria-label="Research summary">
+      <div class="research-panel-inner glass-card">
+        <button type="button" class="research-close" id="research-close" aria-label="Close">×</button>
+        <h2>Reframe Destiny — Research</h2>
+        <h3>Research Question</h3>
+        <p>How does an AI website help young women find and reframe gender bias in BaZi and astrology?</p>
+        <h3>Hypothesis</h3>
+        <p>After using Reframe Destiny, users will notice bias more and feel confident to rewrite their stories.</p>
+        <h3>Why it matters</h3>
+        <p>The same chart can mean "leader" for men but "too strong" for women. We study narrative bias, not whether divination is true.</p>
+        <h3>Method (planned)</h3>
+        <p>15–25 young women · pre/post survey · 7-step website · user study not run yet.</p>
+        <h3>Progress</h3>
+        <p>Prototype done · research/ folder done · midterm defense in progress.</p>
+      </div>
+    </div>
+
     <!-- Wanderer -->
     <aside class="wanderer">
       <canvas id="wanderer-canvas" width="60" height="90"></canvas>
@@ -318,5 +339,20 @@
   <script src="js/canvas.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    (function () {
+      var fab = document.getElementById('research-fab');
+      var panel = document.getElementById('research-panel');
+      var close = document.getElementById('research-close');
+      if (!fab || !panel) return;
+      function toggle(open) {
+        var show = open !== undefined ? open : panel.classList.contains('hidden');
+        panel.classList.toggle('hidden', !show);
+        fab.setAttribute('aria-expanded', show ? 'true' : 'false');
+      }
+      fab.addEventListener('click', function () { toggle(); });
+      if (close) close.addEventListener('click', function () { toggle(false); });
+    })();
+  </script>
 </body>
 </html>

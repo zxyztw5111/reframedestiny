@@ -1,151 +1,127 @@
 # Midterm Oral Script — Simple English (~7 minutes)
 
-**Speak slowly. Pause at //. Total: about 7 minutes.**
+**Notes are already in the PPT. Open WPS → 幻灯片放映 → 演讲者视图.**
+
+Speak slowly. Pause at //. One section per slide.
 
 ---
 
-## Slide 1 — Title (30 seconds)
+## Slide 1 — Title (30 sec)
 
 Hi everyone. My name is Xinyun Zhang.
 
-Today I will talk about my project, **Reframe Destiny**.
+Today I will present **Reframe Destiny** — a website that helps young women find gender bias in BaZi and astrology, and rewrite those stories.
 
-It is a website that helps young women find gender bias in traditional BaZi and astrology readings — and rewrite those stories in a fairer way.
-
-My research advisor is Lawted Wu. This is my Generation AI Social Science project.
+My advisor is Lawted Wu. This is my Generation AI Social Science project.
 
 //
 
 ---
 
-## Slide 2 — Research Question (45 seconds)
+## Slide 2 — Research Question (40 sec)
 
 My research question is:
 
-**How does an AI website help young women find and reframe gender bias in BaZi and astrology readings?**
+How does an AI website help young women find and reframe gender bias in BaZi and astrology readings?
 
 My hypothesis is:
 
-**After using Reframe Destiny, young women will notice gender bias more easily, and feel more confident to rewrite these stories for themselves.**
+After using Reframe Destiny, users will notice bias more easily and feel more confident to rewrite their stories.
 
 //
 
 ---
 
-## Slide 3 — Background (1 minute)
+## Slide 3 — Background (1 min)
 
-Many young women learn about BaZi or astrology from family, social media, or apps.
+Many young women learn BaZi or astrology from family and social media.
 
-These systems do not only talk about personality. They also tell stories about marriage, morality, and life paths.
+These systems tell stories about marriage and life paths — not just personality.
 
-I study BaZi myself. I found a problem: the **same chart** can mean "ambitious leader" for men, but "too strong" or "bad for husband" for women.
+I study BaZi myself. The same chart can mean "leader" for men but "too strong" for women.
 
-My project does **not** ask: is divination true or false?
+We do not ask if divination is true. We ask: **who tells your story, and is it unfair to women?**
 
-It asks: **Who tells your life story — and is that story unfair to women?**
-
-Reframe Destiny is my answer. It is **not** a fortune-telling app. It is a tool to think critically.
+Reframe Destiny is **not** a fortune-telling app. It is a tool to think critically.
 
 //
 
 ---
 
-## Slide 4 — Literature Review (1 minute)
+## Slide 4 — Literature Review (1 min)
 
-I use four main sources.
+Butler says gender is built through culture and stories.
 
-**Butler (1990)** says gender is built through culture and stories — not fixed inside us.
+Foucault says language has power.
 
-**Foucault (1972)** says language has power. Fortune-telling words can control people without sounding political.
+Haraway says who reads the data matters.
 
-**Haraway (1988)** says who reads the data matters. The same birth chart can mean different things.
+Bender warns AI can copy bias — here AI helps us **question**, not predict fate.
 
-**Bender et al. (2021)** warn that AI can copy bias. In my project, AI is a **tool to question**, not a fortune-teller.
-
-The gap: no website lets users **compare gender views** on the same chart and **rewrite** the story. That is what I built.
+The gap: no website lets users compare gender views on the same chart. That is what I built.
 
 //
 
 ---
 
-## Slide 5 — Research Design / Method (1 minute)
+## Slide 5 — Method (1 min)
 
 My project is a bilingual website with seven steps.
 
-Users pick BaZi or astrology, enter birth data, read a traditional version, use a **Bias Scanner**, join a **Court of Destiny** discussion, and see an **AI Reframe** next to the original.
+Users pick BaZi or astrology, read a traditional version, use a **Bias Scanner**, and see an **AI Reframe**.
 
-I plan to test **15 to 25 young women**, age 17 to 34.
+I plan to test **15 to 25** young women with surveys and short interviews.
 
-They will fill a short survey before and after, use the site for 15 minutes, and some will do a short interview.
-
-I will also read 40 traditional texts and mark seven types of bias.
-
-**Important:** I have **not done** the user study yet. Today I only show my design and my plan.
+**Important:** I have **NOT** done the user study yet. Today I show my design only.
 
 //
 
 ---
 
-## Slide 6 — Research Plan & Challenges (1 minute)
+## Slide 6 — Plan & Challenges (50 sec)
 
-My timeline:
+Timeline: idea and prototype — done. User study — late June. Final paper — July.
 
-- Week 2: idea and GitHub — done
-- Week 3–4: research files and website — done
-- Midterm — today
-- User study — late June
-- Final paper — July
+My challenge: I missed several classes and I am catching up.
 
-My biggest challenge: I missed four or five classes. I am catching up now.
-
-I have no real user data yet, so I cannot show results today.
-
-After midterm, I will run the study. I will also add my mentor's idea: a **gender switch** — same chart, change the gender label, see how the story changes.
+After midterm I will run the study and add a gender-switch feature.
 
 //
 
 ---
 
-## Slide 7 — Expected Results (1 minute)
+## Slide 7 — Expected Results (50 sec)
 
-These are **expected results**. I have **not run the study yet**.
+These are **expected results**. I have **NOT run the study yet**.
 
-I think users will notice **marriage bias** and **gender stereotypes** most often.
+I think users will notice marriage bias and gender stereotypes most often.
 
-I think survey scores about bias awareness will **go up** after one session.
+I think the reframed reading will feel more empowering.
 
-I think the reframed reading will feel more **empowering** than the traditional one.
-
-I tested the website myself. The seven steps work. Three bias pieces unlock each time.
-
-*[Point to your screenshot]*
-
-This is a screenshot of my prototype — the Bias Scanner page.
+*[Point to screenshot]*
 
 //
 
 ---
 
-## Slide 8 — References (15 seconds)
+## Slide 8 — References (15 sec)
 
-My references are Butler, Foucault, Haraway, Bender and others, and Vyse. They are on this slide in APA format.
-
-//
-
----
-
-## Slide 9 — Closing (15 seconds)
-
-Thank you for your feedback.
-
-I welcome your questions.
+My references are Butler, Foucault, Haraway, Bender, and Vyse — on this slide in APA format.
 
 //
 
 ---
 
-## If you forget — say these
+## Slide 9 — Closing (15 sec)
 
-1. **"Reframe Destiny helps young women question gender bias in divination — not accept it blindly."**
-2. **"I have not run the user study yet. These are expected results."**
-3. **"AI is a tool to think critically — not an oracle."**
+Thank you for your feedback. I welcome your questions.
+
+//
+
+---
+
+## Emergency lines
+
+1. "Reframe Destiny helps young women question gender bias — not accept it blindly."
+2. "I have not run the user study yet."
+3. "AI is a tool to think critically — not an oracle."

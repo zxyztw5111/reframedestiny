@@ -709,6 +709,74 @@ body {
 /* Parallax helper */
 .parallax { will-change: transform; }
 
+/* Research FAB (Week 4 mentor view) */
+.research-fab {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 95;
+  background: rgba(201, 169, 98, 0.2);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold-light);
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--font-sc);
+  font-size: 0.85rem;
+  backdrop-filter: blur(12px);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.research-fab:hover {
+  background: rgba(201, 169, 98, 0.35);
+  box-shadow: 0 0 20px var(--gold-dim);
+}
+.research-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(5, 8, 16, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.research-panel.hidden { display: none; }
+.research-panel-inner {
+  position: relative;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.research-panel-inner h2 {
+  font-family: var(--font-serif);
+  color: var(--gold-light);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+.research-panel-inner h3 {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 1rem 0 0.35rem;
+}
+.research-panel-inner p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.research-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .nav {
