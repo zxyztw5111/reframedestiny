@@ -1,5 +1,11 @@
 # Reframe Destiny — MVP Spec
 
+## Research Question & Hypothesis
+
+**Research Question:** How does an AI-assisted interactive website affect young people's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?
+
+**Hypothesis:** I hypothesize that after using Reframe Destiny, young people will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.
+
 ## 它做什么
 
 一个短流程网页：年轻人选八字或星盘，读一段带性别偏见的传统命理解读，勾选看到的偏见类型，对照 AI 重构版，并写一句自己的改写。用模拟文本，不上传个人信息。目标是测试：这种交互能否提高识别与重构性别化叙事的能力。

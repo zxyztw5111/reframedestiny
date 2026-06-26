@@ -243,6 +243,61 @@ body {
 
 /* ── Hero ── */
 .hero { padding: 4rem 0 3rem; text-align: center; }
+.hero-icon { margin-bottom: 1rem; opacity: 0.9; }
+.hero-pitch {
+  text-align: left;
+  max-width: 520px;
+  margin: 1.75rem auto 1.5rem;
+  padding: 1.25rem 1.5rem;
+}
+.pitch-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.pitch-what {
+  font-size: 1.05rem;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.pitch-steps {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+.pitch-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+.pitch-emoji { color: var(--gold); flex-shrink: 0; }
+.pitch-who {
+  font-size: 0.8rem;
+  color: var(--jade);
+  border-top: 1px solid var(--glass-border);
+  padding-top: 0.75rem;
+}
+.btn-primary--large {
+  font-size: 1.05rem;
+  padding: 0.85rem 2rem;
+}
+.hero-hint {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.journey-intro {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin: 0.35rem 0 0.75rem;
+  max-width: 36rem;
+}
 .eyebrow {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
@@ -706,6 +761,65 @@ body {
   letter-spacing: 0.1em;
 }
 
+/* ── Research panel ── */
+.research-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(5, 8, 16, 0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  animation: viewIn 0.35s var(--ease-out);
+}
+.research-panel.hidden { display: none !important; }
+.research-panel__inner {
+  width: 100%;
+  max-width: 560px;
+  max-height: min(85vh, 640px);
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+.research-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+.research-panel__header h2 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--gold-light);
+}
+.research-panel__close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.25rem;
+}
+.research-panel__close:hover { color: var(--gold-light); }
+.research-panel__body section { margin-bottom: 1.25rem; }
+.research-panel__body h3 {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+.research-panel__body p {
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
 /* Parallax helper */
 .parallax { will-change: transform; }
 
@@ -730,7 +844,11 @@ body {
   .reframe-divider { display: none; }
   .wanderer { max-width: 260px; left: 0.75rem; bottom: 0.75rem; }
   .hero { padding: 2rem 0; }
+  .hero-pitch { margin-left: 0; margin-right: 0; }
   #lang-label { display: none; }
+  #research-toggle span:last-child { display: none; }
+  .research-panel { align-items: stretch; padding: 0; }
+  .research-panel__inner { max-height: 100vh; border-radius: 0; }
 }
 
 @media (max-width: 480px) {

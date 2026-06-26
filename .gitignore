@@ -4,7 +4,9 @@ docs/
 LOCAL-*
 SUBMIT_TO_TEACHER.md
 *.pptx
-midterm*
+midterm.pptx
+midterm-script*
+!midterm-draft.md
 OFFICE_HOUR*
 GITHUB_*
 PPT_*

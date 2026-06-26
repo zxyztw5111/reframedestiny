@@ -323,6 +323,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.nav').classList.toggle('open');
   });
 
+  const researchPanel = document.getElementById('research-panel');
+  const researchToggle = document.getElementById('research-toggle');
+  function setResearchOpen(open) {
+    if (!researchPanel || !researchToggle) return;
+    researchPanel.classList.toggle('hidden', !open);
+    researchToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  researchToggle?.addEventListener('click', () => {
+    setResearchOpen(researchPanel.classList.contains('hidden'));
+  });
+  document.getElementById('research-close')?.addEventListener('click', () => setResearchOpen(false));
+  researchPanel?.addEventListener('click', (e) => {
+    if (e.target === researchPanel) setResearchOpen(false);
+  });
+
   // Lang & Music
   document.getElementById('lang-toggle').addEventListener('click', toggleLang);
   document.getElementById('music-toggle').addEventListener('click', () => {

@@ -44,6 +44,10 @@
         <button class="nav-link" data-nav="about" data-i18n="nav.about">研究理念</button>
       </nav>
       <div class="topbar-actions">
+        <button class="icon-btn" id="research-toggle" aria-expanded="false" aria-controls="research-panel">
+          <span>📋</span>
+          <span data-i18n="nav.research">研究</span>
+        </button>
         <button class="icon-btn" id="lang-toggle" aria-label="Switch language">
           <span>🌐</span>
           <span id="lang-label">中文 | EN</span>
@@ -60,13 +64,32 @@
       <!-- Home -->
       <section class="view active" id="view-home">
         <div class="hero parallax" data-depth="0.02">
+          <div class="hero-icon" aria-hidden="true">
+            <svg viewBox="0 0 80 80" width="72" height="72" role="img" aria-label="">
+              <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(201,169,98,0.35)" stroke-width="1"/>
+              <path d="M40 12 L48 32 L68 32 L52 44 L58 64 L40 52 L22 64 L28 44 L12 32 L32 32 Z" fill="rgba(201,169,98,0.15)" stroke="rgba(201,169,98,0.5)" stroke-width="1"/>
+            </svg>
+          </div>
           <p class="eyebrow" data-i18n="home.eyebrow">数字人文 · AI · 女性主义叙事研究</p>
           <h1 class="hero-title">
             <span data-i18n="home.title1">谁有权</span><br>
             <span class="gold" data-i18n="home.title2">定义你的命运？</span>
           </h1>
           <p class="hero-desc" data-i18n="home.desc">同样一组命理信息，因性别、文化与社会期待的不同，会生出截然不同的故事。</p>
-          <button class="btn-primary" data-nav="journey" data-i18n="home.cta">进入探索</button>
+
+          <div class="hero-pitch glass-card">
+            <p class="pitch-label" data-i18n="home.pitchLabel">这个网站做什么？</p>
+            <p class="pitch-what" data-i18n="home.pitchWhat">帮你发现八字/星盘解读里的性别偏见，并对照 AI 重构版练习改写。</p>
+            <ol class="pitch-steps">
+              <li><span class="pitch-emoji">①</span> <span data-i18n="home.pitchStep1">点「开始探索」</span></li>
+              <li><span class="pitch-emoji">②</span> <span data-i18n="home.pitchStep2">选八字或星盘，读一段模拟解读</span></li>
+              <li><span class="pitch-emoji">③</span> <span data-i18n="home.pitchStep3">勾选偏见类型，看 AI 重构，写一句你的版本</span></li>
+            </ol>
+            <p class="pitch-who" data-i18n="home.pitchWho">给 15–35 岁、接触过命理的年轻人 · 约 15 分钟 · 不上传真实生辰</p>
+          </div>
+
+          <button class="btn-primary btn-primary--large" data-nav="journey" data-i18n="home.cta">进入探索</button>
+          <p class="hero-hint" data-i18n="home.hint">👆 第一次来？从这里开始</p>
         </div>
 
         <div class="daily-reflection glass-card parallax" data-depth="0.04">
@@ -88,6 +111,7 @@
       <section class="view" id="view-journey">
         <div class="journey-header">
           <h2 data-i18n="journey.title">命运叙事探索</h2>
+          <p class="journey-intro" data-i18n="journey.intro">模拟命盘 · 找偏见 · 对照 AI 重构 · 写一句你的版本</p>
           <span class="step-indicator"><span data-i18n="journey.step">步骤</span> <span id="step-num">1</span> / 7</span>
         </div>
 
@@ -301,6 +325,34 @@
       </section>
 
     </main>
+
+    <!-- Research panel (midterm story) -->
+    <aside class="research-panel hidden" id="research-panel" aria-labelledby="research-toggle">
+      <div class="research-panel__inner glass-card">
+        <div class="research-panel__header">
+          <h2 data-i18n="research.title">研究 / The Research</h2>
+          <button type="button" class="research-panel__close" id="research-close" aria-label="Close">×</button>
+        </div>
+        <div class="research-panel__body">
+          <section>
+            <h3 data-i18n="research.rqTitle">研究问题</h3>
+            <p data-i18n="research.rq">AI 辅助网站能否帮助 15–35 岁年轻人识别并重构八字/星盘解读中的性别叙事偏见？</p>
+          </section>
+          <section>
+            <h3 data-i18n="research.hypTitle">假设</h3>
+            <p data-i18n="research.hyp">使用后，用户对命理叙事中的性别偏见觉察度与自我重构信心会提高。</p>
+          </section>
+          <section>
+            <h3 data-i18n="research.bgTitle">为什么重要</h3>
+            <p data-i18n="research.bg">同样命盘元素，对男性可能是「事业心强」，对女性可能是「克夫」「太强势」。我们不评判命理真假，而问：谁有权讲述命运？</p>
+          </section>
+          <section>
+            <h3 data-i18n="research.doneTitle">目前已完成</h3>
+            <p data-i18n="research.done">文献综述（research/）、可交互原型（GitHub Pages 在线）、中期答辩稿与 PPT；用户研究（15–25 人）与 Supabase 数据收集待做。</p>
+          </section>
+        </div>
+      </div>
+    </aside>
 
     <!-- Wanderer -->
     <aside class="wanderer">
