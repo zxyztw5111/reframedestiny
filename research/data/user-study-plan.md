@@ -2,7 +2,7 @@
 
 ## Participants
 
-15-25 young women, approximately ages 17-34, who have encountered BaZi, astrology, tarot, or similar personality/fate narratives.
+15-25 young people (ages 15-35, men and women) who have encountered BaZi, astrology, tarot, or similar personality/fate narratives.
 
 ## Procedure
 
