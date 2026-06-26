@@ -709,7 +709,7 @@ body {
 /* Parallax helper */
 .parallax { will-change: transform; }
 
-/* Research FAB (Week 4 mentor view) */
+/* Research summary panel */
 .research-fab {
   position: fixed;
   bottom: 1.5rem;

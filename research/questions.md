@@ -6,10 +6,10 @@
 4. How many bias fragments (currently 20) should be unlockable per session to balance engagement vs. completion?
 5. For the final paper: is pre/post survey enough, or do I need 5 semi-structured interviews?
 
-## Primary question (locked for midterm)
+## Primary question
 
 **How does an AI-assisted interactive website affect young people's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?**
 
-## Hypothesis (locked for midterm)
+## Hypothesis
 
 **I hypothesize that after using Reframe Destiny, young people will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.**
