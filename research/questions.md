@@ -8,8 +8,8 @@
 
 ## Primary question (locked for midterm)
 
-**How does an AI-assisted interactive website affect young women's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?**
+**How does an AI-assisted interactive website affect young people's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?**
 
 ## Hypothesis (locked for midterm)
 
-**I hypothesize that after using Reframe Destiny, young women will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.**
+**I hypothesize that after using Reframe Destiny, young people will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.**

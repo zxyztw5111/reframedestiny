@@ -2,11 +2,11 @@
 
 ## 它做什么
 
-An interactive website where young women enter birth data (BaZi or astrology), see a traditional divination reading side-by-side with an AI-reframed version, and discover gendered narrative bias through guided interaction.
+An interactive website where young people enter birth data (BaZi or astrology), see a traditional divination reading side-by-side with an AI-reframed version, and discover gendered narrative bias through guided interaction.
 
 ## 给谁用
 
-Young women aged 17–34 who encounter traditional BaZi or astrology and want to question — not blindly accept — the stories these systems tell about their lives.
+Young people aged 15–35 (men and women) who encounter traditional BaZi or astrology and want to question — not blindly accept — the stories these systems tell about their lives.
 
 ## 核心流程
 
@@ -34,6 +34,6 @@ Young women aged 17–34 who encounter traditional BaZi or astrology and want to
 
 ## Research Question & Hypothesis
 
-**Research Question:** How does an AI-assisted interactive website affect young women's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?
+**Research Question:** How does an AI-assisted interactive website affect young people's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?
 
-**Hypothesis:** I hypothesize that after using Reframe Destiny, young women will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.
+**Hypothesis:** I hypothesize that after using Reframe Destiny, young people will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.

@@ -12,7 +12,7 @@ Western astrology shows parallel patterns: Venus-Saturn aspects framed as "relat
 
 - Whether divination should be studied as **culture/religion** vs. **pseudoscience**
 - Whether AI should **replace** human fortune-tellers or **critique** their language
-- How much young women internalize divination narratives vs. treat them as entertainment
+- How much young people internalize divination narratives vs. treat them as entertainment
 
 ## The gap my project fills
 
@@ -20,4 +20,4 @@ No existing interactive tool lets users **experience the same chart through diff
 
 ## My angle
 
-Combine **digital humanities + feminist narrative analysis + AI-assisted reframing** in one interactive artifact aimed at young women, using both BaZi and astrology to show bias is **cross-cultural**, not only "a Chinese problem."
+Combine **digital humanities + feminist narrative analysis + AI-assisted reframing** in one interactive artifact aimed at young people aged 15–35 (men and women), using both BaZi and astrology to show gendered narrative bias is **cross-cultural**, not only "a Chinese problem."

@@ -1,2 +1,13 @@
 node_modules/
 .DS_Store
+docs/
+LOCAL-*
+SUBMIT_TO_TEACHER.md
+*.pptx
+midterm*
+OFFICE_HOUR*
+GITHUB_*
+PPT_*
+make-pptx.js
+fill-template-pptx.py
+package*.json
