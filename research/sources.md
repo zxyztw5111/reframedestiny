@@ -68,12 +68,43 @@
 | Double V Consulting · 2025 | 玄学消费综述 | 74.1% 用玄学缓解焦虑；年消费 60% &lt;500 元 | 中 | 待核实 |
 | 腾讯新闻 · 2025 · #DeepSeek算命 | 社媒热度 | #DeepSeek算命 小红书超 6600 万浏览（新闻引用） | 低 | 待核实 |
 
+## 主题八：八字 / 中国传统命理学术（Academic BaZi & Chinese divination）
+
+| 来源(作者·年份·标题) | 主题 | 关键发现 / 可引用的话 | 证据强度 | 是否核实 |
+|---|---|---|---|---|
+| 张翼轸 · 2012 · 八字算命术中对女性的价值判断 | 子平经典女命 | 价值判断层集中克夫/旺夫；女命论述以妻子/母亲角色为中心 | 中 | 是 |
+| 游淑珺 · 2006 · 台湾俗语「女有所归」 | 婚配与假造八字 | 「男命无假，女命无真」；克夫标签阻碍嫁娶 | 中 | 是 |
+| 瞿海源 · 中研院 · 术数与巫术社会变迁 | 台湾性别与算命 | 父权结构下算命成为女性「逆来顺受」的因应；女性使用率高反映分工非本质更迷信 | 高 | 是 |
+| 姚春敏 · 2021 · 明清女巫二元特征 | 女巫污名 | 女巫一直被诋毁但从未斩尽杀绝；精英鄙视与日常默许并存 | 中 | 待核实 |
+
+## 主题九：迷信话语与性别权力（Superstition discourse & gender）
+
+| 来源(作者·年份·标题) | 主题 | 关键发现 / 可引用的话 | 证据强度 | 是否核实 |
+|---|---|---|---|---|
+| Valussi · 2020 · *Men Built Religion, Women Made It Superstitious* | 民国迷信性别化 | religion 性别化为男，superstition 性别化为女；清除迷信=国家现代性与妇女改造 | 高 | 是 |
+| 谭晓汶 · 2020 · 「迷信」与妇女·妖妇形象 | 清末民国报章 | 科学/迷信被性别化；占卜女性被知识界妖魔化 | 高 | 是 |
+| 邢婷婷 · 2019 · 女性更加迷信吗？ | 中国星座田野 n=230 | 「女性更迷信」多为判断先行；女性用占卜作社交/焦虑分担 | 高 | 是 |
+| Mowat · 2018 · Divination and Gender (PhD) | 占卜与性别表演 | 性别表演性与占卜表演性相互建构、不可分割 | 高 | 是 |
+
+## 主题十：批判 AI / 数字占卜认识论（Critical AI & digital divination）
+
+| 来源(作者·年份·标题) | 主题 | 关键发现 / 可引用的话 | 证据强度 | 是否核实 |
+|---|---|---|---|---|
+| Cearns · 2024 · Divining Truth: Epistemology of AI | AI 作为占卜认识论 | 预测性 AI 类似占卜；truth 变为 networked、可优化、未来导向 | 高 | 是 |
+| Nikolić · 2023 · Astrological genealogy of AI | 占星—ML 谱系 | 占星 pattern-making 是 ML 前身；与算法数据偏见历史关联 | 高 | 是 |
+| Davies · 2024 · From I-Ching to AI (ISEA) | 数字占卜批判 | AI 占卜的 computational capture；提出 counter-divination | 中 | 是 |
+| Katz et al. · 2023 · AI and conjectural sciences | 或然推理结构 | 占卜与 ML 共享 conjectural logic；外推未来叙事 | 高 | 是 |
+| Sheemar · 2025 · Female Embodiment in Sanskrit Prognostication | 印度占星女命 | 占星将性别等级编码进占卜体系；strījātaka 与体相占卜 | 高 | 是 |
+| Munk · 2012 · "The Stars Down to Earth" | 占星使用者画像 | 实际使用者以城市中产女性为主；探讨 educated women 使用占星 | 高 | 是 |
+
 ---
 
 ## 待核实优先清单
 
 1. 后浪研究所 2025 报告原始 PDF 与样本方法
-2. Lopez Silva 2023 占星性别论文全文
-3. Echoes of Algorithm / GrimmGPT 是否公开可玩
-4. FateTell / AI 八字产品性别 prompt 差异
-5. Co-Star 18–25 岁女性使用率（常见引用，需原始来源）
+2. iiMedia ¥120B AI 玄学市场数据（需原始 PDF）
+3. Lopez Silva 2023 / 姚春敏 2021 全文核实
+4. Echoes of Algorithm / GrimmGPT 是否公开可玩
+5. FateTell / AI 八字产品性别 prompt 差异
+6. Co-Star 18–25 岁女性使用率（需原始来源）
+7. AoIR 2024 *DeepSeek AI Meets Divination* 同行评议状态
