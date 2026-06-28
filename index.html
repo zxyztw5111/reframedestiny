@@ -382,8 +382,22 @@
 
   </div>
 
+  <!-- Pre/post research survey -->
+  <div class="survey-gate hidden" id="survey-gate" role="dialog" aria-modal="true" aria-labelledby="survey-title">
+    <div class="survey-gate__card glass-card">
+      <p class="survey-gate__eyebrow" data-i18n="survey.eyebrow">研究问卷 · Research Survey</p>
+      <h2 class="survey-gate__title" id="survey-title"></h2>
+      <p class="survey-gate__lead" id="survey-lead"></p>
+      <p class="survey-gate__scale-note" data-i18n="survey.scaleNote">每题 1–5 分：1 = 完全不同意，5 = 完全同意</p>
+      <div id="survey-questions" class="survey-questions"></div>
+      <p class="survey-gate__error hidden" id="survey-error" role="alert"></p>
+      <button type="button" class="btn-primary btn-primary--large" id="survey-submit"></button>
+    </div>
+  </div>
+
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
+  <script src="js/survey.js"></script>
   <script src="js/data.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/canvas.js"></script>

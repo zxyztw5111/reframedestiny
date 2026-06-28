@@ -34,7 +34,12 @@ const journey = {
 };
 
 /* ── Navigation ── */
-function navigate(view) {
+function navigate(view, opts = {}) {
+  if (view === 'journey' && !opts.skipPreSurvey && !hasPreSurveyForSession()) {
+    showPreSurvey(() => navigate('journey', { skipPreSurvey: true }));
+    return;
+  }
+
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   const el = document.getElementById(`view-${view}`);
@@ -241,6 +246,7 @@ function completeJourney() {
 
   submitResearch({
     submission_type: 'journey_complete',
+    session_id: getResearchSessionId(),
     system: journey.system,
     narrative_lens: journey.lens,
     bias_ids: found.map(b => b.id),
@@ -262,7 +268,8 @@ function completeJourney() {
   journey.scannerScores = [];
   document.querySelectorAll('.system-card, .lens-card').forEach(c => c.classList.remove('selected'));
   document.getElementById('court-user').value = '';
-  navigate('collection');
+
+  showPostSurvey(() => navigate('collection'));
 }
 
 function journeyNext() {
@@ -354,6 +361,7 @@ function initParallax() {
 function onLangChange() {
   showQuote(state.lastQuoteIdx >= 0 ? state.lastQuoteIdx : undefined);
   setWandererPrompt();
+  onSurveyLangChange();
   if (document.getElementById('view-journey').classList.contains('active')) updateJourneyUI();
   if (document.getElementById('view-collection').classList.contains('active')) renderCollection();
   if (document.getElementById('view-archive').classList.contains('active')) renderArchive();
