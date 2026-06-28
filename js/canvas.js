@@ -32,14 +32,14 @@ const CanvasFX = {
 
   initStars() {
     this.stars = [];
-    const count = Math.min(300, Math.floor(window.innerWidth * 0.15));
+    const count = Math.min(520, Math.floor(window.innerWidth * 0.24));
     for (let i = 0; i < count; i++) {
       this.stars.push({
         x: Math.random(),
         y: Math.random(),
-        size: Math.random() * 1.5 + 0.3,
+        size: Math.random() * 1.8 + 0.35,
         speed: Math.random() * 0.0002 + 0.00005,
-        opacity: Math.random() * 0.6 + 0.2,
+        opacity: Math.random() * 0.72 + 0.24,
         twinkle: Math.random() * Math.PI * 2
       });
     }
@@ -47,15 +47,15 @@ const CanvasFX = {
 
   initSand() {
     this.sandParticles = [];
-    const count = Math.min(120, Math.floor(window.innerWidth * 0.08));
+    const count = Math.min(220, Math.floor(window.innerWidth * 0.13));
     for (let i = 0; i < count; i++) {
       this.sandParticles.push({
         x: Math.random(),
         y: Math.random(),
         vx: (Math.random() - 0.5) * 0.0003,
         vy: -Math.random() * 0.0004 - 0.0001,
-        size: Math.random() * 2 + 0.5,
-        opacity: Math.random() * 0.5 + 0.1
+        size: Math.random() * 2.4 + 0.6,
+        opacity: Math.random() * 0.58 + 0.16
       });
     }
   },
@@ -238,45 +238,60 @@ const CanvasFX = {
 
     ctx.clearRect(0, 0, w, h);
 
-    // Morphing humanoid from sand particles
-    const points = [];
-    const segments = 40;
-    for (let i = 0; i < segments; i++) {
-      const angle = (i / segments) * Math.PI * 2;
-      const morph = Math.sin(t * 0.5 + i * 0.3) * 8;
-      const rx = 25 + morph;
-      const ry = 45 + Math.sin(t + i) * 5;
-      points.push({
-        x: w / 2 + Math.cos(angle) * rx * (0.5 + 0.5 * Math.sin(t * 0.3)),
-        y: h * 0.3 + Math.sin(angle) * ry + Math.sin(t * 2 + i) * 3
-      });
-    }
+    const pulse = 0.65 + 0.35 * Math.sin(t * 1.4);
+    const cx = w / 2;
+    const headY = h * 0.18 + Math.sin(t) * 2;
+    const torsoY = h * 0.48;
+    const footY = h * 0.88;
 
+    // Soft aura: a genderless figure made from light, not a literal person.
+    const aura = ctx.createRadialGradient(cx, torsoY, 4, cx, torsoY, h * 0.55);
+    aura.addColorStop(0, `rgba(232, 213, 163, ${0.22 + pulse * 0.08})`);
+    aura.addColorStop(0.45, 'rgba(201, 169, 98, 0.08)');
+    aura.addColorStop(1, 'rgba(201, 169, 98, 0)');
+    ctx.fillStyle = aura;
     ctx.beginPath();
-    points.forEach((p, i) => {
-      if (i === 0) ctx.moveTo(p.x, p.y);
-      else ctx.lineTo(p.x, p.y);
-    });
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(201, 169, 98, 0.15)';
+    ctx.ellipse(cx, torsoY, w * 0.36, h * 0.42, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = `rgba(201, 169, 98, ${0.4 + 0.2 * Math.sin(t)})`;
-    ctx.lineWidth = 1;
-    ctx.stroke();
+
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = 'rgba(232, 213, 163, 0.65)';
+    ctx.shadowBlur = 14;
 
     // Head
     ctx.beginPath();
-    ctx.arc(w / 2, h * 0.15 + Math.sin(t) * 3, 10 + Math.sin(t * 0.7) * 2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(201, 169, 98, 0.25)';
-    ctx.fill();
+    ctx.arc(cx, headY, 8 + pulse * 1.4, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(232, 213, 163, ${0.62 + pulse * 0.22})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
 
-    // Floating sand motes
-    for (let i = 0; i < 8; i++) {
-      const sx = w / 2 + Math.sin(t * 1.5 + i) * 30;
-      const sy = h * 0.5 + Math.cos(t + i * 0.8) * 20;
+    // Body line
+    ctx.beginPath();
+    ctx.moveTo(cx, headY + 11);
+    ctx.bezierCurveTo(cx - 8, h * 0.38, cx + 10, h * 0.58, cx, footY);
+    ctx.strokeStyle = `rgba(201, 169, 98, ${0.58 + pulse * 0.2})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Arms as orbiting light ribbons
+    ctx.beginPath();
+    ctx.moveTo(cx - 20, h * 0.44 + Math.sin(t) * 2);
+    ctx.quadraticCurveTo(cx, h * 0.38, cx + 20, h * 0.44 + Math.cos(t) * 2);
+    ctx.strokeStyle = `rgba(90, 138, 122, ${0.42 + pulse * 0.18})`;
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    ctx.restore();
+
+    // Floating sand motes around the figure
+    for (let i = 0; i < 18; i++) {
+      const radius = 16 + (i % 5) * 5;
+      const sx = cx + Math.sin(t * 1.2 + i * 0.7) * radius;
+      const sy = torsoY + Math.cos(t * 0.9 + i * 0.9) * (22 + (i % 4) * 4);
       ctx.beginPath();
-      ctx.arc(sx, sy, 1, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(232, 213, 163, ${0.3 + 0.3 * Math.sin(t + i)})`;
+      ctx.arc(sx, sy, 0.8 + (i % 3) * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232, 213, 163, ${0.25 + 0.35 * Math.sin(t + i)})`;
       ctx.fill();
     }
   },
@@ -380,7 +395,8 @@ const CanvasFX = {
 
     // Background nebula
     const neb = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.2);
-    neb.addColorStop(0, 'rgba(90, 138, 122, 0.05)');
+    neb.addColorStop(0, 'rgba(201, 169, 98, 0.08)');
+    neb.addColorStop(0.45, 'rgba(90, 138, 122, 0.06)');
     neb.addColorStop(1, 'transparent');
     ctx.fillStyle = neb;
     ctx.fillRect(0, 0, size, size);
@@ -399,7 +415,7 @@ const CanvasFX = {
       ctx.moveTo(positions[i].x, positions[i].y);
       ctx.lineTo(positions[j].x, positions[j].y);
       ctx.strokeStyle = bothUnlocked
-        ? `rgba(201, 169, 98, ${0.15 + 0.1 * Math.sin(t + i)})`
+        ? `rgba(232, 213, 163, ${0.28 + 0.18 * Math.sin(t + i)})`
         : 'rgba(255,255,255,0.03)';
       ctx.stroke();
     }
@@ -408,17 +424,17 @@ const CanvasFX = {
     biases.forEach((b, i) => {
       const isUnlocked = unlocked.includes(b.id);
       const pos = positions[i];
-      const glow = isUnlocked ? 8 + 4 * Math.sin(t * 2 + i) : 0;
+      const glow = isUnlocked ? 12 + 6 * Math.sin(t * 2 + i) : 0;
 
       if (isUnlocked) {
         ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 6 + glow * 0.3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201, 169, 98, ${0.1 + 0.05 * Math.sin(t + i)})`;
+        ctx.arc(pos.x, pos.y, 8 + glow * 0.45, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 169, 98, ${0.18 + 0.08 * Math.sin(t + i)})`;
         ctx.fill();
       }
 
       ctx.beginPath();
-      ctx.arc(pos.x, pos.y, isUnlocked ? 4 : 2.5, 0, Math.PI * 2);
+      ctx.arc(pos.x, pos.y, isUnlocked ? 5.2 : 2.4, 0, Math.PI * 2);
       ctx.fillStyle = isUnlocked ? '#e8d5a3' : 'rgba(100,100,120,0.4)';
       ctx.fill();
 
@@ -428,8 +444,8 @@ const CanvasFX = {
           const a = (j / 4) * Math.PI * 2 + t;
           ctx.beginPath();
           ctx.moveTo(pos.x, pos.y);
-          ctx.lineTo(pos.x + Math.cos(a) * 10, pos.y + Math.sin(a) * 10);
-          ctx.strokeStyle = `rgba(232, 213, 163, ${0.3 * Math.sin(t * 3 + j)})`;
+          ctx.lineTo(pos.x + Math.cos(a) * 14, pos.y + Math.sin(a) * 14);
+          ctx.strokeStyle = `rgba(232, 213, 163, ${0.38 + 0.22 * Math.sin(t * 3 + j)})`;
           ctx.stroke();
         }
       }

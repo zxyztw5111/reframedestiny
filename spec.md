@@ -2,13 +2,13 @@
 
 ## Research Question & Hypothesis
 
-**Research Question:** How does an AI-assisted interactive website affect young people's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?
+**Research Question:** How can an AI-assisted interactive website help young people recognize, question, and reframe gendered and fatalistic bias in BaZi and astrology interpretations?
 
-**Hypothesis:** I hypothesize that after using Reframe Destiny, young people will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.
+**Hypothesis:** I hypothesize that after using Reframe Destiny, young people will show increased awareness of gendered/fatalistic bias in divination language and greater confidence in reframing these narratives for themselves.
 
 ## 它做什么
 
-一个短流程网页：年轻人选八字或星盘，读一段带性别偏见的传统命理解读，勾选看到的偏见类型，对照 AI 重构版，并写一句自己的改写。用模拟文本，不上传个人信息。目标是测试：这种交互能否提高识别与重构性别化叙事的能力。
+一个短流程网页：年轻人选八字或星盘，进入一段研究用模拟命盘体验，读一段带性别化与宿命化偏见的传统解读，标记看见的问题，对照 AI 重构版，并写一句自己的改写。目标是测试：这种交互能否提高用户识别、质疑并重写命理话术的能力。
 
 ## 给谁用
 
@@ -24,12 +24,10 @@
 
 ## 不在 MVP 里
 
-- 真实出生数据计算或 AI API 调用
-- 七步完整旅程、雷达扫描器、命运法庭三方对话
-- 20 碎片收集、星座图鉴、徽章、每日箴言
-- 开场动画、背景音乐、无名旅人、完整双语
-- 用户账号与云端数据库
-- 论证命理真伪；性别切换对照实验（后续迭代）
+- 真实出生数据计算（当前使用研究用模拟命盘，避免误算）
+- 论证命理真伪
+- 用户账号系统
+- 完整真实星盘/八字生成器（后续迭代）
 
 ## 怎么收集反馈
 

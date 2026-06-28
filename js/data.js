@@ -37,26 +37,26 @@ const QUOTES = [
 ];
 
 const BIASES = [
-  { id: "kefu", zh: "克夫叙事", en: "Ke-fu Narrative", desc: { zh: "将女性命运与伴侣生死绑定，暗示女性本质为「克星」。", en: "Binding a woman's fate to her partner's mortality, implying inherent harm." } },
-  { id: "xianqi", zh: "贤妻叙事", en: "Virtuous Wife Archetype", desc: { zh: "以顺从、持家、牺牲为女性最高美德的叙事模板。", en: "Template framing submission, homemaking, and sacrifice as women's highest virtues." } },
-  { id: "marriage", zh: "婚姻决定人生", en: "Marriage Defines Life", desc: { zh: "将女性人生价值完全系于婚恋状态与伴侣质量。", en: "Tying women's life value entirely to marital status and partner quality." } },
-  { id: "latemarriage", zh: "晚婚焦虑", en: "Late Marriage Anxiety", desc: { zh: "以年龄期限制造紧迫感，将未嫁等同于失败。", en: "Creating urgency through age deadlines, equating unmarried with failure." } },
-  { id: "doomed", zh: "注定失败", en: "Doomed to Fail", desc: { zh: "以命理结构预设人生失败，剥夺能动性。", en: "Pre-determining failure through chart structure, denying agency." } },
-  { id: "moral", zh: "道德标签化", en: "Moral Labeling", desc: { zh: "将性格特征直接转化为道德审判。", en: "Converting personality traits directly into moral judgments." } },
-  { id: "genderrole", zh: "性别角色固化", en: "Gender Role Fixation", desc: { zh: "将阴阳五行与 rigid 性别行为绑定。", en: "Binding yin-yang elements to rigid gender behaviors." } },
-  { id: "depend", zh: "依附男性叙事", en: "Male Dependence Narrative", desc: { zh: "暗示女性需通过男性（父、夫、子）获得命运转机。", en: "Implying women need men (father, husband, son) for fate transformation." } },
-  { id: "procreate", zh: "生育中心论", en: "Procreation Centrism", desc: { zh: "以子嗣多少评判女性命运吉凶。", en: "Judging women's fortune by number of offspring." } },
-  { id: "beauty", zh: "美貌命运论", en: "Beauty-Fate Determinism", desc: { zh: "将外貌与桃花、感情、命运直接挂钩。", en: "Linking appearance directly to romance and fate outcomes." } },
-  { id: "emotion", zh: "情绪刻板化", en: "Emotional Stereotyping", desc: { zh: "将敏感、多虑等特质病理化或性别化。", en: "Pathologizing or gendering traits like sensitivity and worry." } },
-  { id: "submissive", zh: "温顺理想化", en: "Submissiveness Idealized", desc: { zh: "将「温柔」「顺从」作为女性命格的最高评价。", en: "Framing 'gentleness' and 'obedience' as highest chart evaluations for women." } },
-  { id: "binary", zh: "事业家庭二元", en: "Career-Family Binary", desc: { zh: "暗示女性不可兼顾事业与家庭，必须二选一。", en: "Implying women cannot balance career and family — must choose one." } },
-  { id: "blame", zh: "克亲叙事", en: "Family Blame Narrative", desc: { zh: "将家庭变故归因于女性命格。", en: "Attributing family misfortunes to a woman's chart." } },
-  { id: "romancecurse", zh: "桃花劫叙事", en: "Romance as Curse", desc: { zh: "将感情经历框架为「劫数」而非成长。", en: "Framing romantic experiences as calamities rather than growth." } },
-  { id: "chastity", zh: "贞洁审判", en: "Chastity Judgment", desc: { zh: "以感情经历评判女性道德与命运。", en: "Judging women's morality and fate by romantic history." } },
-  { id: "strongfate", zh: "命硬叙事", en: "Strong Fate Harms Others", desc: { zh: "将独立、强势解读为对他人有害。", en: "Interpreting independence and strength as harmful to others." } },
-  { id: "wangfu", zh: "旺夫/克夫二元", en: "Fortune/Harm Husband Binary", desc: { zh: "女性价值仅通过对其伴侣的影响来定义。", en: "Defining women's value solely through impact on partners." } },
-  { id: "filial", zh: "孝顺媳妇模板", en: "Filial Daughter-in-Law Template", desc: { zh: "以侍奉公婆为女性命运核心指标。", en: "Using service to in-laws as core fate metric for women." } },
-  { id: "fatalism", zh: "宿命论压制", en: "Fatalism Suppression", desc: { zh: "以「天命」之名压制改变与反抗的可能。", en: "Suppressing change and resistance in the name of 'heaven's mandate'." } }
+  { id: "kefu", zh: "说女性会害伴侣", en: "Woman as Harmful", desc: { zh: "把伴侣或家庭的不顺归到女性身上。", en: "Blaming a woman for a partner's or family's misfortune." } },
+  { id: "xianqi", zh: "只夸顺从牺牲", en: "Obedient Wife Ideal", desc: { zh: "把顺从、持家、牺牲说成女性最重要的价值。", en: "Treating obedience, homemaking, and sacrifice as a woman's highest value." } },
+  { id: "marriage", zh: "人生只看婚姻", en: "Life Defined by Marriage", desc: { zh: "好像婚姻顺不顺就能决定一个人的全部人生。", en: "Making marriage seem like the measure of an entire life." } },
+  { id: "latemarriage", zh: "晚婚就焦虑", en: "Late Marriage Pressure", desc: { zh: "用年龄制造压力，把不早婚说成问题。", en: "Using age pressure to frame not marrying early as a problem." } },
+  { id: "doomed", zh: "一开口就说没希望", en: "Doomed Framing", desc: { zh: "把某种命盘结构直接说成失败，忽略人的选择。", en: "Treating a chart pattern as failure while ignoring choice." } },
+  { id: "moral", zh: "把性格说成道德问题", en: "Moral Labeling", desc: { zh: "把独立、敏感或犹豫直接变成好坏评判。", en: "Turning traits like independence or sensitivity into moral judgments." } },
+  { id: "genderrole", zh: "男女必须固定样子", en: "Fixed Gender Roles", desc: { zh: "默认男生该怎样、女生该怎样。", en: "Assuming men and women must behave in fixed ways." } },
+  { id: "depend", zh: "转机要靠男性", en: "Must Depend on Men", desc: { zh: "暗示女性的人生转机要靠父亲、丈夫或儿子。", en: "Suggesting a woman's future depends on father, husband, or son." } },
+  { id: "procreate", zh: "用生育评价人生", en: "Judged by Childbearing", desc: { zh: "用有没有孩子、孩子多少来评价一个人的命运。", en: "Judging fate through whether or how many children someone has." } },
+  { id: "beauty", zh: "外貌决定命运", en: "Beauty Decides Fate", desc: { zh: "把外貌和桃花、婚恋、运气直接绑在一起。", en: "Linking appearance directly to romance, luck, and fate." } },
+  { id: "emotion", zh: "把情绪说成弱点", en: "Emotion as Weakness", desc: { zh: "把敏感、犹豫、多想说成天生缺陷。", en: "Framing sensitivity or hesitation as a built-in flaw." } },
+  { id: "submissive", zh: "温顺才是好命", en: "Submission as Good Fate", desc: { zh: "把温柔、忍让、听话包装成最好的命。", en: "Packaging gentleness, endurance, and obedience as ideal fate." } },
+  { id: "binary", zh: "事业家庭只能二选一", en: "Career vs Family Trap", desc: { zh: "暗示一个人不能同时拥有事业和家庭。", en: "Suggesting a person must choose between career and family." } },
+  { id: "blame", zh: "家里出事怪到个人", en: "Family Blame", desc: { zh: "把家庭不顺归因到某个人的命格上。", en: "Attributing family problems to one person's chart." } },
+  { id: "romancecurse", zh: "恋爱都说成劫", en: "Romance as Disaster", desc: { zh: "把感情经历只说成灾难，而不是成长的一部分。", en: "Framing romance only as disaster, not part of growth." } },
+  { id: "chastity", zh: "用感情经历审判人", en: "Judged by Romance History", desc: { zh: "用恋爱经历评判一个人的价值和道德。", en: "Judging someone's worth through romantic history." } },
+  { id: "strongfate", zh: "独立就说太强势", en: "Independence as Threat", desc: { zh: "把独立、有主见说成会伤害别人。", en: "Treating independence and strong will as harmful to others." } },
+  { id: "wangfu", zh: "价值只看旺不旺伴侣", en: "Value Through Partner", desc: { zh: "只用对伴侣有没有好处来评价一个人。", en: "Valuing someone only by their impact on a partner." } },
+  { id: "filial", zh: "把人生绑在婆家责任上", en: "In-Law Duty Trap", desc: { zh: "把照顾婆家当成女性命运的核心任务。", en: "Making service to in-laws the center of a woman's fate." } },
+  { id: "fatalism", zh: "一句天命堵住改变", en: "Fate Stops Change", desc: { zh: "用天命、注定、没办法来压住人的选择。", en: "Using destiny or inevitability to close down choice." } }
 ];
 
 const BIAS_CATEGORIES = [
