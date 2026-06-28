@@ -133,6 +133,80 @@ body {
 }
 .intro-skip:hover { color: var(--gold-light); border-color: var(--gold-dim); }
 
+/* ── Informed consent gate ── */
+.consent-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(5, 8, 16, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.consent-gate__card {
+  width: min(100%, 520px);
+  padding: 2rem 1.75rem;
+  text-align: left;
+}
+
+.consent-gate__eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jade);
+  margin-bottom: 0.75rem;
+}
+
+.consent-gate__title {
+  font-family: var(--font-sc);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  margin-bottom: 0.75rem;
+  line-height: 1.35;
+}
+
+.consent-gate__lead {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+.consent-gate__list {
+  list-style: none;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.consent-gate__list li {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--gold-dim);
+}
+
+.consent-gate__list strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.consent-gate__card .btn-primary {
+  width: 100%;
+}
+
+.consent-gate__decline {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
 /* ── App shell ── */
 .app { position: relative; z-index: 10; min-height: 100vh; }
 .hidden { display: none !important; }

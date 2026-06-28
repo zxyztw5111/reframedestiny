@@ -12,4 +12,8 @@ GITHUB_*
 PPT_*
 make-pptx.js
 fill-template-pptx.py
-package*.json
+package-lock.json
+.env
+.env.local
+.env*.local
+.vercel

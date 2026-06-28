@@ -17,8 +17,25 @@
   <div class="glow-orb glow-orb--1 parallax" data-depth="0.05"></div>
   <div class="glow-orb glow-orb--2 parallax" data-depth="0.08"></div>
 
+  <!-- Informed consent (first visit) -->
+  <div class="consent-gate" id="consent-gate" role="dialog" aria-modal="true" aria-labelledby="consent-title">
+    <div class="consent-gate__card glass-card">
+      <p class="consent-gate__eyebrow" data-i18n="consent.eyebrow">课堂研究 · Informed Consent</p>
+      <h1 class="consent-gate__title" id="consent-title" data-i18n="consent.title">参与前请读一下</h1>
+      <p class="consent-gate__lead" data-i18n="consent.lead">这是一个匿名、自愿的课堂研究页面。继续之前，请确认你了解以下几点：</p>
+      <ul class="consent-gate__list">
+        <li><strong data-i18n="consent.item1.title">匿名</strong><span data-i18n="consent.item1.body">——我们不会收集你的姓名等能认出你是谁的信息。</span></li>
+        <li><strong data-i18n="consent.item2.title">自愿</strong><span data-i18n="consent.item2.body">——参不参加完全由你决定。</span></li>
+        <li><strong data-i18n="consent.item3.title">随时可退出</strong><span data-i18n="consent.item3.body">——中途不想填了，随时关掉离开就行。</span></li>
+        <li><strong data-i18n="consent.item4.title">数据用途</strong><span data-i18n="consent.item4.body">——你的回答只用于这个课堂研究，不会作别的用途。</span></li>
+      </ul>
+      <button type="button" class="btn-primary btn-primary--large" id="consent-agree" data-i18n="consent.agree">同意并继续</button>
+      <p class="consent-gate__decline" data-i18n="consent.decline">若不同意，直接关闭此页面即可。</p>
+    </div>
+  </div>
+
   <!-- Intro -->
-  <div class="intro" id="intro">
+  <div class="intro hidden" id="intro">
     <canvas id="intro-canvas"></canvas>
     <div class="intro-text">
       <h1 class="intro-title" data-i18n="intro.title">REFRAME DESTINY</h1>
@@ -365,6 +382,8 @@
 
   </div>
 
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
   <script src="js/data.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/canvas.js"></script>

@@ -1,6 +1,7 @@
 /* ═══ Main Application Logic ═══ */
 
 const STORAGE_KEY = 'reframe-destiny-v1';
+const CONSENT_KEY = 'rd-consent-v1';
 
 const defaultState = () => ({
   journeys: 0,
@@ -155,17 +156,55 @@ function renderCourt() {
     currentLang === 'zh' ? COURT_DIALOGUES.ai.zh : COURT_DIALOGUES.ai.en;
 }
 
-function renderReframe() {
-  if (!journey.system) return;
-  const reading = READINGS[journey.system];
-  document.getElementById('reframe-original').textContent =
-    currentLang === 'zh' ? reading.traditional.zh : reading.traditional.en;
-
+function animateReframeText(text) {
   const newEl = document.getElementById('reframe-new');
-  const text = currentLang === 'zh' ? reading.reframed.zh : reading.reframed.en;
   newEl.innerHTML = text.split(/(\s+|[，。；：、])/).filter(Boolean).map((word, i) =>
     `<span class="word" style="animation-delay:${i * 0.04}s">${word}</span>`
   ).join('');
+}
+
+async function fetchDeepSeekReframe(originalText, biasLabels) {
+  const langLabel = currentLang === 'zh' ? '简体中文' : 'English';
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a feminist digital humanities assistant for the Reframe Destiny project. ' +
+            'Rewrite divination/fate-reading text to remove gender bias, marriage-centrism, fatalism, and fear narratives. ' +
+            'Keep similar length, preserve cultural context, empower agency. Output only the reframed paragraph, no preamble.'
+        },
+        {
+          role: 'user',
+          content:
+            `Language: ${langLabel}\n` +
+            `Original reading:\n${originalText}\n\n` +
+            `Bias fragments detected this session: ${biasLabels.join(', ')}\n\n` +
+            `Write a de-biased reframed version in ${langLabel}.`
+        }
+      ]
+    })
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Chat API failed');
+  const content = data.choices?.[0]?.message?.content?.trim();
+  if (!content) throw new Error('Empty response from chat API');
+  return content;
+}
+
+async function renderReframe() {
+  if (!journey.system) return;
+  const reading = READINGS[journey.system];
+  const original =
+    currentLang === 'zh' ? reading.traditional.zh : reading.traditional.en;
+  document.getElementById('reframe-original').textContent = original;
+
+  const newEl = document.getElementById('reframe-new');
+  newEl.textContent = t('journey.s7.loading');
 
   const found = journey.foundBiases.length ? journey.foundBiases : discoverBiasesForJourney();
   const fragEl = document.getElementById('fragments-found');
@@ -175,14 +214,46 @@ function renderReframe() {
       `<span class="fragment-tag">${currentLang === 'zh' ? b.zh : b.en}</span>`
     ).join('')}
   `;
+
+  const biasLabels = found.map(b => (currentLang === 'zh' ? b.zh : b.en));
+  let reframedText;
+
+  try {
+    reframedText = await fetchDeepSeekReframe(original, biasLabels);
+  } catch (err) {
+    console.warn('[reframe] API unavailable, using preset', err);
+    reframedText =
+      (currentLang === 'zh' ? reading.reframed.zh : reading.reframed.en) +
+      `\n\n${t('journey.s7.fallback')}`;
+  }
+
+  animateReframeText(reframedText);
 }
 
 function completeJourney() {
   state.journeys++;
   const userText = document.getElementById('court-user').value.trim();
+  const found = journey.foundBiases.length ? journey.foundBiases : [];
+
   if (userText) {
     state.reflections.unshift({ text: userText, date: new Date().toISOString() });
   }
+
+  submitResearch({
+    submission_type: 'journey_complete',
+    system: journey.system,
+    narrative_lens: journey.lens,
+    bias_ids: found.map(b => b.id),
+    scanner_scores: journey.scannerScores.map(s => ({
+      key: s.key,
+      zh: s.zh,
+      en: s.en,
+      score: s.score
+    })),
+    reflection_text: userText || null,
+    lang: currentLang
+  });
+
   saveState(state);
   journey.step = 1;
   journey.system = null;
@@ -289,10 +360,7 @@ function onLangChange() {
 }
 
 /* ── Init ── */
-document.addEventListener('DOMContentLoaded', () => {
-  applyI18n();
-  CanvasFX.init();
-
+function initSite() {
   CanvasFX.runIntro(() => {
     document.getElementById('intro').style.display = 'none';
     document.getElementById('app').classList.remove('hidden');
@@ -313,6 +381,33 @@ document.addEventListener('DOMContentLoaded', () => {
       initParallax();
     }, 400);
   });
+}
+
+function setupConsentGate() {
+  const gate = document.getElementById('consent-gate');
+  const intro = document.getElementById('intro');
+  const agreeBtn = document.getElementById('consent-agree');
+
+  if (localStorage.getItem(CONSENT_KEY) === 'yes') {
+    gate.classList.add('hidden');
+    intro.classList.remove('hidden');
+    initSite();
+    return;
+  }
+
+  intro.classList.add('hidden');
+  agreeBtn?.addEventListener('click', () => {
+    localStorage.setItem(CONSENT_KEY, 'yes');
+    gate.classList.add('hidden');
+    intro.classList.remove('hidden');
+    initSite();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyI18n();
+  CanvasFX.init();
+  setupConsentGate();
 
   // Nav
   document.querySelectorAll('[data-nav]').forEach(btn => {
@@ -384,6 +479,11 @@ document.addEventListener('DOMContentLoaded', () => {
       state.reflections.unshift({ text, date: new Date().toISOString() });
       document.getElementById('reflection-input').value = '';
       saveState(state);
+      submitResearch({
+        submission_type: 'archive_reflection',
+        reflection_text: text,
+        lang: currentLang
+      });
       renderArchive();
     }
   });

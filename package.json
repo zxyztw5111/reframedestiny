@@ -1,0 +1,11 @@
+{
+  "name": "reframe-destiny",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  },
+  "devDependencies": {
+    "vercel": "^41.0.0"
+  }
+}
