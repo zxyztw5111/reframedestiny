@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Reframe Destiny — design tokens
+   Near-black indigo deep space + restrained Dunhuang accents
+   (石青 azurite / 土红 earth-red / 金 gold) + lotus jade-white cool light.
+   Gold reserved for flowing sand & highlights. No purple / neon / dragon.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-serif-en: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  --font-serif-cn: "Noto Serif SC", "Songti SC", serif;
+
+  --color-void-900: #05060a;
+  --color-void-800: #080a12;
+  --color-void-700: #0b1020;
+  --color-indigo-deep: #0e1730;
+
+  --color-azurite: #4a7a9b; /* 石青 */
+  --color-earth-red: #9c5b46; /* 土红 */
+  --color-gold: #d8b46a; /* 金 — sand & highlight only */
+  --color-jade-white: #eef3f0; /* 莲花玉白冷光 */
+  --color-ink: #e8e4d8;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(
+      120% 120% at 50% 18%,
+      #0e1730 0%,
+      #080a12 45%,
+      #05060a 100%
+    )
+    no-repeat;
+  color: var(--color-ink);
+  font-family: var(--font-serif-en);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Liquid glass (Lumina / Max Reed technique) — frosted surface with a
+   gradient hairline border drawn via ::before mask.
+--------------------------------------------------------------------------- */
+.liquid-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 18px 50px -20px rgba(0, 0, 0, 0.7);
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(238, 243, 240, 0.55),
+    rgba(238, 243, 240, 0.06) 38%,
+    rgba(216, 180, 106, 0.4) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-glass-card {
+  border-radius: 22px;
+}
+
+/* ---------------------------------------------------------------------------
+   Noise overlay (Max Reed technique) — fine film grain over a surface.
+--------------------------------------------------------------------------- */
+.noise-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+/* Slow breathing motions, no bounce */
+@keyframes rd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rd-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.rd-fade-up {
+  animation: rd-fade-up 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rd-breathe {
+  animation: rd-breathe 6s ease-in-out infinite;
+}
+
+::selection {
+  background: rgba(216, 180, 106, 0.25);
+}
