@@ -365,6 +365,10 @@ export function LotusCoverCanvas({ onTitleReveal, onSequenceComplete }: LotusCov
       ctx.globalCompositeOperation = 'lighter'
 
       for (const p of goldParticles) {
+        // Keep the lotus clean while it blooms — gold only appears once it
+        // starts gathering into the title.
+        if (titleGather < 0.1 && !interactive) continue
+
         let tx = p.void.x
         let ty = p.void.y
         let attract = 0.003

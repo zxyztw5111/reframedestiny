@@ -128,6 +128,35 @@ body {
   animation: rd-breathe 6s ease-in-out infinite;
 }
 
+/* Cover title: gold mist → solid letterforms (no particle gather) */
+@keyframes gold-solidify {
+  0% {
+    opacity: 0;
+    filter: blur(18px);
+    transform: scale(1.04);
+  }
+  40% {
+    opacity: 0.75;
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+.title-gold-solidify {
+  animation: gold-solidify 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.title-gold-solidify h1 {
+  background: linear-gradient(105deg, #f5e6c8 0%, #d8b46a 45%, #c9a052 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 ::selection {
   background: rgba(216, 180, 106, 0.25);
 }

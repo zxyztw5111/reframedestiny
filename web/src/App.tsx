@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { VolumeX, Music2, ExternalLink } from 'lucide-react'
 import { LotusCoverCanvas } from './components/LotusCoverCanvas'
-import { submitResearch } from './lib/supabase'
 
 type Screen = 'cover' | 'consent' | 'journey'
 
@@ -183,43 +182,13 @@ function ConsentGate({ onAgree }: { onAgree: () => void }) {
   )
 }
 
-function JourneyStub() {
-  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'failed'>('idle')
-
-  async function handleSubmit() {
-    setStatus('saving')
-    const ok = await submitResearch({
-      submission_type: 'journey_complete',
-      system: 'bazi',
-      narrative_lens: 'ai',
-      bias_ids: ['fatalism', 'self-labeling'],
-      scanner_scores: [{ id: 'story', zh: '把随机读成故事', score: 1 }],
-      reflection_text: 'React cover sequence test.',
-      lang: 'zh',
-    })
-    setStatus(ok ? 'saved' : 'failed')
-  }
-
+function JourneyGame() {
   return (
-    <main className="relative min-h-screen overflow-hidden px-5 py-16">
-      <div className="fixed inset-0 bg-[#05060a]" />
-      <section className="relative z-10 mx-auto max-w-4xl">
-        <div className="liquid-glass liquid-glass-card noise-overlay px-6 py-8 sm:px-10 sm:py-10">
-          <h2 className="font-serif-cn text-3xl font-light text-[#eef3f0]">研究功能骨架</h2>
-          <p className="mt-4 font-serif-cn text-sm leading-7 text-[#e8e4d8]/68">
-            知情同意与 Supabase 提交已接好；八字/星盘完整旅程待迁移。
-          </p>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={status === 'saving'}
-            className="liquid-glass mt-8 px-7 py-4 font-serif-cn text-sm tracking-[0.18em] text-[#eef3f0]/90"
-          >
-            {status === 'saving' ? '提交中…' : '测试 Supabase 提交'}
-          </button>
-        </div>
-      </section>
-    </main>
+    <iframe
+      title="Reframe Destiny Journey"
+      src="/game/index.html?embedded=1"
+      className="fixed inset-0 z-10 h-full w-full border-0 bg-[#05060a]"
+    />
   )
 }
 
@@ -253,7 +222,7 @@ function App() {
       )}
       {screen === 'journey' && (
         <motion.div key="journey" exit={{ opacity: 0 }} transition={{ duration: 1.1 }}>
-          <JourneyStub />
+          <JourneyGame />
         </motion.div>
       )}
     </AnimatePresence>
