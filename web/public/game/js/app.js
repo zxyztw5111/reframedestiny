@@ -74,6 +74,28 @@ function showQuote(idx) {
 }
 
 /* ── Lotus guide ── */
+let lotusChatHistory = [];
+
+function initLotusVideos() {
+  const url = window.RD_CONFIG?.lotusVideo;
+  if (!url) return;
+  const consentV = document.getElementById('consent-video');
+  const guideV = document.getElementById('lotus-guide-video');
+  if (consentV && !consentV.src) consentV.src = url;
+  if (guideV && !guideV.src) guideV.src = url;
+}
+
+function appendLotusChatMessage(role, text, extraClass = '') {
+  const box = document.getElementById('lotus-chat-messages');
+  if (!box) return null;
+  const div = document.createElement('div');
+  div.className = `lotus-chat-msg lotus-chat-msg--${role}${extraClass ? ` ${extraClass}` : ''}`;
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
 function setLotusPrompt() {
   const prompt = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
   const el = document.getElementById('lotus-text');
@@ -81,15 +103,74 @@ function setLotusPrompt() {
 }
 
 function openLotusDialog() {
-  const prompt = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
-  const pEl = document.getElementById('lotus-dialog-prompt');
-  if (pEl) pEl.textContent = currentLang === 'zh' ? prompt.zh : prompt.en;
+  lotusChatHistory = [];
+  const box = document.getElementById('lotus-chat-messages');
+  if (box) box.innerHTML = '';
+  appendLotusChatMessage('assistant', t('lotus.welcome'));
+  lotusChatHistory.push({ role: 'assistant', content: t('lotus.welcome') });
   document.getElementById('lotus-dialog')?.classList.remove('hidden');
+  document.getElementById('lotus-dialog-input')?.focus();
 }
 
 function closeLotusDialog() {
   document.getElementById('lotus-dialog')?.classList.add('hidden');
   setLotusPrompt();
+}
+
+async function fetchLotusReply(userMessage) {
+  const langLabel = currentLang === 'zh' ? '简体中文' : 'English';
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are 莲心 (Lotus Guide) on the Reframe Destiny site — a warm companion, not a fortune-teller. ' +
+            'Connect lotus symbolism (Buddhism/Taoism: rising unstained from mud), fate narratives, religion, and the user\'s right to question readings. ' +
+            'Reply in plain, accessible language in ' + langLabel + ', 2–5 sentences. No fatalism, no clinical advice. Encourage questioning the story, not the self.'
+        },
+        ...lotusChatHistory.map(m => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userMessage }
+      ]
+    })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Chat API failed');
+  const content = data.choices?.[0]?.message?.content?.trim();
+  if (!content) throw new Error('Empty response');
+  return content;
+}
+
+async function sendLotusMessage() {
+  const input = document.getElementById('lotus-dialog-input');
+  const sendBtn = document.getElementById('lotus-dialog-send');
+  const text = input?.value.trim();
+  if (!text) return;
+
+  appendLotusChatMessage('user', text);
+  lotusChatHistory.push({ role: 'user', content: text });
+  if (input) input.value = '';
+
+  const thinkingEl = appendLotusChatMessage('assistant', t('lotus.thinking'), 'lotus-chat-msg--thinking');
+  if (sendBtn) sendBtn.disabled = true;
+
+  try {
+    const reply = await fetchLotusReply(text);
+    if (thinkingEl) thinkingEl.remove();
+    appendLotusChatMessage('assistant', reply);
+    lotusChatHistory.push({ role: 'assistant', content: reply });
+    setLotusPrompt();
+  } catch (err) {
+    console.warn('[lotus chat]', err);
+    if (thinkingEl) thinkingEl.remove();
+    const fallback = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
+    const msg = (currentLang === 'zh' ? fallback.zh : fallback.en) + '\n\n' + t('lotus.error');
+    appendLotusChatMessage('assistant', msg);
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
+  }
 }
 
 /* ── Journey ── */
@@ -425,11 +506,19 @@ function setupConsentGate() {
 
 document.addEventListener('DOMContentLoaded', () => {
   applyI18n();
+  initLotusVideos();
   CanvasFX.init();
   setupConsentGate();
 
   document.getElementById('lotus-ask-btn')?.addEventListener('click', openLotusDialog);
   document.getElementById('lotus-dialog-close')?.addEventListener('click', closeLotusDialog);
+  document.getElementById('lotus-dialog-send')?.addEventListener('click', sendLotusMessage);
+  document.getElementById('lotus-dialog-input')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendLotusMessage();
+    }
+  });
 
   // Nav
   document.querySelectorAll('[data-nav]').forEach(btn => {

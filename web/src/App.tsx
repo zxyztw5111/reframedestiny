@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { VolumeX, Music2, ExternalLink } from 'lucide-react'
-import { LotusCoverCanvas } from './components/LotusCoverCanvas'
+import { LotusCoverCanvas, LOTUS_VIDEO } from './components/LotusCoverCanvas'
 
 type Screen = 'cover' | 'consent' | 'journey'
 
@@ -146,7 +146,16 @@ function Cover({ onEnter }: { onEnter: () => void }) {
 function ConsentGate({ onAgree }: { onAgree: () => void }) {
   return (
     <section className="relative grid min-h-screen place-items-center overflow-hidden px-5 py-16">
-      <div className="pointer-events-none fixed inset-0 bg-[#05060a]/80" />
+      <video
+        className="pointer-events-none fixed inset-0 z-0 h-full w-full scale-105 object-cover brightness-[0.55] saturate-110"
+        src={LOTUS_VIDEO}
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden
+      />
+      <div className="pointer-events-none fixed inset-0 z-[1] bg-[radial-gradient(ellipse_90%_70%_at_50%_40%,rgba(8,12,28,0.35),rgba(2,4,10,0.88))]" />
       <motion.div
         className="liquid-glass liquid-glass-card noise-overlay relative z-10 w-full max-w-3xl px-6 py-8 text-left sm:px-10 sm:py-10"
         initial={{ opacity: 0, y: 18 }}

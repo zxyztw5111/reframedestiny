@@ -145,14 +145,36 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: rgba(5, 8, 16, 0.92);
-  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.consent-gate__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.06);
+  filter: brightness(0.55) saturate(1.1);
+}
+
+.consent-gate__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 40%, rgba(8, 12, 28, 0.35), rgba(2, 4, 10, 0.88)),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.65));
+  pointer-events: none;
 }
 
 .consent-gate__card {
+  position: relative;
+  z-index: 2;
   width: min(100%, 520px);
   padding: 2rem 1.75rem;
   text-align: left;
+  border: 1px solid rgba(201, 169, 98, 0.22);
+  box-shadow: 0 0 60px rgba(201, 169, 98, 0.12), 0 24px 80px rgba(0, 0, 0, 0.45);
 }
 
 .consent-gate__eyebrow {
@@ -392,11 +414,24 @@ body {
   animation: wandererIn 1s var(--ease-out) 0.5s forwards;
 }
 @keyframes wandererIn { to { opacity: 1; transform: none; } }
+.lotus-guide-video-wrap {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  box-shadow: 0 0 24px rgba(201, 169, 98, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+.lotus-guide-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.35);
+  filter: brightness(0.85) saturate(1.15);
+}
 .lotus-guide-icon {
-  font-size: 2.4rem;
-  line-height: 1;
-  filter: drop-shadow(0 0 12px rgba(216, 180, 106, 0.45));
-  margin-bottom: 0.35rem;
+  display: none;
 }
 #wanderer-canvas {
   display: none;
@@ -425,6 +460,89 @@ body {
 }
 .wanderer-text { font-size: 0.85rem; color: rgba(245,240,232,0.78); line-height: 1.5; }
 
+/* ── Lotus chat dialog ── */
+.lotus-chat-card { max-width: 560px; }
+.lotus-chat-messages {
+  max-height: min(42vh, 320px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(201, 169, 98, 0.12);
+}
+.lotus-chat-msg {
+  max-width: 92%;
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.lotus-chat-msg--user {
+  align-self: flex-end;
+  background: rgba(90, 138, 122, 0.22);
+  border: 1px solid rgba(90, 138, 122, 0.35);
+}
+.lotus-chat-msg--assistant {
+  align-self: flex-start;
+  background: rgba(201, 169, 98, 0.12);
+  border: 1px solid rgba(201, 169, 98, 0.22);
+}
+.lotus-chat-msg--thinking { opacity: 0.65; font-style: italic; }
+.lotus-chat-compose {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-end;
+}
+.lotus-chat-input {
+  flex: 1;
+  resize: vertical;
+  min-height: 2.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: inherit;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+.lotus-chat-close { margin-top: 0.85rem; width: 100%; text-align: center; }
+
+/* ── Why lotus ── */
+.lotus-why {
+  margin: 2rem auto 1.75rem;
+  max-width: 640px;
+  text-align: left;
+  padding: 1.25rem 1.35rem;
+}
+.lotus-why--compact { margin: 0 0 1.5rem; max-width: none; }
+.lotus-why__label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.lotus-why__text {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--text-dim);
+}
+.research-ref-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.research-ref-list em { color: var(--gold-light); font-style: normal; }
+
 /* ── Main views ── */
 .main { padding-top: var(--nav-h); min-height: 100vh; }
 .view {
@@ -440,48 +558,30 @@ body {
 /* ── Hero ── */
 .hero {
   position: relative;
-  padding: 5rem 0 3.5rem;
+  padding: 4.5rem 0 3.5rem;
   text-align: center;
   isolation: isolate;
 }
 .hero::before {
   content: "";
   position: absolute;
-  inset: 1rem 50% auto;
-  width: min(82vw, 760px);
-  height: min(82vw, 760px);
+  inset: 0 50% auto;
+  width: min(90vw, 820px);
+  height: min(55vh, 420px);
   transform: translateX(-50%);
   z-index: -1;
   background:
-    radial-gradient(circle, rgba(232,213,163,0.2), transparent 6%),
-    radial-gradient(circle, rgba(201,169,98,0.12), transparent 42%),
-    radial-gradient(circle, rgba(90,138,122,0.08), transparent 62%);
-  filter: blur(4px);
-  opacity: 0.9;
-  animation: heroPulse 6s ease-in-out infinite;
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 5rem;
-  width: min(70vw, 640px);
-  height: min(70vw, 640px);
-  transform: translateX(-50%) rotate(18deg);
-  z-index: -1;
-  border: 1px solid rgba(201,169,98,0.12);
-  border-radius: 50%;
-  box-shadow: 0 0 80px rgba(201,169,98,0.16), inset 0 0 90px rgba(90,138,122,0.08);
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,169,98,0.14), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 80%, rgba(90,138,122,0.08), transparent 65%);
+  filter: blur(8px);
+  opacity: 0.85;
+  animation: heroPulse 8s ease-in-out infinite;
 }
 @keyframes heroPulse {
-  0%, 100% { opacity: 0.62; transform: translateX(-50%) scale(0.98); }
-  50% { opacity: 1; transform: translateX(-50%) scale(1.04); }
+  0%, 100% { opacity: 0.55; transform: translateX(-50%) scale(0.98); }
+  50% { opacity: 0.9; transform: translateX(-50%) scale(1.02); }
 }
-.hero-icon {
-  margin-bottom: 1rem;
-  opacity: 1;
-  filter: drop-shadow(0 0 28px rgba(201,169,98,0.42));
-}
+.hero-icon { display: none; }
 .hero-pitch {
   text-align: left;
   max-width: 520px;

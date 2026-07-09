@@ -19,6 +19,8 @@
 
   <!-- Informed consent (first visit) -->
   <div class="consent-gate" id="consent-gate" role="dialog" aria-modal="true" aria-labelledby="consent-title">
+    <video class="consent-gate__video" id="consent-video" muted loop playsinline autoplay aria-hidden></video>
+    <div class="consent-gate__veil" aria-hidden></div>
     <div class="consent-gate__card glass-card">
       <p class="consent-gate__eyebrow" data-i18n="consent.eyebrow">课堂研究 · Informed Consent</p>
       <h1 class="consent-gate__title" id="consent-title" data-i18n="consent.title">参与前请读一下</h1>
@@ -81,12 +83,6 @@
       <!-- Home -->
       <section class="view active" id="view-home">
         <div class="hero parallax" data-depth="0.02">
-          <div class="hero-icon" aria-hidden="true">
-            <svg viewBox="0 0 80 80" width="72" height="72" role="img" aria-label="">
-              <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(201,169,98,0.35)" stroke-width="1"/>
-              <path d="M40 12 L48 32 L68 32 L52 44 L58 64 L40 52 L22 64 L28 44 L12 32 L32 32 Z" fill="rgba(201,169,98,0.15)" stroke="rgba(201,169,98,0.5)" stroke-width="1"/>
-            </svg>
-          </div>
           <p class="eyebrow" data-i18n="home.eyebrow">数字人文 · AI · 女性主义叙事研究</p>
           <h1 class="hero-title">
             <span data-i18n="home.title1">谁有权</span><br>
@@ -103,6 +99,11 @@
               <li><span class="pitch-emoji">③</span> <span data-i18n="home.pitchStep3">勾选偏见类型，看 AI 重构，写一句你的版本</span></li>
             </ol>
             <p class="pitch-who" data-i18n="home.pitchWho">给 15–35 岁、接触过命理的年轻人 · 约 15 分钟 · 不上传真实生辰</p>
+          </div>
+
+          <div class="lotus-why glass-card">
+            <p class="lotus-why__label" data-i18n="home.lotusWhyLabel">为什么是莲？</p>
+            <p class="lotus-why__text" data-i18n="home.lotusWhy">佛教与道教都以莲象征「出淤泥而不染」——命运叙事可以读，但不必照单全收。莲开于深空，连接信仰、命运与解释权：我们研究的不是算命准不准，而是谁在替你讲故事。</p>
           </div>
 
           <button class="btn-primary btn-primary--large" data-nav="journey" data-i18n="home.cta">进入探索</button>
@@ -134,6 +135,10 @@
 
         <!-- Step 1 -->
         <div class="journey-step active" data-step="1">
+          <div class="lotus-why lotus-why--compact glass-card">
+            <p class="lotus-why__label" data-i18n="home.lotusWhyLabel">为什么是莲？</p>
+            <p class="lotus-why__text" data-i18n="home.lotusWhy">佛教与道教都以莲象征「出淤泥而不染」——命运叙事可以读，但不必照单全收。莲开于深空，连接信仰、命运与解释权：我们研究的不是算命准不准，而是谁在替你讲故事。</p>
+          </div>
           <h3 data-i18n="journey.s1.title">选择命理体系</h3>
           <div class="card-grid">
             <button class="system-card" data-system="bazi">
@@ -155,7 +160,7 @@
         <div class="journey-step" data-step="2">
           <h3 data-i18n="journey.s2.title">选择叙事视角</h3>
           <div class="card-grid card-grid--3">
-            <button class="lens-card" data-lens="traditional" data-i18n="journey.s2.trad">传统解读</button>
+            <button class="lens-card" data-lens="traditional" data-i18n="journey.s2.trad">传统解读（含性别差异）</button>
             <button class="lens-card" data-lens="modern" data-i18n="journey.s2.modern">现代解读</button>
             <button class="lens-card" data-lens="ai" data-i18n="journey.s2.ai">AI 重构解读</button>
           </div>
@@ -364,8 +369,13 @@
             <p data-i18n="research.bg">同样命盘元素，对男性可能是「事业心强」，对女性可能是「克夫」「太强势」。我们不评判命理真假，而问：谁有权讲述命运？</p>
           </section>
           <section>
-            <h3 data-i18n="research.doneTitle">目前已完成</h3>
-            <p data-i18n="research.done">文献综述（research/）、可交互原型（GitHub Pages 在线）、中期答辩稿与 PPT；用户研究（15–25 人）与 Supabase 数据收集待做。</p>
+            <h3 data-i18n="research.refTitle">参考文献</h3>
+            <ul class="research-ref-list">
+              <li>Butler, J. (1990). <em>Gender Trouble</em>.</li>
+              <li>Foucault, M. (1980). <em>Power/Knowledge</em>.</li>
+              <li>Haraway, D. (1988). Situated Knowledges.</li>
+              <li>Tu, W. (1985). Confucian Thought.</li>
+            </ul>
           </section>
         </div>
       </div>
@@ -373,7 +383,9 @@
 
     <!-- Lotus guide (replaces wanderer) -->
     <aside class="wanderer lotus-guide" id="lotus-guide">
-      <div class="lotus-guide-icon" aria-hidden="true">🪷</div>
+      <div class="lotus-guide-video-wrap" aria-hidden="true">
+        <video class="lotus-guide-video" id="lotus-guide-video" muted loop playsinline autoplay></video>
+      </div>
       <div class="wanderer-bubble">
         <p class="wanderer-name" data-i18n="lotus.name">莲心</p>
         <p class="wanderer-text" id="lotus-text"></p>
@@ -382,12 +394,15 @@
     </aside>
 
     <div class="survey-gate hidden" id="lotus-dialog" role="dialog" aria-modal="true" aria-labelledby="lotus-dialog-title">
-      <div class="survey-gate__card glass-card">
+      <div class="survey-gate__card glass-card lotus-chat-card">
         <p class="survey-gate__eyebrow" data-i18n="lotus.dialogEyebrow">莲心 · Lotus Guide</p>
-        <h2 class="survey-gate__title" id="lotus-dialog-title" data-i18n="lotus.dialogTitle">莲心问你</h2>
-        <p class="survey-gate__lead" id="lotus-dialog-prompt"></p>
-        <textarea id="lotus-dialog-input" class="birth-form" rows="3" placeholder="写下你的疑问（可选）…" style="width:100%;margin:1rem 0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:inherit;padding:0.75rem;border-radius:8px;font-family:inherit"></textarea>
-        <button type="button" class="btn-primary btn-primary--large" id="lotus-dialog-close" data-i18n="lotus.dialogClose">继续旅程</button>
+        <h2 class="survey-gate__title" id="lotus-dialog-title" data-i18n="lotus.dialogTitle">与莲心对话</h2>
+        <div class="lotus-chat-messages" id="lotus-chat-messages" role="log" aria-live="polite"></div>
+        <div class="lotus-chat-compose">
+          <textarea id="lotus-dialog-input" class="lotus-chat-input" rows="2" data-i18n-placeholder="lotus.inputPh" placeholder="例如：命运到底由谁决定？"></textarea>
+          <button type="button" class="btn-primary" id="lotus-dialog-send" data-i18n="lotus.send">发送</button>
+        </div>
+        <button type="button" class="text-btn lotus-chat-close" id="lotus-dialog-close" data-i18n="lotus.dialogClose">继续旅程</button>
       </div>
     </div>
 
