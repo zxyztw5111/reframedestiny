@@ -29,6 +29,7 @@ const journey = {
   step: 1,
   system: null,
   lens: null,
+  chartData: null,
   scannerScores: [],
   foundBiases: []
 };
@@ -50,6 +51,7 @@ function navigate(view, opts = {}) {
   if (view === 'archive') renderArchive();
   if (view === 'journey') updateJourneyUI();
 
+  CanvasFX.setHomeInteractive(view === 'home');
   setLotusPrompt();
 }
 
@@ -108,12 +110,14 @@ function openLotusDialog() {
   if (box) box.innerHTML = '';
   appendLotusChatMessage('assistant', t('lotus.welcome'));
   lotusChatHistory.push({ role: 'assistant', content: t('lotus.welcome') });
-  document.getElementById('lotus-dialog')?.classList.remove('hidden');
+  document.getElementById('lotus-chat-panel')?.classList.remove('hidden');
+  document.getElementById('lotus-guide')?.classList.add('lotus-guide--chat-open');
   document.getElementById('lotus-dialog-input')?.focus();
 }
 
 function closeLotusDialog() {
-  document.getElementById('lotus-dialog')?.classList.add('hidden');
+  document.getElementById('lotus-chat-panel')?.classList.add('hidden');
+  document.getElementById('lotus-guide')?.classList.remove('lotus-guide--chat-open');
   setLotusPrompt();
 }
 
@@ -127,13 +131,13 @@ async function fetchLotusReply(userMessage) {
         {
           role: 'system',
           content:
-            'You are 莲心 (Lotus Guide) on the Reframe Destiny site — a warm companion, not a fortune-teller. ' +
-            'Connect lotus symbolism (Buddhism/Taoism: rising unstained from mud), fate narratives, religion, and the user\'s right to question readings. ' +
-            'Reply in plain, accessible language in ' + langLabel + ', 2–5 sentences. No fatalism, no clinical advice. Encourage questioning the story, not the self.'
+            'You are 莲心 (Lotus Guide). Reply in ' + langLabel + ' in ONE or TWO short sentences only (under 40 words). ' +
+            'Warm, plain language. No fortune-telling. No error messages. No apologies about connectivity.'
         },
-        ...lotusChatHistory.map(m => ({ role: m.role, content: m.content })),
+        ...lotusChatHistory.slice(-6).map(m => ({ role: m.role, content: m.content })),
         { role: 'user', content: userMessage }
-      ]
+      ],
+      max_tokens: 120
     })
   });
   const data = await res.json();
@@ -165,9 +169,14 @@ async function sendLotusMessage() {
   } catch (err) {
     console.warn('[lotus chat]', err);
     if (thinkingEl) thinkingEl.remove();
-    const fallback = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
-    const msg = (currentLang === 'zh' ? fallback.zh : fallback.en) + '\n\n' + t('lotus.error');
-    appendLotusChatMessage('assistant', msg);
+    try {
+      const retry = await fetchLotusReply(text);
+      appendLotusChatMessage('assistant', retry);
+      lotusChatHistory.push({ role: 'assistant', content: retry });
+    } catch {
+      const fallback = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
+      appendLotusChatMessage('assistant', currentLang === 'zh' ? fallback.zh : fallback.en);
+    }
   } finally {
     if (sendBtn) sendBtn.disabled = false;
   }
@@ -190,24 +199,59 @@ function updateJourneyUI() {
   if (journey.step === 7) renderReframe();
 }
 
+function getReadingKey() {
+  const lens = journey.lens || 'traditional';
+  if (lens === 'modern') return 'modern';
+  if (lens === 'ai') return 'reframed';
+  return 'traditional';
+}
+
+function getLensLabelKey() {
+  const lens = journey.lens || 'traditional';
+  if (lens === 'modern') return 'modern';
+  if (lens === 'ai') return 'ai';
+  return 'trad';
+}
+
 function renderTraditionalReading() {
   const el = document.getElementById('traditional-reading');
   if (!journey.system) return;
-  const lens = journey.lens || 'traditional';
-  const key = lens === 'ai' ? 'traditional' : lens;
-  const reading = READINGS[journey.system][key] || READINGS[journey.system].traditional;
-  const cards = [
-    { tag: currentLang === 'zh' ? '命局总论' : 'Chart Overview', text: reading },
-    { tag: currentLang === 'zh' ? '情感与关系' : 'Emotion & Relations', text: reading }
-  ];
+
+  if (!journey.chartData) journey.chartData = ChartCalc.computeAll();
+
+  const key = getReadingKey();
+  const titleEl = document.getElementById('journey-reading-title');
+  if (titleEl) {
+    const titleKeys = { traditional: 'journey.s4.title', modern: 'journey.s4.modern', reframed: 'journey.s4.ai' };
+    titleEl.textContent = t(titleKeys[key] || 'journey.s4.title');
+  }
+
+  const baziEl = document.getElementById('bazi-chart');
+  const astroCanvas = document.getElementById('astro-chart-canvas');
+  if (journey.system === 'bazi') {
+    if (baziEl) { baziEl.classList.remove('hidden'); ChartFX.drawBazi('bazi-chart', currentLang, journey.chartData); }
+    if (astroCanvas) astroCanvas.classList.add('hidden');
+  } else {
+    if (baziEl) baziEl.classList.add('hidden');
+    if (astroCanvas) {
+      astroCanvas.classList.remove('hidden');
+      ChartFX.drawAstro('astro-chart-canvas', currentLang, journey.chartData);
+    }
+  }
+
+  const lensForEngine = key === 'reframed' ? 'ai' : journey.lens;
+  const readingText = ReadingEngine.getReading(
+    journey.system,
+    lensForEngine,
+    currentLang,
+    journey.chartData
+  );
+
   el.innerHTML = `
-    <p class="reading-source">${t('journey.readingSource')} · ${t('journey.s2.' + (lens === 'ai' ? 'trad' : lens === 'traditional' ? 'trad' : 'modern'))}</p>
-    ${cards.map((c, i) => `
-      <article style="margin-top:${i ? '1.5rem' : '0'};padding-top:${i ? '1.5rem' : '0'};border-top:${i ? '1px solid rgba(201,169,98,0.12)' : 'none'}">
-        <p style="font-size:0.7rem;letter-spacing:0.12em;color:var(--jade);margin-bottom:0.75rem">${c.tag}</p>
-        <p>${currentLang === 'zh' ? c.text.zh : c.text.en}</p>
-      </article>
-    `).join('')}
+    <p class="reading-source">${t('journey.readingSource')} · ${t('journey.s2.' + getLensLabelKey())}</p>
+    <article>
+      <p>${readingText}</p>
+    </article>
   `;
 }
 
@@ -296,9 +340,16 @@ async function fetchDeepSeekReframe(originalText, biasLabels) {
 
 async function renderReframe() {
   if (!journey.system) return;
-  const reading = READINGS[journey.system];
-  const original =
-    currentLang === 'zh' ? reading.traditional.zh : reading.traditional.en;
+  if (!journey.chartData) journey.chartData = ChartCalc.computeAll();
+
+  const originalKey = journey.lens === 'modern' ? 'modern' : 'traditional';
+  const lensForEngine = originalKey === 'modern' ? 'modern' : 'traditional';
+  const original = ReadingEngine.getReading(
+    journey.system,
+    lensForEngine,
+    currentLang,
+    journey.chartData
+  );
   document.getElementById('reframe-original').textContent = original;
 
   const newEl = document.getElementById('reframe-new');
@@ -320,9 +371,12 @@ async function renderReframe() {
     reframedText = await fetchDeepSeekReframe(original, biasLabels);
   } catch (err) {
     console.warn('[reframe] API unavailable, using preset', err);
-    reframedText =
-      (currentLang === 'zh' ? reading.reframed.zh : reading.reframed.en) +
-      `\n\n${t('journey.s7.fallback')}`;
+    reframedText = ReadingEngine.getReading(
+      journey.system,
+      'ai',
+      currentLang,
+      journey.chartData
+    );
   }
 
   animateReframeText(reframedText);
@@ -357,6 +411,7 @@ function completeJourney() {
   journey.step = 1;
   journey.system = null;
   journey.lens = null;
+  journey.chartData = null;
   journey.foundBiases = [];
   journey.scannerScores = [];
   document.querySelectorAll('.system-card, .lens-card').forEach(c => c.classList.remove('selected'));
@@ -367,6 +422,10 @@ function completeJourney() {
 function journeyNext() {
   if (journey.step === 1 && !journey.system) return;
   if (journey.step === 2 && !journey.lens) return;
+  if (journey.step === 3) {
+    journey.chartData = ChartCalc.computeAll();
+    if (!journey.chartData?.birth) return;
+  }
   if (journey.step === 7) { completeJourney(); return; }
   journey.step++;
   updateJourneyUI();
@@ -460,33 +519,43 @@ function onLangChange() {
 }
 
 /* ── Init ── */
-function initSite() {
-  CanvasFX.runIntro(() => {
-    document.getElementById('intro').style.display = 'none';
-    document.getElementById('app').classList.remove('hidden');
-    CanvasFX.startWandererLoop();
-    showQuote();
-    setLotusPrompt();
-    initParallax();
-  });
+function enterAppHome() {
+  document.getElementById('app')?.classList.remove('hidden');
+  showQuote();
+  setLotusPrompt();
+  initParallax();
+  CanvasFX.setHomeInteractive(true);
+  navigate('home');
+}
 
-  document.getElementById('intro-skip')?.addEventListener('click', () => {
-    document.getElementById('intro').classList.add('fade-out');
-    setTimeout(() => {
-      document.getElementById('intro').style.display = 'none';
-      document.getElementById('app').classList.remove('hidden');
-      CanvasFX.startWandererLoop();
-      showQuote();
-      setLotusPrompt();
-      initParallax();
-    }, 400);
-  });
+function initSite() {
+  CanvasFX.runVideoIntro(enterAppHome);
+}
+
+function skipIntroToHome() {
+  const video = document.getElementById('intro-video');
+  if (video) {
+    video.pause();
+    video.onended = null;
+  }
+  document.getElementById('intro')?.classList.add('fade-out');
+  setTimeout(() => {
+    document.getElementById('intro').style.display = 'none';
+    enterAppHome();
+  }, 350);
 }
 
 function setupConsentGate() {
   const gate = document.getElementById('consent-gate');
   const intro = document.getElementById('intro');
   const agreeBtn = document.getElementById('consent-agree');
+  const skipBtn = document.getElementById('consent-skip');
+
+  const enterIntro = () => {
+    gate.classList.add('hidden');
+    intro.classList.remove('hidden');
+    initSite();
+  };
 
   if (localStorage.getItem(CONSENT_KEY) === 'yes') {
     gate.classList.add('hidden');
@@ -498,9 +567,11 @@ function setupConsentGate() {
   intro.classList.add('hidden');
   agreeBtn?.addEventListener('click', () => {
     localStorage.setItem(CONSENT_KEY, 'yes');
-    gate.classList.add('hidden');
-    intro.classList.remove('hidden');
-    initSite();
+    enterIntro();
+  });
+  skipBtn?.addEventListener('click', () => {
+    localStorage.setItem(CONSENT_KEY, 'yes');
+    enterIntro();
   });
 }
 
@@ -508,7 +579,17 @@ document.addEventListener('DOMContentLoaded', () => {
   applyI18n();
   initLotusVideos();
   CanvasFX.init();
-  setupConsentGate();
+
+  document.getElementById('intro-skip')?.addEventListener('click', skipIntroToHome);
+
+  const embedded = new URLSearchParams(location.search).get('embedded') === '1';
+  if (embedded) {
+    document.getElementById('consent-gate')?.classList.add('hidden');
+    document.getElementById('intro')?.classList.add('hidden');
+    enterAppHome();
+  } else {
+    setupConsentGate();
+  }
 
   document.getElementById('lotus-ask-btn')?.addEventListener('click', openLotusDialog);
   document.getElementById('lotus-dialog-close')?.addEventListener('click', closeLotusDialog);

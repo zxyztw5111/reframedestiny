@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { VolumeX, Music2, ExternalLink } from 'lucide-react'
 import { LotusCoverCanvas, LOTUS_VIDEO } from './components/LotusCoverCanvas'
+import { GoldGatherIntro } from './components/GoldGatherIntro'
 
-type Screen = 'cover' | 'consent' | 'journey'
+type Screen = 'cover' | 'goldIntro' | 'consent' | 'journey'
 
 const consentItems = [
   ['匿名', '我们不会收集你的姓名、联系方式等能认出你是谁的信息。'],
@@ -147,15 +148,16 @@ function ConsentGate({ onAgree }: { onAgree: () => void }) {
   return (
     <section className="relative grid min-h-screen place-items-center overflow-hidden px-5 py-16">
       <video
-        className="pointer-events-none fixed inset-0 z-0 h-full w-full scale-105 object-cover brightness-[0.55] saturate-110"
+        className="pointer-events-none fixed inset-0 z-0 h-full w-full scale-[1.15] object-cover brightness-[0.92] saturate-[1.45] contrast-[1.12]"
         src={LOTUS_VIDEO}
         autoPlay
         loop
         muted
         playsInline
+        preload="auto"
         aria-hidden
       />
-      <div className="pointer-events-none fixed inset-0 z-[1] bg-[radial-gradient(ellipse_90%_70%_at_50%_40%,rgba(8,12,28,0.35),rgba(2,4,10,0.88))]" />
+      <div className="pointer-events-none fixed inset-0 z-[1] bg-[radial-gradient(ellipse_75%_60%_at_50%_42%,transparent_0%,rgba(2,4,12,0.28)_55%,rgba(1,2,8,0.62)_100%)]" />
       <motion.div
         className="liquid-glass liquid-glass-card noise-overlay relative z-10 w-full max-w-3xl px-6 py-8 text-left sm:px-10 sm:py-10"
         initial={{ opacity: 0, y: 18 }}
@@ -169,7 +171,7 @@ function ConsentGate({ onAgree }: { onAgree: () => void }) {
           参与前请先确认
         </h2>
         <p className="mt-5 font-serif-cn text-base leading-8 text-[#e8e4d8]/72">
-          这是一个关于命理叙事如何影响自我理解的课堂研究体验。封面上的莲，象征在信仰、命运与自我之间醒来的那一刻；旅程中的「莲心」会陪你提问，而非替你下结论。
+          这是一个关于命理叙事如何影响自我理解的课堂研究。星空是他人写下的命运地图，莲花是你自己；每识别一片偏见，便在你专属的莲瓣上点亮一颗星。
         </p>
         <div className="mt-7 grid gap-4">
           {consentItems.map(([title, body]) => (
@@ -205,6 +207,10 @@ function App() {
   const [screen, setScreen] = useState<Screen>('cover')
 
   function handleEnterFromCover() {
+    setScreen('goldIntro')
+  }
+
+  function handleGoldIntroDone() {
     if (window.localStorage.getItem('rd-consent-v1') === 'yes') {
       setScreen('journey')
     } else {
@@ -222,6 +228,11 @@ function App() {
       {screen === 'cover' && (
         <motion.div key="cover" exit={{ opacity: 0 }} transition={{ duration: 1.1 }}>
           <Cover onEnter={handleEnterFromCover} />
+        </motion.div>
+      )}
+      {screen === 'goldIntro' && (
+        <motion.div key="goldIntro" exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
+          <GoldGatherIntro onComplete={handleGoldIntroDone} />
         </motion.div>
       )}
       {screen === 'consent' && (

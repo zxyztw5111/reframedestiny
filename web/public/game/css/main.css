@@ -81,20 +81,35 @@ body {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: var(--bg-deep);
+  background: #030508;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 1.2s var(--ease-out), visibility 1.2s;
+  overflow: hidden;
+  transition: opacity 0.6s var(--ease-out), visibility 0.6s;
 }
 .intro.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
-#intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.08);
+  filter: brightness(0.88) saturate(1.2);
+}
+.intro-veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 45%, transparent 0%, rgba(3, 5, 8, 0.55) 100%);
+  pointer-events: none;
+}
 .intro-text {
   position: relative;
   z-index: 2;
   text-align: center;
   opacity: 0;
-  animation: introFade 1s var(--ease-out) 2.8s forwards;
+  animation: introFade 1s var(--ease-out) 1.2s forwards;
 }
 @keyframes introFade { to { opacity: 1; } }
 .intro-title {
@@ -129,10 +144,17 @@ body {
   border: 1px solid var(--glass-border);
   color: var(--text-dim);
   padding: 0.45rem 1rem;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  border-radius: 999px;
   cursor: pointer;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
   transition: color 0.3s, border-color 0.3s;
+}
+.consent-skip {
+  position: static;
+  margin-top: 1rem;
+  width: 100%;
+  text-align: center;
 }
 .intro-skip:hover { color: var(--gold-light); border-color: var(--gold-dim); }
 
@@ -154,16 +176,16 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.06);
-  filter: brightness(0.55) saturate(1.1);
+  transform: scale(1.18);
+  filter: brightness(0.95) saturate(1.5) contrast(1.15);
 }
 
 .consent-gate__veil {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 90% 70% at 50% 40%, rgba(8, 12, 28, 0.35), rgba(2, 4, 10, 0.88)),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.65));
+    radial-gradient(ellipse 68% 58% at 50% 44%, transparent 0%, rgba(2, 4, 12, 0.22) 50%, rgba(1, 2, 8, 0.55) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.28));
   pointer-events: none;
 }
 
@@ -460,56 +482,192 @@ body {
 }
 .wanderer-text { font-size: 0.85rem; color: rgba(245,240,232,0.78); line-height: 1.5; }
 
-/* ── Lotus chat dialog ── */
-.lotus-chat-card { max-width: 560px; }
-.lotus-chat-messages {
-  max-height: min(42vh, 320px);
-  overflow-y: auto;
+/* ── Lotus chat panel ── */
+.lotus-chat-panel {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 96;
+  max-width: 720px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  margin: 1rem 0;
-  padding: 0.75rem;
-  border-radius: 12px;
+}
+.lotus-chat-panel.hidden { display: none; }
+.lotus-guide.lotus-guide--chat-open {
+  bottom: auto;
+  position: fixed;
+  left: 1rem;
+  bottom: calc(min(70vh, 520px) + 1.5rem);
+  max-width: 380px;
+}
+.lotus-chat-panel__inner {
+  padding: 1rem 1.15rem;
+  border: 1px solid rgba(201, 169, 98, 0.32);
+  box-shadow: 0 0 48px rgba(201, 169, 98, 0.18);
+}
+.lotus-chat-compose {
+  padding: 0.85rem 1rem 1rem;
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.lotus-chat-panel__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.lotus-chat-panel__eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jade);
+}
+.lotus-chat-panel__title {
+  font-size: 1.15rem;
+  color: var(--gold-light);
+  margin-top: 0.15rem;
+}
+.lotus-chat-panel__close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+}
+.lotus-chat-hint {
+  font-size: 0.9rem;
+  color: var(--gold-light);
+  margin-bottom: 0.75rem;
+  line-height: 1.55;
+}
+.lotus-chat-messages {
+  min-height: 100px;
+  max-height: min(28vh, 200px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.65rem;
+  border-radius: 10px;
   background: rgba(0, 0, 0, 0.28);
   border: 1px solid rgba(201, 169, 98, 0.12);
 }
 .lotus-chat-msg {
-  max-width: 92%;
-  padding: 0.65rem 0.85rem;
+  max-width: 94%;
+  padding: 0.7rem 0.9rem;
   border-radius: 12px;
-  font-size: 0.9rem;
-  line-height: 1.55;
+  font-size: 0.92rem;
+  line-height: 1.6;
 }
 .lotus-chat-msg--user {
   align-self: flex-end;
-  background: rgba(90, 138, 122, 0.22);
-  border: 1px solid rgba(90, 138, 122, 0.35);
+  background: rgba(90, 138, 122, 0.24);
+  border: 1px solid rgba(90, 138, 122, 0.38);
 }
 .lotus-chat-msg--assistant {
   align-self: flex-start;
-  background: rgba(201, 169, 98, 0.12);
-  border: 1px solid rgba(201, 169, 98, 0.22);
+  background: rgba(201, 169, 98, 0.14);
+  border: 1px solid rgba(201, 169, 98, 0.24);
 }
 .lotus-chat-msg--thinking { opacity: 0.65; font-style: italic; }
 .lotus-chat-compose {
   display: flex;
+  flex-direction: column;
   gap: 0.65rem;
-  align-items: flex-end;
 }
 .lotus-chat-input {
-  flex: 1;
+  width: 100%;
+  min-height: 140px;
   resize: vertical;
-  min-height: 2.75rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: inherit;
-  padding: 0.65rem 0.75rem;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  color: #f5f0e8;
+  padding: 1rem 1.05rem;
+  border-radius: 12px;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 1.08rem;
+  line-height: 1.65;
 }
-.lotus-chat-close { margin-top: 0.85rem; width: 100%; text-align: center; }
+.lotus-chat-input:focus {
+  outline: none;
+  border-color: rgba(201, 169, 98, 0.55);
+  box-shadow: 0 0 0 2px rgba(201, 169, 98, 0.15);
+}
+
+/* ── Charts ── */
+.chart-mount { margin-bottom: 1.25rem; }
+.bazi-chart { text-align: center; }
+.chart-caption {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--jade);
+  margin-bottom: 0.85rem;
+  text-transform: uppercase;
+}
+.bazi-pillars {
+  display: flex;
+  justify-content: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+.bazi-pillar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 4.5rem;
+}
+.bazi-pillar__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+.bazi-cell {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 10px;
+  font-size: 1.35rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+}
+.bazi-cell small { font-size: 0.55rem; opacity: 0.7; }
+.bazi-cell--stem { background: color-mix(in srgb, var(--el) 28%, transparent); color: var(--el); }
+.bazi-cell--branch { background: rgba(255, 255, 255, 0.06); color: var(--gold-light); }
+.bazi-legend {
+  display: flex;
+  justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.bazi-legend i {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+.astro-wheel {
+  display: block;
+  margin: 0 auto 1.25rem;
+  max-width: 100%;
+  height: auto;
+}
 
 /* ── Why lotus ── */
 .lotus-why {

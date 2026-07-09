@@ -7,6 +7,8 @@ const CanvasFX = {
   sandParticles: [],
   animId: null,
   scrollY: 0,
+  mouse: { x: -9999, y: -9999 },
+  homeActive: false,
 
   init() {
     this.bgCanvas = document.getElementById('bg-canvas');
@@ -16,10 +18,18 @@ const CanvasFX = {
     this.resize();
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('scroll', () => { this.scrollY = window.scrollY; });
+    window.addEventListener('pointermove', (e) => {
+      this.mouse.x = e.clientX;
+      this.mouse.y = e.clientY;
+    });
 
     this.initStars();
     this.initSand();
     this.loop();
+  },
+
+  setHomeInteractive(active) {
+    this.homeActive = active;
   },
 
   resize() {
@@ -32,15 +42,19 @@ const CanvasFX = {
 
   initStars() {
     this.stars = [];
-    const count = Math.min(520, Math.floor(window.innerWidth * 0.24));
+    const count = Math.min(380, Math.floor(window.innerWidth * 0.18));
     for (let i = 0; i < count; i++) {
       this.stars.push({
         x: Math.random(),
         y: Math.random(),
-        size: Math.random() * 1.8 + 0.35,
-        speed: Math.random() * 0.0002 + 0.00005,
-        opacity: Math.random() * 0.72 + 0.24,
-        twinkle: Math.random() * Math.PI * 2
+        size: Math.random() * 1.6 + 0.25,
+        speed: Math.random() * 0.00015 + 0.00004,
+        opacity: Math.random() * 0.65 + 0.2,
+        twinkle: Math.random() * Math.PI * 2,
+        warm: Math.random() > 0.62,
+        depth: Math.random(),
+        vx: 0,
+        vy: 0,
       });
     }
   },
@@ -66,6 +80,27 @@ const CanvasFX = {
     this.animId = requestAnimationFrame(() => this.loop());
   },
 
+  drawStarPoint(ctx, px, py, r, alpha, warm) {
+    const glow = ctx.createRadialGradient(px, py, 0, px, py, r * 5);
+    glow.addColorStop(0, warm ? `rgba(255, 230, 180, ${alpha})` : `rgba(200, 220, 255, ${alpha})`);
+    glow.addColorStop(0.4, warm ? `rgba(255, 190, 100, ${alpha * 0.25})` : `rgba(140, 180, 255, ${alpha * 0.2})`);
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(px, py, r * 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.9})`;
+    ctx.lineWidth = Math.max(0.35, r * 0.4);
+    const arm = r * (1.8 + r);
+    ctx.beginPath();
+    ctx.moveTo(px - arm, py);
+    ctx.lineTo(px + arm, py);
+    ctx.moveTo(px, py - arm);
+    ctx.lineTo(px, py + arm);
+    ctx.stroke();
+  },
+
   drawStars() {
     const c = this.bgCanvas;
     if (!c) return;
@@ -73,29 +108,45 @@ const CanvasFX = {
     const w = c.width, h = c.height;
     const t = Date.now() * 0.001;
 
-    ctx.fillStyle = '#050810';
+    ctx.fillStyle = '#030508';
     ctx.fillRect(0, 0, w, h);
 
-    // Deep gradient
-    const grad = ctx.createRadialGradient(w * 0.5, h * 0.3, 0, w * 0.5, h * 0.5, w * 0.8);
-    grad.addColorStop(0, '#12101f');
-    grad.addColorStop(0.5, '#0a0e1a');
-    grad.addColorStop(1, '#050810');
+    const grad = ctx.createRadialGradient(w * 0.5, h * 0.28, 0, w * 0.5, h * 0.5, w * 0.85);
+    grad.addColorStop(0, '#141028');
+    grad.addColorStop(0.45, '#0a0e1c');
+    grad.addColorStop(1, '#030508');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+
     this.stars.forEach(s => {
-      s.x += s.speed;
+      s.x += s.speed * (0.5 + s.depth);
       if (s.x > 1) s.x = 0;
-      const parallax = 1 + s.size * 0.1;
-      const px = s.x * w;
-      const py = (s.y * h + this.scrollY * 0.02 * parallax) % h;
-      const tw = s.opacity * (0.6 + 0.4 * Math.sin(t * 2 + s.twinkle));
-      ctx.beginPath();
-      ctx.arc(px, py, s.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(245, 240, 232, ${tw})`;
-      ctx.fill();
+
+      const parallax = 1 + s.size * 0.12;
+      let px = s.x * w;
+      let py = (s.y * h + this.scrollY * 0.015 * parallax) % h;
+
+      if (this.homeActive) {
+        const dx = px - this.mouse.x;
+        const dy = py - this.mouse.y;
+        const dist = Math.hypot(dx, dy);
+        const pull = dist < 220 ? (1 - dist / 220) * (2.5 + s.depth * 2) : 0;
+        s.vx += (dx / (dist || 1)) * pull * 0.08;
+        s.vy += (dy / (dist || 1)) * pull * 0.08;
+        s.vx *= 0.92;
+        s.vy *= 0.92;
+        px += s.vx;
+        py += s.vy;
+      }
+
+      const tw = s.opacity * (0.55 + 0.45 * Math.sin(t * (1.5 + s.depth) + s.twinkle));
+      this.drawStarPoint(ctx, px, py, s.size * (0.8 + s.depth * 0.5), tw, s.warm);
     });
+
+    ctx.restore();
   },
 
   drawSand() {
@@ -121,112 +172,25 @@ const CanvasFX = {
     });
   },
 
-  /* ── Intro animation ── */
-  runIntro(callback) {
-    const canvas = document.getElementById('intro-canvas');
+  /* ── Intro: lotus video, then home (no particle gather) ── */
+  runVideoIntro(callback) {
     const intro = document.getElementById('intro');
-    if (!canvas || !intro) { callback(); return; }
+    const video = document.getElementById('intro-video');
+    if (!intro || !video) { callback(); return; }
 
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles = [];
-    const targetPoints = [];
-    const w = canvas.width, h = canvas.height;
-    const cx = w / 2, cy = h / 2 - 40;
-
-    // Generate target positions for "REFRAME" text shape (simplified dot matrix)
-    const text = 'REFRAME DESTINY';
-    ctx.font = `300 ${Math.min(48, w * 0.06)}px Cormorant Garamond, serif`;
-    ctx.textAlign = 'center';
-    const metrics = ctx.measureText(text);
-    const textW = metrics.width;
-
-    // Sample points from text
-    ctx.fillStyle = '#fff';
-    ctx.fillText(text, cx, cy);
-    const imageData = ctx.getImageData(cx - textW / 2 - 10, cy - 40, textW + 20, 60);
-    ctx.clearRect(0, 0, w, h);
-
-    for (let y = 0; y < imageData.height; y += 3) {
-      for (let x = 0; x < imageData.width; x += 3) {
-        const i = (y * imageData.width + x) * 4;
-        if (imageData.data[i + 3] > 128) {
-          targetPoints.push({
-            x: cx - textW / 2 - 10 + x,
-            y: cy - 40 + y
-          });
-        }
-      }
-    }
-
-    // Create particles from edges
-    const numParticles = Math.min(targetPoints.length, 800);
-    for (let i = 0; i < numParticles; i++) {
-      const target = targetPoints[i % targetPoints.length];
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 200 + Math.random() * Math.max(w, h) * 0.5;
-      particles.push({
-        x: cx + Math.cos(angle) * dist,
-        y: cy + Math.sin(angle) * dist,
-        tx: target.x,
-        ty: target.y,
-        size: Math.random() * 2 + 0.5,
-        delay: Math.random() * 0.5,
-        phase: 'gather'
-      });
-    }
-
-    let startTime = null;
-    const gatherDuration = 2500;
-    const holdDuration = 1200;
-    const scatterDuration = 1500;
-
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-
-      ctx.clearRect(0, 0, w, h);
-
-      particles.forEach(p => {
-        let progress;
-        if (elapsed < gatherDuration) {
-          progress = Math.min(1, elapsed / gatherDuration);
-          progress = 1 - Math.pow(1 - progress, 3);
-          p.x = p.x + (p.tx - p.x) * 0.06 * progress;
-          p.y = p.y + (p.ty - p.y) * 0.06 * progress;
-        } else if (elapsed < gatherDuration + holdDuration) {
-          p.x += (p.tx - p.x) * 0.15;
-          p.y += (p.ty - p.y) * 0.15;
-        } else {
-          const scatterProgress = (elapsed - gatherDuration - holdDuration) / scatterDuration;
-          if (scatterProgress < 1) {
-            p.x += (Math.random() - 0.5) * 3;
-            p.y += (Math.random() - 0.5) * 3 - 1;
-            p.size *= 0.998;
-          }
-        }
-
-        const alpha = elapsed > gatherDuration + holdDuration
-          ? Math.max(0, 1 - (elapsed - gatherDuration - holdDuration) / scatterDuration)
-          : Math.min(1, elapsed / 800);
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201, 169, 98, ${alpha * 0.8})`;
-        ctx.fill();
-      });
-
-      if (elapsed < gatherDuration + holdDuration + scatterDuration) {
-        requestAnimationFrame(animate);
-      } else {
-        intro.classList.add('fade-out');
-        setTimeout(callback, 800);
-      }
+    const finish = () => {
+      intro.classList.add('fade-out');
+      setTimeout(() => {
+        intro.classList.add('hidden');
+        intro.style.display = 'none';
+        callback();
+      }, 600);
     };
 
-    requestAnimationFrame(animate);
+    video.currentTime = 0;
+    video.play().catch(() => finish());
+    video.onended = finish;
+    setTimeout(finish, 12000);
   },
 
   /* ── Wanderer silhouette ── */
@@ -378,77 +342,117 @@ const CanvasFX = {
     });
   },
 
-  /* ── Constellation map ── */
+  lotusPositions(n, cx, cy, r, petalCount = 8) {
+    const positions = [];
+    for (let i = 0; i < n; i++) {
+      const petal = i % petalCount;
+      const slot = Math.floor(i / petalCount);
+      const slotsOnPetal = Math.ceil(n / petalCount);
+      const t = (slot + 0.35) / (slotsOnPetal + 0.5);
+      const baseAngle = (petal / petalCount) * Math.PI * 2 - Math.PI / 2;
+      const spread = 0.22;
+      const angle = baseAngle + (slot - (slotsOnPetal - 1) / 2) * spread;
+      const dist = r * (0.22 + t * 0.78);
+      positions.push({
+        x: cx + Math.cos(angle) * dist,
+        y: cy + Math.sin(angle) * dist * 0.52,
+        petal,
+      });
+    }
+    return positions;
+  },
+
+  drawLotusPetal(ctx, cx, cy, r, petalIndex, petalCount, alpha) {
+    const base = (petalIndex / petalCount) * Math.PI * 2 - Math.PI / 2;
+    const tipX = cx + Math.cos(base) * r * 0.95;
+    const tipY = cy + Math.sin(base) * r * 0.5;
+    const leftX = cx + Math.cos(base - 0.35) * r * 0.35;
+    const leftY = cy + Math.sin(base - 0.35) * r * 0.2;
+    const rightX = cx + Math.cos(base + 0.35) * r * 0.35;
+    const rightY = cy + Math.sin(base + 0.35) * r * 0.2;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.quadraticCurveTo(leftX, leftY, tipX, tipY);
+    ctx.quadraticCurveTo(rightX, rightY, cx, cy);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(201, 169, 98, ${alpha * 0.06})`;
+    ctx.fill();
+    ctx.strokeStyle = `rgba(201, 169, 98, ${alpha * 0.2})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  },
+
+  /* ── Constellation map (lotus shape) ── */
   drawConstellation(canvas, biases, unlocked, lang) {
     if (!canvas) return;
     const parent = canvas.parentElement;
-    const size = Math.min(parent.clientWidth, 700);
+    const size = Math.min(parent.clientWidth, 720);
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    const cx = size / 2, cy = size / 2;
+    const cx = size / 2;
+    const cy = size / 2 + size * 0.02;
     const r = size * 0.38;
     const n = biases.length;
     const t = Date.now() * 0.001;
+    const petalCount = 8;
 
     ctx.clearRect(0, 0, size, size);
 
-    // Background nebula
     const neb = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.2);
-    neb.addColorStop(0, 'rgba(201, 169, 98, 0.08)');
-    neb.addColorStop(0.45, 'rgba(90, 138, 122, 0.06)');
+    neb.addColorStop(0, 'rgba(201, 169, 98, 0.12)');
+    neb.addColorStop(0.5, 'rgba(90, 138, 122, 0.08)');
     neb.addColorStop(1, 'transparent');
     ctx.fillStyle = neb;
     ctx.fillRect(0, 0, size, size);
 
-    const positions = biases.map((_, i) => {
-      const angle = (i / n) * Math.PI * 2 - Math.PI / 2 + Math.sin(i * 1.7) * 0.15;
-      const dist = r * (0.6 + 0.4 * Math.abs(Math.sin(i * 2.3)));
-      return { x: cx + Math.cos(angle) * dist, y: cy + Math.sin(angle) * dist };
-    });
+    for (let p = 0; p < petalCount; p++) {
+      this.drawLotusPetal(ctx, cx, cy, r, p, petalCount, 0.85 + 0.15 * Math.sin(t * 0.7 + p));
+    }
 
-    // Connection lines (constellation)
+    const positions = this.lotusPositions(n, cx, cy, r, petalCount);
+
     for (let i = 0; i < n; i++) {
-      const j = (i + 3) % n;
-      const bothUnlocked = unlocked.includes(biases[i].id) && unlocked.includes(biases[j].id);
+      const j = i + 1;
+      if (j >= n) continue;
+      if (positions[i].petal !== positions[j].petal) continue;
+      const both = unlocked.includes(biases[i].id) && unlocked.includes(biases[j].id);
       ctx.beginPath();
       ctx.moveTo(positions[i].x, positions[i].y);
       ctx.lineTo(positions[j].x, positions[j].y);
-      ctx.strokeStyle = bothUnlocked
-        ? `rgba(232, 213, 163, ${0.28 + 0.18 * Math.sin(t + i)})`
-        : 'rgba(255,255,255,0.03)';
+      ctx.strokeStyle = both
+        ? `rgba(232, 213, 163, ${0.35 + 0.12 * Math.sin(t + i)})`
+        : 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = both ? 1.2 : 0.6;
       ctx.stroke();
     }
 
-    // Stars
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 0.08, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(201, 169, 98, ${0.15 + 0.08 * Math.sin(t)})`;
+    ctx.fill();
+
     biases.forEach((b, i) => {
       const isUnlocked = unlocked.includes(b.id);
       const pos = positions[i];
-      const glow = isUnlocked ? 12 + 6 * Math.sin(t * 2 + i) : 0;
-
       if (isUnlocked) {
+        const gr = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 18);
+        gr.addColorStop(0, 'rgba(232, 213, 163, 0.55)');
+        gr.addColorStop(1, 'transparent');
+        ctx.fillStyle = gr;
         ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 8 + glow * 0.45, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201, 169, 98, ${0.18 + 0.08 * Math.sin(t + i)})`;
+        ctx.arc(pos.x, pos.y, 14 + 4 * Math.sin(t * 2 + i), 0, Math.PI * 2);
         ctx.fill();
       }
-
-      ctx.beginPath();
-      ctx.arc(pos.x, pos.y, isUnlocked ? 5.2 : 2.4, 0, Math.PI * 2);
-      ctx.fillStyle = isUnlocked ? '#e8d5a3' : 'rgba(100,100,120,0.4)';
-      ctx.fill();
-
-      if (isUnlocked) {
-        // Sparkle rays
-        for (let j = 0; j < 4; j++) {
-          const a = (j / 4) * Math.PI * 2 + t;
-          ctx.beginPath();
-          ctx.moveTo(pos.x, pos.y);
-          ctx.lineTo(pos.x + Math.cos(a) * 14, pos.y + Math.sin(a) * 14);
-          ctx.strokeStyle = `rgba(232, 213, 163, ${0.38 + 0.22 * Math.sin(t * 3 + j)})`;
-          ctx.stroke();
-        }
-      }
+      this.drawStarPoint(
+        ctx,
+        pos.x,
+        pos.y,
+        isUnlocked ? 2.2 : 1.1,
+        isUnlocked ? 0.95 : 0.35,
+        i % 3 !== 0
+      );
     });
 
     return positions;

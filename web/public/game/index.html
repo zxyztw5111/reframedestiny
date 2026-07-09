@@ -19,7 +19,7 @@
 
   <!-- Informed consent (first visit) -->
   <div class="consent-gate" id="consent-gate" role="dialog" aria-modal="true" aria-labelledby="consent-title">
-    <video class="consent-gate__video" id="consent-video" muted loop playsinline autoplay aria-hidden></video>
+    <video class="consent-gate__video" id="consent-video" muted loop playsinline autoplay preload="auto" aria-hidden></video>
     <div class="consent-gate__veil" aria-hidden></div>
     <div class="consent-gate__card glass-card">
       <p class="consent-gate__eyebrow" data-i18n="consent.eyebrow">课堂研究 · Informed Consent</p>
@@ -32,20 +32,22 @@
         <li><strong data-i18n="consent.item4.title">数据用途</strong><span data-i18n="consent.item4.body">——你的回答只用于这个课堂研究，不会作别的用途。</span></li>
       </ul>
       <button type="button" class="btn-primary btn-primary--large" id="consent-agree" data-i18n="consent.agree">同意并继续</button>
+      <button type="button" class="intro-skip consent-skip" id="consent-skip" data-i18n="intro.skip">Skip · 跳过</button>
       <p class="consent-gate__decline" data-i18n="consent.decline">若不同意，直接关闭此页面即可。</p>
     </div>
   </div>
 
-  <!-- Intro -->
+  <!-- Intro: lotus video (skippable) → home -->
   <div class="intro hidden" id="intro">
-    <canvas id="intro-canvas"></canvas>
+    <video class="intro-video" id="intro-video" muted playsinline autoplay preload="auto" aria-hidden></video>
+    <div class="intro-veil" aria-hidden></div>
     <div class="intro-text">
       <h1 class="intro-title" data-i18n="intro.title">REFRAME DESTINY</h1>
       <p class="intro-subtitle-cn" data-i18n="intro.subtitleCn">重塑命运</p>
       <p class="intro-tagline" data-i18n="intro.tagline">Question the Story. Not Yourself.</p>
       <p class="intro-tagline-cn" data-i18n="intro.taglineCn">质疑叙事，而非质疑自己。</p>
     </div>
-    <button type="button" class="intro-skip" id="intro-skip">Skip · 跳过</button>
+    <button type="button" class="intro-skip" id="intro-skip" data-i18n="intro.skip">Skip · 跳过</button>
   </div>
 
   <div class="app hidden" id="app">
@@ -102,8 +104,8 @@
           </div>
 
           <div class="lotus-why glass-card">
-            <p class="lotus-why__label" data-i18n="home.lotusWhyLabel">为什么是莲？</p>
-            <p class="lotus-why__text" data-i18n="home.lotusWhy">佛教与道教都以莲象征「出淤泥而不染」——命运叙事可以读，但不必照单全收。莲开于深空，连接信仰、命运与解释权：我们研究的不是算命准不准，而是谁在替你讲故事。</p>
+            <p class="lotus-why__label" data-i18n="home.lotusWhyLabel">莲 · 星空 · 命运</p>
+            <p class="lotus-why__text" data-i18n="home.lotusWhy">古人用星空写命运——每一颗星都是一句被写进天空的叙事。你也是一朵莲：在淤泥般的偏见与期待里生长。每当你识别出一片别人强加给你的故事，就在星空中点亮一颗星；这些星连起来，恰好组成你的莲瓣。</p>
           </div>
 
           <button class="btn-primary btn-primary--large" data-nav="journey" data-i18n="home.cta">进入探索</button>
@@ -136,8 +138,8 @@
         <!-- Step 1 -->
         <div class="journey-step active" data-step="1">
           <div class="lotus-why lotus-why--compact glass-card">
-            <p class="lotus-why__label" data-i18n="home.lotusWhyLabel">为什么是莲？</p>
-            <p class="lotus-why__text" data-i18n="home.lotusWhy">佛教与道教都以莲象征「出淤泥而不染」——命运叙事可以读，但不必照单全收。莲开于深空，连接信仰、命运与解释权：我们研究的不是算命准不准，而是谁在替你讲故事。</p>
+            <p class="lotus-why__label" data-i18n="home.lotusWhyLabel">莲 · 星空 · 命运</p>
+            <p class="lotus-why__text" data-i18n="home.lotusWhy">古人用星空写命运——每一颗星都是一句被写进天空的叙事。你也是一朵莲：在淤泥般的偏见与期待里生长。每当你识别出一片别人强加给你的故事，就在星空中点亮一颗星；这些星连起来，恰好组成你的莲瓣。</p>
           </div>
           <h3 data-i18n="journey.s1.title">选择命理体系</h3>
           <div class="card-grid">
@@ -188,7 +190,9 @@
 
         <!-- Step 4 -->
         <div class="journey-step" data-step="4">
-          <h3 data-i18n="journey.s4.title">传统解读</h3>
+          <h3 id="journey-reading-title" data-i18n="journey.s4.title">传统解读（含性别差异）</h3>
+          <div id="bazi-chart" class="chart-mount"></div>
+          <canvas id="astro-chart-canvas" class="chart-mount astro-wheel hidden" width="360" height="360"></canvas>
           <div class="glass-card reading-card" id="traditional-reading"></div>
         </div>
 
@@ -393,16 +397,21 @@
       </div>
     </aside>
 
-    <div class="survey-gate hidden" id="lotus-dialog" role="dialog" aria-modal="true" aria-labelledby="lotus-dialog-title">
-      <div class="survey-gate__card glass-card lotus-chat-card">
-        <p class="survey-gate__eyebrow" data-i18n="lotus.dialogEyebrow">莲心 · Lotus Guide</p>
-        <h2 class="survey-gate__title" id="lotus-dialog-title" data-i18n="lotus.dialogTitle">与莲心对话</h2>
-        <div class="lotus-chat-messages" id="lotus-chat-messages" role="log" aria-live="polite"></div>
-        <div class="lotus-chat-compose">
-          <textarea id="lotus-dialog-input" class="lotus-chat-input" rows="2" data-i18n-placeholder="lotus.inputPh" placeholder="例如：命运到底由谁决定？"></textarea>
-          <button type="button" class="btn-primary" id="lotus-dialog-send" data-i18n="lotus.send">发送</button>
+    <div class="lotus-chat-panel hidden" id="lotus-chat-panel" role="dialog" aria-labelledby="lotus-dialog-title">
+      <div class="lotus-chat-panel__inner glass-card">
+        <div class="lotus-chat-panel__head">
+          <div>
+            <p class="lotus-chat-panel__eyebrow" data-i18n="lotus.dialogEyebrow">莲心 · Lotus Guide</p>
+            <h2 class="lotus-chat-panel__title" id="lotus-dialog-title" data-i18n="lotus.dialogTitle">与莲心对话</h2>
+          </div>
+          <button type="button" class="lotus-chat-panel__close" id="lotus-dialog-close" aria-label="Close">×</button>
         </div>
-        <button type="button" class="text-btn lotus-chat-close" id="lotus-dialog-close" data-i18n="lotus.dialogClose">继续旅程</button>
+        <p class="lotus-chat-hint" data-i18n="lotus.typeHint">在下方大输入框打字，向莲心提问</p>
+        <div class="lotus-chat-messages" id="lotus-chat-messages" role="log" aria-live="polite"></div>
+      </div>
+      <div class="lotus-chat-compose glass-card">
+        <textarea id="lotus-dialog-input" class="lotus-chat-input" rows="5" data-i18n-placeholder="lotus.inputPh" placeholder="例如：命运到底由谁决定？"></textarea>
+        <button type="button" class="btn-primary btn-primary--large" id="lotus-dialog-send" data-i18n="lotus.send">发送</button>
       </div>
     </div>
 
@@ -421,24 +430,25 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/survey.js"></script>
   <script src="js/data.js"></script>
   <script src="js/i18n.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/reading-engine.js"></script>
   <script src="js/canvas.js"></script>
   <script src="js/audio.js"></script>
+  <script src="js/charts.js"></script>
   <script src="js/app.js"></script>
   <script>
-    if (new URLSearchParams(location.search).get('embedded') === '1') {
-      document.getElementById('consent-gate')?.classList.add('hidden');
-      document.getElementById('intro')?.classList.add('hidden');
-      document.getElementById('app')?.classList.remove('hidden');
-      document.addEventListener('DOMContentLoaded', () => {
-        setLotusPrompt();
-        setTimeout(() => navigate('journey'), 120);
-      });
-    }
+    (function () {
+      const url = window.RD_CONFIG?.lotusVideo;
+      const v = document.getElementById('intro-video');
+      if (v && url) v.src = url;
+    })();
   </script>
 </body>
 </html>
