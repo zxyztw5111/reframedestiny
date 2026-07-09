@@ -95,42 +95,59 @@ export function burstFromLotus(
   }
 }
 
-export function buildTitlePoints(width: number, height: number, count: number): { x: number; y: number }[] {
-  const sampleW = Math.min(1280, Math.floor(width * 0.92))
-  const sampleH = Math.max(160, Math.floor(height * 0.22))
+export function sampleTitleLetters(width: number, height: number, maxPoints = 680): { x: number; y: number }[] {
+  const sampleW = Math.min(1280, Math.floor(width * 0.9))
+  const sampleH = Math.max(200, Math.floor(height * 0.32))
   const c = document.createElement('canvas')
   c.width = sampleW
   c.height = sampleH
   const ctx = c.getContext('2d')
-  if (!ctx) return Array.from({ length: count }, () => ({ x: width / 2, y: height * 0.42 }))
+  const centerY = height * 0.26
+  if (!ctx) return [{ x: width / 2, y: centerY }]
 
-  const fontSize = Math.min(sampleW / 4.2, sampleH / 1.5)
+  const fontSize = Math.min(sampleW / 6.2, sampleH / 2.25)
   ctx.clearRect(0, 0, sampleW, sampleH)
   ctx.fillStyle = '#fff'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.font = `300 ${fontSize}px "Cormorant Garamond", Georgia, serif`
-  ctx.fillText('REFRAME DESTINY', sampleW / 2, sampleH / 2)
+  ctx.font = `300 ${fontSize}px "Cormorant Garamond", "EB Garamond", Georgia, serif`
+  ctx.fillText('REFRAME', sampleW / 2, sampleH / 2 - fontSize * 0.48)
+  ctx.fillText('DESTINY', sampleW / 2, sampleH / 2 + fontSize * 0.48)
 
   const data = ctx.getImageData(0, 0, sampleW, sampleH).data
+  const stride = Math.max(2, Math.floor(sampleW / 520))
   const candidates: { x: number; y: number }[] = []
-  for (let y = 0; y < sampleH; y += 2) {
-    for (let x = 0; x < sampleW; x += 2) {
+  const offsetX = width * 0.5 - sampleW / 2
+  const offsetY = centerY - sampleH / 2
+
+  for (let y = 0; y < sampleH; y += stride) {
+    for (let x = 0; x < sampleW; x += stride) {
       const i = (y * sampleW + x) * 4
-      if (data[i + 3] > 128) {
+      if (data[i + 3] > 40) {
         candidates.push({
-          x: (x / sampleW) * width,
-          y: (y / sampleH) * height * 0.14 + height * 0.2,
+          x: offsetX + x + (Math.random() - 0.5) * 0.8,
+          y: offsetY + y + (Math.random() - 0.5) * 0.8,
         })
       }
     }
   }
 
-  if (!candidates.length) {
-    return Array.from({ length: count }, () => ({ x: width / 2, y: height * 0.36 }))
+  if (!candidates.length) return [{ x: width / 2, y: centerY }]
+
+  for (let i = candidates.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[candidates[i], candidates[j]] = [candidates[j], candidates[i]]
   }
 
-  return Array.from({ length: count }, (_, i) => candidates[i % candidates.length])
+  if (candidates.length <= maxPoints) return candidates
+  const step = candidates.length / maxPoints
+  return Array.from({ length: maxPoints }, (_, i) => candidates[Math.floor(i * step)])
+}
+
+/** @deprecated use sampleTitleLetters */
+export function buildTitlePoints(width: number, height: number, count: number): { x: number; y: number }[] {
+  const letters = sampleTitleLetters(width, height, count)
+  return Array.from({ length: count }, (_, i) => letters[i % letters.length])
 }
 
 export function sandTarget(width: number, height: number, seed: number): { x: number; y: number } {

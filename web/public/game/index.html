@@ -420,7 +420,8 @@
       document.getElementById('intro')?.classList.add('hidden');
       document.getElementById('app')?.classList.remove('hidden');
       document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => navigate('journey'), 100);
+        setLotusPrompt();
+        setTimeout(() => navigate('journey'), 120);
       });
     }
   </script>

@@ -69,16 +69,19 @@ const BIAS_CATEGORIES = [
   { key: "class", zh: "阶级叙事", en: "Class Narrative" }
 ];
 
-const WANDERER_PROMPTS = [
+const LOTUS_PROMPTS = [
+  { zh: "莲出于泥而不染——命运叙事亦然，可读，不必照单全收。", en: "The lotus rises unstained from mud — fate narratives too may be read without being swallowed whole." },
+  { zh: "宗教讲因果，命理讲运势；莲心只问：谁在替你下结论？", en: "Religion speaks of karma, charts speak of fortune — the lotus asks only: who speaks for you?" },
   { zh: "如果这句话用于男性，结论会一样吗？", en: "If this were said about a man, would the conclusion be the same?" },
   { zh: "故事来自过去，但解释权属于现在。", en: "Stories come from the past, but the right to interpret belongs to the present." },
   { zh: "你听到的，是预测还是规训？", en: "What you hear — is it prediction or discipline?" },
-  { zh: "命运是一面镜子，还是一扇门？", en: "Is fate a mirror, or a door?" },
-  { zh: "谁在讲述这个故事？谁从中受益？", en: "Who tells this story? Who benefits from it?" },
-  { zh: "我不负责算命。我负责提问。", en: "I don't tell fortunes. I ask questions." },
-  { zh: "沙粒聚散，形态无常——你亦然。", en: "Sand gathers and scatters, formless — so too are you." },
-  { zh: "每一次探索，只点亮一部分星空。", en: "Each journey lights only part of the constellation." }
+  { zh: "莲开一瞬，照见命运；花落不损其根——你亦然。", en: "The lotus blooms once, revealing fate; when petals fall the root remains — so too with you." },
+  { zh: "我不替你算命。我陪你问对问题。", en: "I don't tell your fortune. I walk with you toward better questions." },
+  { zh: "每一次探索，只点亮一部分星空。", en: "Each journey lights only part of the constellation." },
 ];
+
+/** @deprecated use LOTUS_PROMPTS */
+const WANDERER_PROMPTS = LOTUS_PROMPTS;
 
 const READINGS = {
   bazi: {

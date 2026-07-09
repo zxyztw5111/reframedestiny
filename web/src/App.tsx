@@ -43,9 +43,9 @@ function Cover({ onEnter }: { onEnter: () => void }) {
           {titleVisible && (
             <motion.div
               className="pointer-events-none flex flex-col items-center"
-              initial={{ opacity: 0, y: 12, filter: 'blur(14px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, filter: 'blur(14px)' }}
+              animate={{ opacity: 1, filter: 'blur(0px)' }}
+              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
             >
               <h1 className="font-serif-en text-[clamp(2rem,6.5vw,4.5rem)] font-light tracking-[0.22em] text-[#f5e6c8] drop-shadow-[0_0_40px_rgba(216,180,106,0.35)]">
                 REFRAME DESTINY
@@ -160,7 +160,7 @@ function ConsentGate({ onAgree }: { onAgree: () => void }) {
           参与前请先确认
         </h2>
         <p className="mt-5 font-serif-cn text-base leading-8 text-[#e8e4d8]/72">
-          这是一个关于命理叙事如何影响自我理解的课堂研究体验。
+          这是一个关于命理叙事如何影响自我理解的课堂研究体验。封面上的莲，象征在信仰、命运与自我之间醒来的那一刻；旅程中的「莲心」会陪你提问，而非替你下结论。
         </p>
         <div className="mt-7 grid gap-4">
           {consentItems.map(([title, body]) => (

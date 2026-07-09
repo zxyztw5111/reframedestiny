@@ -1,51 +1,24 @@
 import { useEffect, useRef } from 'react'
-import {
-  applyLotusMotion,
-  buildTitlePoints,
-  lotusTarget,
-  sandTarget,
-  type LotusPoint,
-} from '../lib/lotusGeometry'
+import { sampleTitleLetters } from '../lib/lotusGeometry'
 
-/** Veldara-style cosmic void video — deep space, no earth */
-export const COSMIC_VIDEO =
+/** Prompt-generated lotus / cosmic bloom — this video IS the lotus. */
+export const LOTUS_VIDEO =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260616_212935_bbf608da-62d1-4f25-9be4-c346e4d09cc8.mp4'
 
-type LotusParticle = {
-  x: number
-  y: number
-  vx: number
-  vy: number
-  lotus: LotusPoint
-  seed: number
-  size: number
-  opacity: number
-}
+type Point = { x: number; y: number }
 
 type GoldParticle = {
   x: number
   y: number
   vx: number
   vy: number
-  void: Point
+  spawn: Point
   title: Point
+  scatter: Point
   seed: number
   size: number
   opacity: number
 }
-
-type SandParticle = {
-  x: number
-  y: number
-  vx: number
-  vy: number
-  sand: { x: number; y: number }
-  seed: number
-  size: number
-  opacity: number
-}
-
-type Point = { x: number; y: number }
 
 type LotusCoverCanvasProps = {
   onTitleReveal?: () => void
@@ -54,10 +27,12 @@ type LotusCoverCanvasProps = {
 
 const TAU = Math.PI * 2
 
+/** Gather → swap to DOM title → all gold scatters (v1 timing). */
 const PHASE = {
-  LOTUS_FADE_END: 2.8,
-  TITLE_GATHER_END: 7.2,
-  INTERACTIVE: 8.4,
+  GOLD_APPEAR: 4.2,
+  TITLE_GATHER_END: 7.4,
+  SCATTER_END: 9.0,
+  DONE: 9.4,
 } as const
 
 function clamp(v: number, a = 0, b = 1) {
@@ -73,104 +48,20 @@ function smoothstep(e0: number, e1: number, x: number) {
   return t * t * (3 - 2 * t)
 }
 
-function drawDustVeil(
-  ctx: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  time: number,
-  intensity: number,
-) {
-  const sweep = clamp(intensity)
-  if (sweep <= 0.001) return
-
-  ctx.save()
-  ctx.globalAlpha = 0.22 * sweep
-  ctx.translate(Math.sin(time * 0.14) * 32, Math.cos(time * 0.09) * 6)
-  const gradient = ctx.createLinearGradient(width * -0.1, height * 0.42, width * 1.1, height * 0.62)
-  gradient.addColorStop(0, 'rgba(216, 180, 106, 0)')
-  gradient.addColorStop(0.42, 'rgba(216, 180, 106, 0.38)')
-  gradient.addColorStop(0.6, 'rgba(156, 91, 70, 0.16)')
-  gradient.addColorStop(1, 'rgba(216, 180, 106, 0)')
-  ctx.fillStyle = gradient
-  ctx.beginPath()
-  ctx.ellipse(width * 0.5, height * 0.56, width * 0.7, height * 0.09, 0.08, 0, TAU)
-  ctx.fill()
-  ctx.restore()
+function edgeSpawn(w: number, h: number, seed: number): Point {
+  const side = Math.floor((seed * 3.7) % 4)
+  const t = (seed * 11.3) % 1
+  if (side === 0) return { x: -24 - (seed % 1) * 40, y: t * h * 0.55 }
+  if (side === 1) return { x: w + 24 + (seed % 1) * 40, y: t * h * 0.55 }
+  if (side === 2) return { x: t * w, y: -24 - (seed % 1) * 30 }
+  return { x: t * w, y: h * 0.58 + (seed % 1) * 40 }
 }
 
-function drawGoldenStar(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  r: number,
-  alpha: number,
-  twinkle: number,
-  glow: number,
-) {
-  const g = glow * (0.55 + twinkle * 0.45)
-  ctx.save()
-  if (g > 0.06) {
-    ctx.shadowBlur = r * (2.2 + g * 3.5)
-    ctx.shadowColor = `rgba(255, 190, 70, ${alpha * g * 0.8})`
+function scatterTarget(w: number, h: number, seed: number): Point {
+  return {
+    x: ((seed * 17.1) % 1) * w,
+    y: ((seed * 9.3) % 1) * h * 0.5,
   }
-  ctx.fillStyle = `rgba(255, ${210 + twinkle * 35}, ${90 + twinkle * 45}, ${alpha})`
-  ctx.beginPath()
-  ctx.arc(x, y, r, 0, TAU)
-  ctx.fill()
-  ctx.restore()
-}
-
-function drawSandGrain(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  r: number,
-  alpha: number,
-  twinkle: number,
-) {
-  ctx.save()
-  ctx.shadowBlur = r * 3.2
-  ctx.shadowColor = `rgba(216, 180, 106, ${alpha * 0.75})`
-  ctx.fillStyle = `rgba(216, ${180 + twinkle * 28}, ${106 + twinkle * 20}, ${alpha})`
-  ctx.beginPath()
-  ctx.arc(x, y, r * 1.15, 0, TAU)
-  ctx.fill()
-  ctx.restore()
-}
-
-function drawLotusStar(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  r: number,
-  alpha: number,
-  twinkle: number,
-) {
-  ctx.save()
-  ctx.shadowBlur = r * 2.2
-  ctx.shadowColor = `rgba(238, 243, 240, ${alpha * 0.35})`
-  ctx.fillStyle = `rgba(238, ${243 - twinkle * 8}, ${240 - twinkle * 12}, ${alpha})`
-  ctx.beginPath()
-  ctx.arc(x, y, r, 0, TAU)
-  ctx.fill()
-  ctx.restore()
-}
-
-function mouseForce(
-  px: number,
-  py: number,
-  mx: number,
-  my: number,
-  down: boolean,
-  radius: number,
-  strength: number,
-) {
-  const dx = px - mx
-  const dy = py - my
-  const dist = Math.hypot(dx, dy)
-  if (dist >= radius) return { fx: 0, fy: 0 }
-  const f = (1 - dist / radius) * strength * (down ? 1.45 : 1)
-  return { fx: (dx / (dist || 1)) * f, fy: (dy / (dist || 1)) * f }
 }
 
 export function LotusCoverCanvas({ onTitleReveal, onSequenceComplete }: LotusCoverCanvasProps) {
@@ -187,20 +78,17 @@ export function LotusCoverCanvas({ onTitleReveal, onSequenceComplete }: LotusCov
     if (!canvas) return
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
     let w = 0
     let h = 0
-    let lotusParticles: LotusParticle[] = []
     let goldParticles: GoldParticle[] = []
-    let sandParticles: SandParticle[] = []
     let frame = 0
     const start = performance.now()
-    const mouse = { x: -9999, y: -9999, down: false }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
       w = window.innerWidth
       h = window.innerHeight
       canvas.width = Math.floor(w * dpr)
@@ -209,233 +97,123 @@ export function LotusCoverCanvas({ onTitleReveal, onSequenceComplete }: LotusCov
       canvas.style.height = `${h}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      const lotusN = reduced ? 500 : Math.min(1300, Math.max(700, Math.floor((w * h) / 1600)))
-      lotusParticles = Array.from({ length: lotusN }, (_, i) => {
-        const lotus = lotusTarget(w, h, i)
+      const count = reduced ? 200 : Math.min(420, Math.max(260, Math.floor((w * h) / 4500)))
+      const letters = sampleTitleLetters(w, h, count)
+
+      goldParticles = letters.map((title, i) => {
+        const seed = i * 1.37 + Math.random() * 100
+        const spawn = edgeSpawn(w, h, seed)
         return {
-          x: lotus.x + (Math.random() - 0.5) * w * 0.08,
-          y: lotus.y + (Math.random() - 0.5) * h * 0.08,
+          x: spawn.x,
+          y: spawn.y,
           vx: 0,
           vy: 0,
-          lotus,
-          seed: Math.random() * 1000,
-          size: Math.random() * 0.9 + 0.35,
-          opacity: Math.random() * 0.35 + 0.45,
-        }
-      })
-
-      const goldN = reduced ? 280 : Math.min(850, Math.max(380, Math.floor((w * h) / 3200)))
-      const titles = buildTitlePoints(w, h, goldN)
-      goldParticles = Array.from({ length: goldN }, (_, i) => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        void: { x: Math.random() * w, y: Math.random() * h * 0.85 },
-        title: titles[i],
-        seed: Math.random() * 1000,
-        size: Math.random() * 1.05 + 0.4,
-        opacity: Math.random() * 0.4 + 0.3,
-      }))
-
-      const sandN = reduced ? 180 : Math.min(520, Math.max(260, Math.floor((w * h) / 5500)))
-      sandParticles = Array.from({ length: sandN }, () => {
-        const seed = Math.random() * 1000
-        return {
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: 0,
-          vy: 0,
-          sand: sandTarget(w, h, seed),
+          spawn,
+          title,
+          scatter: scatterTarget(w, h, seed + 19),
           seed,
-          size: Math.random() * 1.2 + 0.55,
-          opacity: Math.random() * 0.35 + 0.4,
+          size: 0.7 + (seed % 1) * 0.5,
+          opacity: 0.55 + (seed % 1) * 0.35,
         }
       })
-    }
-
-    const onMove = (e: PointerEvent) => {
-      mouse.x = e.clientX
-      mouse.y = e.clientY
-    }
-    const onDown = () => {
-      mouse.down = true
-    }
-    const onUp = () => {
-      mouse.down = false
     }
 
     const tick = (now: number) => {
-      const elapsed = reduced ? PHASE.INTERACTIVE + 1 : (now - start) / 1000
-      const t = elapsed
+      const t = reduced ? PHASE.DONE + 1 : (now - start) / 1000
 
-      const lotusFade = smoothstep(0.4, PHASE.LOTUS_FADE_END, t)
-      const titleGather = smoothstep(1.2, PHASE.TITLE_GATHER_END, t)
-      const interactive = t >= PHASE.INTERACTIVE
-      const sandFlow = smoothstep(PHASE.TITLE_GATHER_END - 1.5, PHASE.INTERACTIVE, t)
-      const pointerActive = interactive || titleGather > 0.75
-      const lotusRotation = t * 0.04
+      const goldVisible = smoothstep(PHASE.GOLD_APPEAR, PHASE.GOLD_APPEAR + 0.35, t)
+      const titleGather = goldVisible > 0 ? smoothstep(PHASE.GOLD_APPEAR, PHASE.TITLE_GATHER_END, t) : 0
+      const scatter = smoothstep(PHASE.TITLE_GATHER_END, PHASE.SCATTER_END, t)
+      const done = t >= PHASE.DONE
 
-      if (titleGather > 0.88 && !titleDoneRef.current) {
+      if (t >= PHASE.TITLE_GATHER_END && !titleDoneRef.current) {
         titleDoneRef.current = true
         onTitleRef.current?.()
       }
-      if (interactive && !doneRef.current) {
+      if (done && !doneRef.current) {
         doneRef.current = true
         onCompleteRef.current?.()
       }
 
       ctx.clearRect(0, 0, w, h)
 
-      if (sandFlow > 0.02) {
-        drawDustVeil(ctx, w, h, t, sandFlow)
-      }
-
-      // --- Lotus layer ---
-      if (lotusFade > 0.02) {
-        ctx.save()
-        ctx.globalCompositeOperation = 'lighter'
-        const aura = ctx.createRadialGradient(w / 2, h * 0.62, 0, w / 2, h * 0.62, Math.min(w, h) * 0.36)
-        aura.addColorStop(0, `rgba(238, 243, 240, ${0.05 * lotusFade})`)
-        aura.addColorStop(0.45, `rgba(216, 180, 106, ${0.025 * lotusFade})`)
-        aura.addColorStop(1, 'rgba(216, 180, 106, 0)')
-        ctx.fillStyle = aura
-        ctx.fillRect(0, 0, w, h)
-
-        for (const p of lotusParticles) {
-          const base = applyLotusMotion(w, h, p.lotus, 1, lotusRotation)
-          const breath = Math.sin(t * 0.85 + p.seed) * 1.8
-          const tx = base.x + Math.cos(p.seed) * breath
-          const ty = base.y + Math.sin(p.seed) * breath * 0.85
-          p.vx += (tx - p.x) * (0.012 + lotusFade * 0.01)
-          p.vy += (ty - p.y) * (0.012 + lotusFade * 0.01)
-          p.vx *= 0.84
-          p.vy *= 0.84
-          p.x += p.vx
-          p.y += p.vy
-
-          const tw = 0.5 + 0.5 * Math.sin(t * 2.4 + p.seed)
-          drawLotusStar(ctx, p.x, p.y, p.size * 1.05, p.opacity * lotusFade * (0.65 + tw * 0.35), tw)
-        }
-        ctx.restore()
-      }
-
-      // --- Flowing sand layer (mouse-interactive) ---
-      if (sandFlow > 0.03) {
-        ctx.save()
-        ctx.globalCompositeOperation = 'lighter'
-        for (const p of sandParticles) {
-          const sweep = (t * 58 + p.seed * 17) % (w * 1.35)
-          const tx = p.sand.x * 0.72 + sweep - w * 0.18
-          const ty = p.sand.y + Math.sin(t * 0.65 + p.seed) * h * 0.022
-          const oceanX = Math.sin(t * 0.19 + p.seed) * 3.2 * sandFlow
-          const oceanY = Math.cos(t * 0.16 + p.seed * 1.7) * 2.1 * sandFlow
-
-          const { fx, fy } = pointerActive
-            ? mouseForce(p.x, p.y, mouse.x, mouse.y, mouse.down, 200, mouse.down ? 7.5 : 3.2)
-            : { fx: 0, fy: 0 }
-
-          p.vx += (tx + oceanX - p.x) * (0.014 + sandFlow * 0.008) + fx
-          p.vy += (ty + oceanY - p.y) * (0.014 + sandFlow * 0.008) + fy + 0.004 * sandFlow
-          p.vx *= 0.84
-          p.vy *= 0.84
-          p.x += p.vx
-          p.y += p.vy
-
-          const tw = 0.5 + 0.5 * Math.sin(t * 2.8 + p.seed)
-          const alpha = p.opacity * sandFlow * (0.55 + tw * 0.45)
-          drawSandGrain(ctx, p.x, p.y, p.size, alpha, tw)
-        }
-        ctx.restore()
-      }
-
-      // --- Title gather stars ---
-      if (titleGather > 0.08 && titleGather < 0.92) {
-        ctx.save()
-        ctx.globalCompositeOperation = 'lighter'
-        const titleGlow = ctx.createRadialGradient(w / 2, h * 0.34, 0, w / 2, h * 0.34, w * 0.32)
-        titleGlow.addColorStop(0, `rgba(255, 215, 100, ${0.1 * titleGather})`)
-        titleGlow.addColorStop(1, 'rgba(255, 215, 100, 0)')
-        ctx.fillStyle = titleGlow
-        ctx.fillRect(0, 0, w, h)
-        ctx.restore()
+      if (goldVisible <= 0.02) {
+        frame = requestAnimationFrame(tick)
+        return
       }
 
       ctx.save()
       ctx.globalCompositeOperation = 'lighter'
 
+      const forming = scatter <= 0 && titleGather < 0.98
+      if (forming && titleGather > 0.2) {
+        ctx.shadowColor = 'rgba(255, 200, 80, 0.35)'
+        ctx.shadowBlur = 5
+      }
+
       for (const p of goldParticles) {
-        // Keep the lotus clean while it blooms — gold only appears once it
-        // starts gathering into the title.
-        if (titleGather < 0.1 && !interactive) continue
+        let tx = p.spawn.x
+        let ty = p.spawn.y
+        let attract = 0.028
+        let damp = 0.76
 
-        let tx = p.void.x
-        let ty = p.void.y
-        let attract = 0.003
-        let damp = 0.9
-
-        if (titleGather < 0.98) {
-          if (titleGather < 0.08) {
-            tx = p.x + p.vx * 3
-            ty = p.y + p.vy * 3
-            attract = 0.001
-            damp = 0.93
-          } else {
-            tx = lerp(p.void.x, p.title.x, titleGather)
-            ty = lerp(p.void.y, p.title.y, titleGather)
-            attract = 0.018 + titleGather * 0.014
-            damp = 0.82
-          }
-        } else if (interactive) {
-          const sweep = (t * 42 + p.seed * 11) % (w * 1.2)
-          tx = p.void.x * 0.5 + sweep * 0.5 - w * 0.1
-          ty = p.void.y + Math.sin(t * 0.5 + p.seed) * h * 0.015
-          attract = 0.008
-          damp = 0.88
+        if (scatter <= 0) {
+          const ease = titleGather * titleGather * (3 - 2 * titleGather)
+          tx = lerp(p.spawn.x, p.title.x, ease)
+          ty = lerp(p.spawn.y, p.title.y, ease)
+          attract = 0.032 + titleGather * 0.045
+        } else if (scatter < 1) {
+          tx = lerp(p.title.x, p.scatter.x, scatter)
+          ty = lerp(p.title.y, p.scatter.y, scatter)
+          attract = 0.038
+          damp = 0.74
+        } else {
+          tx = p.scatter.x + Math.sin(t * 0.5 + p.seed) * 5
+          ty = p.scatter.y + Math.cos(t * 0.45 + p.seed) * 3
+          attract = 0.003
+          damp = 0.94
         }
 
-        const driftX = Math.sin(t * 0.16 + p.seed) * (interactive ? 2.8 : 0.6)
-        const driftY = Math.cos(t * 0.14 + p.seed) * (interactive ? 2 : 0.45)
-
-        const { fx, fy } = pointerActive
-          ? mouseForce(p.x, p.y, mouse.x, mouse.y, mouse.down, 190, mouse.down ? 6.5 : 2.8)
-          : { fx: 0, fy: 0 }
-
-        p.vx += (tx + driftX - p.x) * attract + fx
-        p.vy += (ty + driftY - p.y) * attract + fy
+        p.vx += (tx - p.x) * attract
+        p.vy += (ty - p.y) * attract
         p.vx *= damp
         p.vy *= damp
         p.x += p.vx
         p.y += p.vy
 
-        const tw = 0.5 + 0.5 * Math.sin(t * 3.4 + p.seed * 2.2)
-        let alpha = p.opacity * (0.5 + tw * 0.5)
-        const forming = titleGather > 0.12 && titleGather < 0.92
-        const glow = forming ? titleGather * 0.95 : interactive || sandFlow > 0.5 ? 0.42 : 0.12
+        const tw = 0.5 + 0.5 * Math.sin(t * 3.2 + p.seed)
+        let alpha = p.opacity * goldVisible
+        let radius = p.size
 
-        if (titleGather > 0.9) alpha *= lerp(1, 0.32, (titleGather - 0.9) / 0.1)
-        if (interactive) alpha *= 0.78
+        if (scatter <= 0) {
+          alpha *= 0.5 + titleGather * 0.45
+          radius *= 0.85 + titleGather * 0.35
+        } else {
+          alpha *= lerp(0.85, 0.12, scatter)
+          radius *= lerp(1.05, 0.65, scatter)
+        }
 
-        drawGoldenStar(ctx, p.x, p.y, p.size, alpha, tw, glow)
+        if (alpha < 0.02) continue
+
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, radius, 0, TAU)
+        ctx.fillStyle = `rgba(255, ${205 + tw * 40}, ${85 + tw * 50}, ${alpha})`
+        ctx.fill()
       }
 
+      ctx.shadowBlur = 0
       ctx.restore()
+
       frame = requestAnimationFrame(tick)
     }
 
     resize()
     window.addEventListener('resize', resize)
-    window.addEventListener('pointermove', onMove)
-    window.addEventListener('pointerdown', onDown)
-    window.addEventListener('pointerup', onUp)
     frame = requestAnimationFrame(tick)
 
     return () => {
       cancelAnimationFrame(frame)
       window.removeEventListener('resize', resize)
-      window.removeEventListener('pointermove', onMove)
-      window.removeEventListener('pointerdown', onDown)
-      window.removeEventListener('pointerup', onUp)
     }
   }, [])
 
@@ -443,26 +221,24 @@ export function LotusCoverCanvas({ onTitleReveal, onSequenceComplete }: LotusCov
     <>
       <video
         className="pointer-events-none fixed inset-0 z-0 h-full w-full scale-105 object-cover"
-        src={COSMIC_VIDEO}
+        src={LOTUS_VIDEO}
         autoPlay
         loop
         muted
         playsInline
+        preload="metadata"
         aria-hidden
       />
+      <div className="pointer-events-none fixed inset-0 z-[1] bg-black/25" aria-hidden />
       <div
-        className="pointer-events-none fixed inset-0 z-[1] bg-[radial-gradient(ellipse_120%_80%_at_50%_20%,rgba(14,23,48,0.55),rgba(1,1,1,0.88)_70%)]"
+        className="pointer-events-none fixed inset-0 z-[1] bg-[radial-gradient(ellipse_100%_80%_at_50%_55%,transparent_30%,rgba(1,1,2,0.55)_100%)]"
         aria-hidden
       />
-      <div
-        className="pointer-events-none fixed inset-0 z-[1] bg-[radial-gradient(circle_at_80%_15%,rgba(74,122,155,0.12),transparent_45%)]"
+      <canvas
+        ref={canvasRef}
         aria-hidden
+        className="pointer-events-none fixed inset-0 z-[2] h-full w-full"
       />
-      <div
-        className="pointer-events-none fixed inset-0 z-[1] bg-gradient-to-b from-[#010101]/25 via-transparent to-[#010101]/75"
-        aria-hidden
-      />
-      <canvas ref={canvasRef} aria-hidden className="fixed inset-0 z-[2] h-full w-full touch-none" />
     </>
   )
 }

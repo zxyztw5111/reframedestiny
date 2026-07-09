@@ -75,13 +75,13 @@ function showQuote(idx) {
 
 /* ── Lotus guide ── */
 function setLotusPrompt() {
-  const prompt = WANDERER_PROMPTS[Math.floor(Math.random() * WANDERER_PROMPTS.length)];
+  const prompt = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
   const el = document.getElementById('lotus-text');
   if (el) el.textContent = currentLang === 'zh' ? prompt.zh : prompt.en;
 }
 
 function openLotusDialog() {
-  const prompt = WANDERER_PROMPTS[Math.floor(Math.random() * WANDERER_PROMPTS.length)];
+  const prompt = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
   const pEl = document.getElementById('lotus-dialog-prompt');
   if (pEl) pEl.textContent = currentLang === 'zh' ? prompt.zh : prompt.en;
   document.getElementById('lotus-dialog')?.classList.remove('hidden');
