@@ -9,6 +9,7 @@ const EL_COLORS = {
 };
 
 const SIGN_GLYPH = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+const SIGN_ZH = ['白羊', '金牛', '双子', '巨蟹', '狮子', '处女', '天秤', '天蝎', '射手', '摩羯', '水瓶', '双鱼'];
 
 const ChartFX = {
   drawBazi(containerId, lang = 'zh', chartData = null) {
@@ -22,7 +23,7 @@ const ChartFX = {
 
     host.innerHTML = `
       <div class="bazi-chart">
-        <p class="chart-caption">${lang === 'zh' ? '四柱排盘' : 'Four Pillars'} · ${bazi.summary[lang === 'zh' ? 'zh' : 'en']}</p>
+        <p class="chart-caption">${lang === 'zh' ? '四柱排盘（真实历法计算）' : 'Four Pillars (computed)'} · ${bazi.summary[lang === 'zh' ? 'zh' : 'en']}</p>
         <div class="bazi-pillars">
           ${bazi.pillars.map(p => `
             <div class="bazi-pillar">
@@ -45,10 +46,15 @@ const ChartFX = {
     if (!canvas) return;
     const astro = chartData?.astro || ChartCalc.computeAstro();
     const parent = canvas.parentElement;
-    const size = Math.min(parent?.clientWidth || 380, 380);
-    canvas.width = size;
-    canvas.height = size;
+    const cssSize = Math.min(parent?.clientWidth || 400, 440);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const size = cssSize;
+    canvas.width = Math.floor(size * dpr);
+    canvas.height = Math.floor(size * dpr);
+    canvas.style.width = `${size}px`;
+    canvas.style.height = `${size}px`;
     const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const cx = size / 2;
     const cy = size / 2;
 
@@ -62,70 +68,111 @@ const ChartFX = {
       return;
     }
 
-    const outer = size * 0.44;
-    const inner = size * 0.28;
+    const outer = size * 0.46;
+    const mid = size * 0.36;
+    const inner = size * 0.2;
+    const ascIdx = astro.ascSign?.index ?? 0;
+    const ascOffset = -ascIdx * 30;
 
-    for (let ring = 3; ring >= 1; ring--) {
+    const lonToAngle = (lon) => ((lon + ascOffset + 90) * Math.PI) / 180;
+
+    ctx.fillStyle = 'rgba(5,8,16,0.85)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (let h = 1; h <= 12; h++) {
+      const cuspLon = ((ascIdx * 30) + (h - 1) * 30) % 360;
+      const signIdx = Math.floor(cuspLon / 30) % 12;
+      const a1 = lonToAngle(cuspLon);
+      const a2 = lonToAngle((cuspLon + 30) % 360);
       ctx.beginPath();
-      ctx.arc(cx, cy, (outer * ring) / 3, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(201,169,98,${0.1 + ring * 0.05})`;
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, outer, a1, a2);
+      ctx.closePath();
+      ctx.fillStyle = h % 2 ? 'rgba(201,169,98,0.04)' : 'rgba(90,138,122,0.03)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(201,169,98,0.18)';
       ctx.lineWidth = 1;
       ctx.stroke();
+
+      const midA = lonToAngle(cuspLon + 15);
+      const hx = cx + Math.cos(midA) * (mid + (outer - mid) * 0.55);
+      const hy = cy + Math.sin(midA) * (mid + (outer - mid) * 0.55);
+      ctx.fillStyle = 'rgba(232,213,163,0.7)';
+      ctx.font = `600 ${Math.max(11, size * 0.034)}px system-ui, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(lang === 'zh' ? `${h}宫` : `H${h}`, hx, hy - size * 0.022);
+
+      const inHouse = astro.planets.filter(p => p.house === h);
+      const houseSign = lang === 'zh' ? SIGN_ZH[signIdx] : SIGN_GLYPH[signIdx];
+      ctx.fillStyle = 'rgba(201,169,98,0.55)';
+      ctx.font = `${Math.max(9, size * 0.026)}px system-ui, sans-serif`;
+      ctx.fillText(houseSign, hx, hy + size * 0.018);
+
+      if (inHouse.length) {
+        const names = inHouse.map(p => lang === 'zh' ? p.zh : p.en).join('·');
+        ctx.fillStyle = 'rgba(245,240,232,0.88)';
+        ctx.font = `600 ${Math.max(8, size * 0.022)}px system-ui, sans-serif`;
+        ctx.fillText(names, hx, hy + size * 0.04);
+      }
     }
 
     for (let i = 0; i < 12; i++) {
-      const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
-      ctx.beginPath();
-      ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner);
-      ctx.lineTo(cx + Math.cos(a) * outer, cy + Math.sin(a) * outer);
-      ctx.strokeStyle = 'rgba(201,169,98,0.12)';
-      ctx.stroke();
-
-      const lx = cx + Math.cos(a) * (outer + size * 0.04);
-      const ly = cy + Math.sin(a) * (outer + size * 0.04);
-      ctx.fillStyle = 'rgba(232, 213, 163, 0.85)';
-      ctx.font = `${size * 0.048}px serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      const signLon = i * 30;
+      const a = lonToAngle(signLon + 15);
+      const lx = cx + Math.cos(a) * (outer + size * 0.038);
+      const ly = cy + Math.sin(a) * (outer + size * 0.038);
+      ctx.fillStyle = 'rgba(245, 240, 232, 0.95)';
+      ctx.font = `${Math.max(14, size * 0.05)}px serif`;
       ctx.fillText(SIGN_GLYPH[i], lx, ly);
+      ctx.font = `${Math.max(9, size * 0.026)}px system-ui, sans-serif`;
+      ctx.fillStyle = 'rgba(201,169,98,0.85)';
+      ctx.fillText(lang === 'zh' ? SIGN_ZH[i] : SIGN_GLYPH[i], lx, ly + size * 0.03);
     }
 
-    astro.planets.forEach((p, i) => {
-      if (p.longitude == null) return;
-      const a = (p.longitude * Math.PI) / 180 - Math.PI / 2;
-      const r = inner + (outer - inner) * (0.25 + (i % 3) * 0.22);
-      const x = cx + Math.cos(a) * r;
-      const y = cy + Math.sin(a) * r;
+    ctx.beginPath();
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(201,169,98,0.35)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
 
-      const glow = ctx.createRadialGradient(x, y, 0, x, y, size * 0.04);
-      glow.addColorStop(0, 'rgba(232,213,163,0.9)');
+    const used = [];
+    astro.planets.forEach((p) => {
+      if (p.longitude == null) return;
+      const a = lonToAngle(p.longitude);
+      let r = mid + ((p.house || 1) % 4) * ((outer - mid) / 5);
+      const jitter = (used.filter(u => Math.abs(u - a) < 0.15).length) * size * 0.018;
+      used.push(a);
+      const x = cx + Math.cos(a) * (r + jitter);
+      const y = cy + Math.sin(a) * (r + jitter);
+
+      const glow = ctx.createRadialGradient(x, y, 0, x, y, size * 0.035);
+      glow.addColorStop(0, 'rgba(232,213,163,0.95)');
       glow.addColorStop(1, 'transparent');
       ctx.fillStyle = glow;
       ctx.beginPath();
-      ctx.arc(x, y, size * 0.04, 0, Math.PI * 2);
+      ctx.arc(x, y, size * 0.035, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = '#f5f0e8';
-      ctx.font = `600 ${size * 0.034}px serif`;
-      ctx.fillText(p.sym, x, y + 1);
+      ctx.font = `600 ${Math.max(13, size * 0.042)}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.sym, x, y);
 
-      ctx.fillStyle = 'rgba(201,169,98,0.75)';
-      ctx.font = `${size * 0.022}px sans-serif`;
-      ctx.fillText(lang === 'zh' ? p.sign.zh : p.sign.en, x, y + size * 0.055);
+      ctx.fillStyle = 'rgba(245, 240, 232, 0.92)';
+      ctx.font = `600 ${Math.max(9, size * 0.026)}px system-ui, sans-serif`;
+      const label = lang === 'zh'
+        ? `${p.zh}·${p.house || '?'}宫`
+        : `${p.en} H${p.house || '?'}`;
+      ctx.fillText(label, x, y + size * 0.038);
     });
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, size * 0.055, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(201,169,98,0.3)';
-    ctx.fill();
-
-    ctx.fillStyle = 'rgba(232,213,163,0.8)';
-    ctx.font = `${size * 0.028}px serif`;
+    ctx.fillStyle = 'rgba(232,213,163,0.85)';
+    ctx.font = `${size * 0.024}px serif`;
     ctx.textAlign = 'center';
-    ctx.fillText(
-      lang === 'zh' ? astro.summary.zh : astro.summary.en,
-      cx,
-      size - size * 0.06
-    );
+    ctx.fillText(lang === 'zh' ? astro.summary.zh : astro.summary.en, cx, size - size * 0.04);
   },
 };

@@ -132,7 +132,7 @@
         <div class="journey-header">
           <h2 data-i18n="journey.title">命运叙事探索</h2>
           <p class="journey-intro" data-i18n="journey.intro">模拟命盘 · 找偏见 · 对照 AI 重构 · 写一句你的版本</p>
-          <span class="step-indicator"><span data-i18n="journey.step">步骤</span> <span id="step-num">1</span> / 7</span>
+          <span class="step-indicator"><span data-i18n="journey.step">步骤</span> <span id="step-num">1</span> / 6</span>
         </div>
 
         <!-- Step 1 -->
@@ -158,18 +158,8 @@
           </div>
         </div>
 
-        <!-- Step 2 -->
+        <!-- Step 2: 出生信息 -->
         <div class="journey-step" data-step="2">
-          <h3 data-i18n="journey.s2.title">选择叙事视角</h3>
-          <div class="card-grid card-grid--3">
-            <button class="lens-card" data-lens="traditional" data-i18n="journey.s2.trad">传统解读（含性别差异）</button>
-            <button class="lens-card" data-lens="modern" data-i18n="journey.s2.modern">现代解读</button>
-            <button class="lens-card" data-lens="ai" data-i18n="journey.s2.ai">AI 重构解读</button>
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="journey-step" data-step="3">
           <h3 data-i18n="journey.s3.title">输入信息</h3>
           <form class="birth-form" onsubmit="return false">
             <label>
@@ -184,20 +174,21 @@
               <span data-i18n="journey.s3.place">出生地点</span>
               <input type="text" data-i18n-placeholder="journey.s3.placePh" placeholder="例如：上海" value="上海">
             </label>
-            <p class="form-note" data-i18n="journey.s3.note">* 本原型使用模拟数据，不会上传任何个人信息。</p>
+            <p class="form-note" data-i18n="journey.s3.note">* 出生信息仅在浏览器本地计算排盘，不会上传服务器。</p>
           </form>
         </div>
 
-        <!-- Step 4 -->
-        <div class="journey-step" data-step="4">
+        <!-- Step 3: 传统解读（固定，用于发现偏见） -->
+        <div class="journey-step" data-step="3">
           <h3 id="journey-reading-title" data-i18n="journey.s4.title">传统解读（含性别差异）</h3>
+          <p class="journey-step-hint" data-i18n="journey.s4.hint">请先阅读传统说法——其中的性别偏见，是本次探索的起点。</p>
           <div id="bazi-chart" class="chart-mount"></div>
-          <canvas id="astro-chart-canvas" class="chart-mount astro-wheel hidden" width="360" height="360"></canvas>
+          <canvas id="astro-chart-canvas" class="chart-mount astro-wheel hidden" width="400" height="400"></canvas>
           <div class="glass-card reading-card" id="traditional-reading"></div>
         </div>
 
-        <!-- Step 5 -->
-        <div class="journey-step" data-step="5">
+        <!-- Step 4: 偏见扫描 -->
+        <div class="journey-step" data-step="4">
           <h3 data-i18n="journey.s5.title">偏见扫描器 · Bias Scanner</h3>
           <div class="scanner-layout">
             <canvas id="radar-canvas" width="320" height="320"></canvas>
@@ -205,8 +196,8 @@
           </div>
         </div>
 
-        <!-- Step 6 -->
-        <div class="journey-step" data-step="6">
+        <!-- Step 5: 命运法庭 -->
+        <div class="journey-step" data-step="5">
           <h3 data-i18n="journey.s6.title">命运法庭 · Court of Destiny</h3>
           <div class="court-grid">
             <div class="glass-card court-panel">
@@ -224,18 +215,22 @@
           </div>
         </div>
 
-        <!-- Step 7 -->
-        <div class="journey-step" data-step="7">
-          <h3 data-i18n="journey.s7.title">AI 重构</h3>
-          <div class="reframe-layout">
+        <!-- Step 6: 对照现代 / AI 重构 -->
+        <div class="journey-step" data-step="6">
+          <h3 data-i18n="journey.s7.title">对照：现代视角与 AI 重构</h3>
+          <p class="journey-step-hint" data-i18n="journey.s7.hint">你已经看过传统说法并标出偏见——现在对照另外两种写法。</p>
+          <div class="compare-grid">
             <div class="glass-card reframe-col">
-              <h4 data-i18n="journey.s7.original">原文</h4>
-              <p class="reframe-text" id="reframe-original"></p>
+              <h4 data-i18n="journey.s7.traditional">传统（你已读）</h4>
+              <p class="reframe-text reframe-text--compact" id="reframe-traditional"></p>
             </div>
-            <div class="reframe-divider">→</div>
+            <div class="glass-card reframe-col">
+              <h4 data-i18n="journey.s7.modern">现代解读</h4>
+              <p class="reframe-text reframe-text--compact" id="reframe-modern"></p>
+            </div>
             <div class="glass-card reframe-col">
               <h4 data-i18n="journey.s7.reframed">AI 重构</h4>
-              <p class="reframe-text reframe-text--animated" id="reframe-new"></p>
+              <p class="reframe-text reframe-text--animated reframe-text--compact" id="reframe-new"></p>
             </div>
           </div>
           <div class="fragments-found" id="fragments-found"></div>
@@ -346,7 +341,7 @@
               </ul>
             </div>
           </div>
-          <p class="poster-footer" data-i18n="about.footer">高中生研究项目 · Reframe Destiny © 2025</p>
+          <p class="poster-footer" data-i18n="about.footer">高中生研究项目 · Reframe Destiny © 2026</p>
         </div>
       </section>
 

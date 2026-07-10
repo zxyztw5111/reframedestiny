@@ -102,7 +102,7 @@ export function sampleTitleLetters(width: number, height: number, maxPoints = 68
   c.width = sampleW
   c.height = sampleH
   const ctx = c.getContext('2d')
-  const centerY = height * 0.26
+  const centerY = height * 0.44
   if (!ctx) return [{ x: width / 2, y: centerY }]
 
   const fontSize = Math.min(sampleW / 6.2, sampleH / 2.25)

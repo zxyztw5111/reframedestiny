@@ -51,7 +51,7 @@ function navigate(view, opts = {}) {
   if (view === 'archive') renderArchive();
   if (view === 'journey') updateJourneyUI();
 
-  CanvasFX.setHomeInteractive(view === 'home');
+  CanvasFX.setHomeInteractive(true);
   setLotusPrompt();
 }
 
@@ -182,6 +182,8 @@ async function sendLotusMessage() {
   }
 }
 
+const JOURNEY_STEPS = 6;
+
 /* ── Journey ── */
 function updateJourneyUI() {
   document.querySelectorAll('.journey-step').forEach(s => {
@@ -191,26 +193,12 @@ function updateJourneyUI() {
   document.getElementById('journey-prev').disabled = journey.step === 1;
 
   const nextBtn = document.getElementById('journey-next');
-  nextBtn.textContent = journey.step === 7 ? t('journey.finish') : t('journey.next');
+  nextBtn.textContent = journey.step === JOURNEY_STEPS ? t('journey.finish') : t('journey.next');
 
-  if (journey.step === 4) renderTraditionalReading();
-  if (journey.step === 5) renderScanner();
-  if (journey.step === 6) renderCourt();
-  if (journey.step === 7) renderReframe();
-}
-
-function getReadingKey() {
-  const lens = journey.lens || 'traditional';
-  if (lens === 'modern') return 'modern';
-  if (lens === 'ai') return 'reframed';
-  return 'traditional';
-}
-
-function getLensLabelKey() {
-  const lens = journey.lens || 'traditional';
-  if (lens === 'modern') return 'modern';
-  if (lens === 'ai') return 'ai';
-  return 'trad';
+  if (journey.step === 3) renderTraditionalReading();
+  if (journey.step === 4) renderScanner();
+  if (journey.step === 5) renderCourt();
+  if (journey.step === 6) renderCompare();
 }
 
 function renderTraditionalReading() {
@@ -218,13 +206,6 @@ function renderTraditionalReading() {
   if (!journey.system) return;
 
   if (!journey.chartData) journey.chartData = ChartCalc.computeAll();
-
-  const key = getReadingKey();
-  const titleEl = document.getElementById('journey-reading-title');
-  if (titleEl) {
-    const titleKeys = { traditional: 'journey.s4.title', modern: 'journey.s4.modern', reframed: 'journey.s4.ai' };
-    titleEl.textContent = t(titleKeys[key] || 'journey.s4.title');
-  }
 
   const baziEl = document.getElementById('bazi-chart');
   const astroCanvas = document.getElementById('astro-chart-canvas');
@@ -239,19 +220,16 @@ function renderTraditionalReading() {
     }
   }
 
-  const lensForEngine = key === 'reframed' ? 'ai' : journey.lens;
   const readingText = ReadingEngine.getReading(
     journey.system,
-    lensForEngine,
+    'traditional',
     currentLang,
     journey.chartData
   );
 
   el.innerHTML = `
-    <p class="reading-source">${t('journey.readingSource')} · ${t('journey.s2.' + getLensLabelKey())}</p>
-    <article>
-      <p>${readingText}</p>
-    </article>
+    <p class="reading-source">${t('journey.readingSource')} · ${t('journey.s2.trad')}</p>
+    <article class="reading-body">${readingText.split('\n\n').map(p => `<p>${p}</p>`).join('')}</article>
   `;
 }
 
@@ -338,19 +316,15 @@ async function fetchDeepSeekReframe(originalText, biasLabels) {
   return content;
 }
 
-async function renderReframe() {
+async function renderCompare() {
   if (!journey.system) return;
   if (!journey.chartData) journey.chartData = ChartCalc.computeAll();
 
-  const originalKey = journey.lens === 'modern' ? 'modern' : 'traditional';
-  const lensForEngine = originalKey === 'modern' ? 'modern' : 'traditional';
-  const original = ReadingEngine.getReading(
-    journey.system,
-    lensForEngine,
-    currentLang,
-    journey.chartData
-  );
-  document.getElementById('reframe-original').textContent = original;
+  const trad = ReadingEngine.getReading(journey.system, 'traditional', currentLang, journey.chartData);
+  const modern = ReadingEngine.getReading(journey.system, 'modern', currentLang, journey.chartData);
+
+  document.getElementById('reframe-traditional').textContent = trad;
+  document.getElementById('reframe-modern').textContent = modern;
 
   const newEl = document.getElementById('reframe-new');
   newEl.textContent = t('journey.s7.loading');
@@ -366,19 +340,12 @@ async function renderReframe() {
 
   const biasLabels = found.map(b => (currentLang === 'zh' ? b.zh : b.en));
   let reframedText;
-
   try {
-    reframedText = await fetchDeepSeekReframe(original, biasLabels);
+    reframedText = await fetchDeepSeekReframe(trad, biasLabels);
   } catch (err) {
     console.warn('[reframe] API unavailable, using preset', err);
-    reframedText = ReadingEngine.getReading(
-      journey.system,
-      'ai',
-      currentLang,
-      journey.chartData
-    );
+    reframedText = ReadingEngine.getReading(journey.system, 'ai', currentLang, journey.chartData);
   }
-
   animateReframeText(reframedText);
 }
 
@@ -395,7 +362,7 @@ function completeJourney() {
     submission_type: 'journey_complete',
     session_id: getResearchSessionId(),
     system: journey.system,
-    narrative_lens: journey.lens,
+    narrative_lens: 'traditional',
     bias_ids: found.map(b => b.id),
     scanner_scores: journey.scannerScores.map(s => ({
       key: s.key,
@@ -410,23 +377,23 @@ function completeJourney() {
   saveState(state);
   journey.step = 1;
   journey.system = null;
-  journey.lens = null;
+  journey.lens = 'traditional';
   journey.chartData = null;
   journey.foundBiases = [];
   journey.scannerScores = [];
-  document.querySelectorAll('.system-card, .lens-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.system-card').forEach(c => c.classList.remove('selected'));
   document.getElementById('court-user').value = '';
   showPostSurvey(() => navigate('collection'));
 }
 
 function journeyNext() {
   if (journey.step === 1 && !journey.system) return;
-  if (journey.step === 2 && !journey.lens) return;
-  if (journey.step === 3) {
+  if (journey.step === 2) {
     journey.chartData = ChartCalc.computeAll();
     if (!journey.chartData?.birth) return;
+    journey.lens = 'traditional';
   }
-  if (journey.step === 7) { completeJourney(); return; }
+  if (journey.step === JOURNEY_STEPS) { completeJourney(); return; }
   journey.step++;
   updateJourneyUI();
 }
@@ -650,14 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.system-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       journey.system = card.dataset.system;
-    });
-  });
-
-  document.querySelectorAll('.lens-card').forEach(card => {
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.lens-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      journey.lens = card.dataset.lens;
+      journey.lens = 'traditional';
     });
   });
 

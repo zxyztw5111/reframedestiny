@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { VolumeX, Music2, ExternalLink } from 'lucide-react'
 import { LotusCoverCanvas, LOTUS_VIDEO } from './components/LotusCoverCanvas'
 import { GoldGatherIntro } from './components/GoldGatherIntro'
+import { StarfieldCanvas } from './components/StarfieldCanvas'
 
 type Screen = 'cover' | 'goldIntro' | 'consent' | 'journey'
 
@@ -19,6 +20,7 @@ function Cover({ onEnter }: { onEnter: () => void }) {
 
   return (
     <main className="relative flex min-h-[115vh] w-full flex-col items-center overflow-x-hidden font-serif-en selection:bg-white/20 selection:text-white">
+      <StarfieldCanvas />
       <LotusCoverCanvas
         onTitleReveal={() => setTitleVisible(true)}
         onSequenceComplete={() => setReady(true)}
@@ -147,6 +149,7 @@ function Cover({ onEnter }: { onEnter: () => void }) {
 function ConsentGate({ onAgree }: { onAgree: () => void }) {
   return (
     <section className="relative grid min-h-screen place-items-center overflow-hidden px-5 py-16">
+      <StarfieldCanvas />
       <video
         className="pointer-events-none fixed inset-0 z-0 h-full w-full scale-[1.15] object-cover brightness-[0.92] saturate-[1.45] contrast-[1.12]"
         src={LOTUS_VIDEO}
@@ -211,11 +214,7 @@ function App() {
   }
 
   function handleGoldIntroDone() {
-    if (window.localStorage.getItem('rd-consent-v1') === 'yes') {
-      setScreen('journey')
-    } else {
-      setScreen('consent')
-    }
+    setScreen('consent')
   }
 
   function handleAgree() {

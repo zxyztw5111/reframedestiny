@@ -68,6 +68,26 @@ function bodyLongitude(body, astroTime) {
   }
 }
 
+function computeAscendant(astroTime, lat, lon) {
+  const theta0 = Astronomy.SiderealTime(astroTime);
+  const lst = theta0 + lon / 15;
+  const ramc = ((lst * 15) % 360 + 360) % 360;
+  const phi = (lat * Math.PI) / 180;
+  const eps = (23.4392911 * Math.PI) / 180;
+  const ramcRad = (ramc * Math.PI) / 180;
+  let ascRad = Math.atan2(
+    Math.cos(ramcRad),
+    -(Math.sin(ramcRad) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps))
+  );
+  let ascLon = (ascRad * 180) / Math.PI;
+  if (ascLon < 0) ascLon += 360;
+  return ascLon;
+}
+
+function houseOf(longitude, ascLon) {
+  return Math.floor(((longitude - ascLon + 360) % 360) / 30) + 1;
+}
+
 const ChartCalc = {
   readBirthForm,
 
@@ -125,7 +145,13 @@ const ChartCalc = {
     const planets = bodies.map(b => {
       const lon = bodyLongitude(b.body, astroTime);
       const sign = lon != null ? signFromLongitude(lon) : { index: 0, zh: '—', en: '—' };
-      return { ...b, longitude: lon ?? 0, sign };
+      return { ...b, longitude: lon ?? 0, sign, house: null };
+    });
+
+    const ascLon = computeAscendant(astroTime, f.geo.lat, f.geo.lon);
+    const ascSign = signFromLongitude(ascLon);
+    planets.forEach(p => {
+      if (p.longitude != null) p.house = houseOf(p.longitude, ascLon);
     });
 
     const sun = planets[0];
@@ -133,12 +159,14 @@ const ChartCalc = {
 
     return {
       planets,
+      ascLon,
+      ascSign,
       sunSign: sun.sign,
       moonSign: moon.sign,
       place: f.geo,
       summary: {
-        zh: `太阳${sun.sign.zh} · 月亮${moon.sign.zh} · 地点${f.geo.label}`,
-        en: `Sun ${sun.sign.en} · Moon ${moon.sign.en} · ${f.geo.label}`,
+        zh: `上升${ascSign.zh} · 太阳${sun.sign.zh} · 月亮${moon.sign.zh} · ${f.geo.label}`,
+        en: `Asc ${ascSign.en} · Sun ${sun.sign.en} · Moon ${moon.sign.en} · ${f.geo.label}`,
       },
     };
   },
