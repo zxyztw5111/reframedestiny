@@ -1,0 +1,2 @@
+# React SPA: static files (e.g. /game/*) are served first; unmatched paths fall back to index.html
+/*    /index.html   200

@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "vercel dev",
-    "start": "vercel dev"
+    "start": "vercel dev",
+    "build": "npm install --prefix web && npm run build --prefix web"
   },
   "devDependencies": {
     "vercel": "^41.0.0"
