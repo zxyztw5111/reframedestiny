@@ -2,10 +2,9 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { VolumeX, Music2, ExternalLink } from 'lucide-react'
 import { LotusCoverCanvas, LOTUS_VIDEO } from './components/LotusCoverCanvas'
-import { GoldGatherIntro } from './components/GoldGatherIntro'
 import { StarfieldCanvas } from './components/StarfieldCanvas'
 
-type Screen = 'cover' | 'goldIntro' | 'consent' | 'journey'
+type Screen = 'cover' | 'consent' | 'journey'
 
 const consentItems = [
   ['匿名', '我们不会收集你的姓名、联系方式等能认出你是谁的信息。'],
@@ -210,10 +209,6 @@ function App() {
   const [screen, setScreen] = useState<Screen>('cover')
 
   function handleEnterFromCover() {
-    setScreen('goldIntro')
-  }
-
-  function handleGoldIntroDone() {
     setScreen('consent')
   }
 
@@ -227,11 +222,6 @@ function App() {
       {screen === 'cover' && (
         <motion.div key="cover" exit={{ opacity: 0 }} transition={{ duration: 1.1 }}>
           <Cover onEnter={handleEnterFromCover} />
-        </motion.div>
-      )}
-      {screen === 'goldIntro' && (
-        <motion.div key="goldIntro" exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
-          <GoldGatherIntro onComplete={handleGoldIntroDone} />
         </motion.div>
       )}
       {screen === 'consent' && (
