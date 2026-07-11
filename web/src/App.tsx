@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { VolumeX, Music2, ExternalLink } from 'lucide-react'
+import { Music2, ExternalLink } from 'lucide-react'
 import { LotusCoverCanvas, LOTUS_VIDEO } from './components/LotusCoverCanvas'
 import { StarfieldCanvas } from './components/StarfieldCanvas'
 
@@ -24,21 +24,6 @@ function Cover({ onEnter }: { onEnter: () => void }) {
         onTitleReveal={() => setTitleVisible(true)}
         onSequenceComplete={() => setReady(true)}
       />
-
-      <AnimatePresence>
-        {ready && (
-          <motion.button
-            type="button"
-            aria-label="Muted"
-            className="liquid-glass fixed right-5 top-5 z-30 grid h-9 w-9 place-items-center text-[#e8e4d8]/60 transition hover:text-[#eef3f0]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2 }}
-          >
-            <VolumeX size={14} strokeWidth={1.5} />
-          </motion.button>
-        )}
-      </AnimatePresence>
 
       <div className="pointer-events-none relative z-10 flex w-full max-w-7xl flex-1 flex-col items-center px-6 pt-[22vh] pb-8 text-center">
         <AnimatePresence>

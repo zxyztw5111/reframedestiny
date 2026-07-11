@@ -105,11 +105,11 @@ function setLotusPrompt() {
 }
 
 function openLotusDialog() {
-  lotusChatHistory = [];
   const box = document.getElementById('lotus-chat-messages');
-  if (box) box.innerHTML = '';
-  appendLotusChatMessage('assistant', t('lotus.welcome'));
-  lotusChatHistory.push({ role: 'assistant', content: t('lotus.welcome') });
+  if (box && !box.children.length) {
+    appendLotusChatMessage('assistant', t('lotus.welcome'));
+    lotusChatHistory.push({ role: 'assistant', content: t('lotus.welcome') });
+  }
   document.getElementById('lotus-chat-panel')?.classList.remove('hidden');
   document.getElementById('lotus-guide')?.classList.add('lotus-guide--chat-open');
   document.getElementById('lotus-dialog-input')?.focus();
@@ -121,23 +121,32 @@ function closeLotusDialog() {
   setLotusPrompt();
 }
 
-async function fetchLotusReply(userMessage) {
+function lotusSystemPrompt() {
   const langLabel = currentLang === 'zh' ? '简体中文' : 'English';
+  return (
+    'You are 莲心 (Lotus Guide) in the Reframe Destiny research site. ' +
+    'Reply in ' + langLabel + ' only, 2–4 short sentences (under 90 words). ' +
+    'Answer the user\'s actual question — never repeat the same canned line. ' +
+    'Topics you handle: BaZi, Western astrology, gender bias in fate/divination language, marriage centrism, ke-fu / husband-harming labels, fear narratives, personal agency, reframing narratives. ' +
+    'Do NOT predict lucky dates, marriage timing, or anyone\'s real fortune. ' +
+    'Do NOT claim metaphysical truth; teach critical reading of narratives. ' +
+    'If the question is off-topic, briefly redirect to questioning fate-talk and gender scripts. ' +
+    'Warm, plain, youth-friendly tone. No error messages about servers.'
+  );
+}
+
+async function fetchLotusReply(userMessage) {
   const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       messages: [
-        {
-          role: 'system',
-          content:
-            'You are 莲心 (Lotus Guide). Reply in ' + langLabel + ' in ONE or TWO short sentences only (under 40 words). ' +
-            'Warm, plain language. No fortune-telling. No error messages. No apologies about connectivity.'
-        },
-        ...lotusChatHistory.slice(-6).map(m => ({ role: m.role, content: m.content })),
+        { role: 'system', content: lotusSystemPrompt() },
+        ...lotusChatHistory.slice(-8).map(m => ({ role: m.role, content: m.content })),
         { role: 'user', content: userMessage }
       ],
-      max_tokens: 120
+      max_tokens: 220,
+      temperature: 0.85
     })
   });
   const data = await res.json();
@@ -174,8 +183,11 @@ async function sendLotusMessage() {
       appendLotusChatMessage('assistant', retry);
       lotusChatHistory.push({ role: 'assistant', content: retry });
     } catch {
+      const hint = currentLang === 'zh'
+        ? '（AI 暂时离线）莲心想说：'
+        : '(AI offline for now) The lotus says: ';
       const fallback = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
-      appendLotusChatMessage('assistant', currentLang === 'zh' ? fallback.zh : fallback.en);
+      appendLotusChatMessage('assistant', hint + (currentLang === 'zh' ? fallback.zh : fallback.en));
     }
   } finally {
     if (sendBtn) sendBtn.disabled = false;

@@ -1,6 +1,6 @@
 /* ═══ Canvas: Stars, Sand, Intro, Wanderer, Constellation, Radar ═══ */
 
-/** Fixed lotus constellation layout (v1 draft, normalized 0–1, origin top-left). */
+/** v1 lotus draft — normalized 0–1, origin top-left (point 1 = index 0 … point 20 = index 19). */
 const LOTUS_CONSTELLATION_POINTS = [
   [0.50, 0.06], [0.28, 0.14], [0.72, 0.14], [0.92, 0.38],
   [0.72, 0.72], [0.50, 0.94], [0.28, 0.72], [0.08, 0.38],
@@ -9,21 +9,16 @@ const LOTUS_CONSTELLATION_POINTS = [
   [0.28, 0.34], [0.46, 0.44], [0.54, 0.44], [0.50, 0.52],
 ];
 
-/** Edge pairs (0-indexed point indices). */
 const LOTUS_CONSTELLATION_EDGES = [
-  // outer petal ring 1-2-3-4-5-6-7-8-1
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
-  // inner frame 9-10-11-12-13-14-15-16-17-9
   [8, 9], [9, 10], [10, 11], [11, 12], [12, 13], [13, 14], [14, 15], [15, 16], [16, 8],
-  // center 18-20-19-18
   [17, 19], [19, 18], [18, 17],
-  // spokes 20-9,20-10,20-13,20-14,20-16,20-17
   [19, 8], [19, 9], [19, 12], [19, 13], [19, 15], [19, 16],
-  // vertical 1-9, 10-20, 13-6, 14-6
   [0, 8], [9, 19], [12, 5], [13, 5],
-  // horizontal 8-16-20, 11-4, 12-4
   [7, 15], [15, 19], [10, 3], [11, 3],
 ];
+
+const LOTUS_MAP_IMAGE_SRC = 'assets/lotus-constellation-draft.png';
 
 const CanvasFX = {
   bgCanvas: null,
@@ -34,12 +29,24 @@ const CanvasFX = {
   scrollY: 0,
   mouse: { x: -9999, y: -9999 },
   homeActive: false,
+  lotusMapImage: null,
+  lotusMapReady: false,
+
+  initLotusMapImage() {
+    if (this.lotusMapImage) return;
+    const img = new Image();
+    img.onload = () => { this.lotusMapReady = true; };
+    img.onerror = () => { console.warn('[lotus map] failed to load', LOTUS_MAP_IMAGE_SRC); };
+    img.src = LOTUS_MAP_IMAGE_SRC;
+    this.lotusMapImage = img;
+  },
 
   init() {
     this.bgCanvas = document.getElementById('bg-canvas');
     this.sandCanvas = document.getElementById('sand-canvas');
     if (!this.bgCanvas) return;
 
+    this.initLotusMapImage();
     this.resize();
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('scroll', () => { this.scrollY = window.scrollY; });
@@ -416,7 +423,7 @@ const CanvasFX = {
     ctx.stroke();
   },
 
-  /* ── Constellation map (lotus shape, v1 fixed layout) ── */
+  /* ── Constellation map — v1 draft image + 20 fixed star slots ── */
   drawConstellation(canvas, biases, unlocked, lang) {
     if (!canvas) return;
     const parent = canvas.parentElement;
@@ -424,34 +431,35 @@ const CanvasFX = {
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    const pad = size * 0.06;
+    const pad = size * 0.04;
     const t = Date.now() * 0.001;
-    const petalCount = 8;
     const cx = size / 2;
-    const cy = size / 2 + size * 0.02;
-    const r = size * 0.38;
+    const cy = size / 2;
 
     ctx.clearRect(0, 0, size, size);
 
-    const neb = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.2);
-    neb.addColorStop(0, 'rgba(201, 169, 98, 0.12)');
-    neb.addColorStop(0.5, 'rgba(90, 138, 122, 0.08)');
+    const neb = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.48);
+    neb.addColorStop(0, 'rgba(201, 169, 98, 0.1)');
+    neb.addColorStop(0.55, 'rgba(90, 138, 122, 0.06)');
     neb.addColorStop(1, 'transparent');
     ctx.fillStyle = neb;
     ctx.fillRect(0, 0, size, size);
 
-    for (let p = 0; p < petalCount; p++) {
-      this.drawLotusPetal(ctx, cx, cy, r, p, petalCount, 0.85 + 0.15 * Math.sin(t * 0.7 + p));
+    const drawW = size - pad * 2;
+    const drawH = size - pad * 2;
+    if (this.lotusMapReady && this.lotusMapImage) {
+      ctx.save();
+      ctx.globalAlpha = 0.92;
+      ctx.drawImage(this.lotusMapImage, pad, pad, drawW, drawH);
+      ctx.restore();
     }
 
     const pointCount = LOTUS_CONSTELLATION_POINTS.length;
-    const mappedBiases = Array.from({ length: pointCount }, (_, i) =>
-      biases.length ? biases[i % biases.length] : null
-    );
+    const mappedBiases = Array.from({ length: pointCount }, (_, i) => biases[i] || null);
 
     const positions = LOTUS_CONSTELLATION_POINTS.map(([nx, ny]) => ({
-      x: pad + nx * (size - pad * 2),
-      y: pad + ny * (size - pad * 2),
+      x: pad + nx * drawW,
+      y: pad + ny * drawH,
     }));
 
     LOTUS_CONSTELLATION_EDGES.forEach(([a, b], i) => {
@@ -463,36 +471,31 @@ const CanvasFX = {
       ctx.moveTo(positions[a].x, positions[a].y);
       ctx.lineTo(positions[b].x, positions[b].y);
       ctx.strokeStyle = both
-        ? `rgba(232, 213, 163, ${0.35 + 0.12 * Math.sin(t + i)})`
-        : 'rgba(255,255,255,0.05)';
-      ctx.lineWidth = both ? 1.2 : 0.6;
+        ? `rgba(232, 213, 163, ${0.38 + 0.14 * Math.sin(t + i)})`
+        : 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = both ? 1.4 : 0.5;
       ctx.stroke();
     });
-
-    ctx.beginPath();
-    ctx.arc(positions[19].x, positions[19].y, r * 0.06, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(201, 169, 98, ${0.15 + 0.08 * Math.sin(t)})`;
-    ctx.fill();
 
     mappedBiases.forEach((b, i) => {
       if (!b) return;
       const isUnlocked = unlocked.includes(b.id);
       const pos = positions[i];
       if (isUnlocked) {
-        const gr = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 18);
-        gr.addColorStop(0, 'rgba(232, 213, 163, 0.55)');
+        const gr = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 20);
+        gr.addColorStop(0, 'rgba(232, 213, 163, 0.65)');
         gr.addColorStop(1, 'transparent');
         ctx.fillStyle = gr;
         ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 14 + 4 * Math.sin(t * 2 + i), 0, Math.PI * 2);
+        ctx.arc(pos.x, pos.y, 16 + 5 * Math.sin(t * 2 + i), 0, Math.PI * 2);
         ctx.fill();
       }
       this.drawStarPoint(
         ctx,
         pos.x,
         pos.y,
-        isUnlocked ? 2.2 : 1.1,
-        isUnlocked ? 0.95 : 0.35,
+        isUnlocked ? 2.4 : 1.0,
+        isUnlocked ? 1 : 0.28,
         i % 3 !== 0
       );
     });

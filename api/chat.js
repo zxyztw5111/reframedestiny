@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'DEEPSEEK_API_KEY is not configured on the server' });
   }
 
-  const { messages, model } = req.body || {};
+  const { messages, model, max_tokens, temperature } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Request body must include a non-empty messages array' });
   }
@@ -28,7 +28,9 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: model || 'deepseek-chat',
         messages,
-        stream: false
+        stream: false,
+        ...(max_tokens ? { max_tokens } : {}),
+        ...(temperature != null ? { temperature } : {})
       })
     });
 
