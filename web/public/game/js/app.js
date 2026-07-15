@@ -184,8 +184,8 @@ async function sendLotusMessage() {
       lotusChatHistory.push({ role: 'assistant', content: retry });
     } catch {
       const hint = currentLang === 'zh'
-        ? '（AI 暂时离线）莲心想说：'
-        : '(AI offline for now) The lotus says: ';
+        ? '莲心想说：'
+        : 'The lotus says: ';
       const fallback = LOTUS_PROMPTS[Math.floor(Math.random() * LOTUS_PROMPTS.length)];
       appendLotusChatMessage('assistant', hint + (currentLang === 'zh' ? fallback.zh : fallback.en));
     }
@@ -195,6 +195,47 @@ async function sendLotusMessage() {
 }
 
 const JOURNEY_STEPS = 6;
+
+const READING_HIGHLIGHTS_ZH = [
+  '克夫', '晚婚', '桃花', '不宜', '太强', '妇道', '正缘', '劫数', '命中注定', '婚姻', '顺从', '贞洁', '贤妻', '旺夫'
+];
+const READING_HIGHLIGHTS_EN = [
+  'ke-fu', 'late marriage', 'peach blossom', 'unfit', 'too strong', 'wifely', 'husband', 'curse', 'destiny', 'marriage', 'obedien', 'chastity', 'virtuous', 'harm'
+];
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function formatReadingHtml(text, lang) {
+  const keywords = lang === 'zh' ? READING_HIGHLIGHTS_ZH : READING_HIGHLIGHTS_EN;
+  const warnWords = lang === 'zh' ? ['克夫', '克', '不宜', '注定', '劫'] : ['ke-fu', 'harm', 'unfit', 'doomed', 'curse'];
+  const parts = escapeHtml(text).split(/(【[^】]+】)/g);
+  return parts.map((part) => {
+    if (!part) return '';
+    if (/^【[^】]+】$/.test(part)) {
+      const emoji = part.includes('婚姻') || part.includes('Love') ? '💍'
+        : part.includes('性格') || part.includes('Character') ? '🪞'
+        : part.includes('事业') || part.includes('Career') ? '✨'
+        : part.includes('重构') || part.includes('Reframed') ? '🌸'
+        : part.includes('现代') || part.includes('Modern') ? '🧭'
+        : '🔍';
+      return `<span class="reading-emoji">${emoji}</span><span class="reading-section">${part}</span>`;
+    }
+    let html = part;
+    keywords.forEach((kw) => {
+      const re = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+      html = html.replace(re, (m) => {
+        const cls = warnWords.some(w => m.toLowerCase().includes(w.toLowerCase())) ? 'reading-warn' : 'reading-highlight';
+        return `<span class="${cls}">${m}</span>`;
+      });
+    });
+    return html;
+  }).join('');
+}
 
 /* ── Journey ── */
 function updateJourneyUI() {
@@ -241,7 +282,7 @@ function renderTraditionalReading() {
 
   el.innerHTML = `
     <p class="reading-source">${t('journey.readingSource')} · ${t('journey.s2.trad')}</p>
-    <article class="reading-body">${readingText.split('\n\n').map(p => `<p>${p}</p>`).join('')}</article>
+    <article class="reading-body">${readingText.split('\n\n').map(p => `<p>${formatReadingHtml(p, currentLang)}</p>`).join('')}</article>
   `;
 }
 
@@ -290,9 +331,8 @@ function renderCourt() {
 
 function animateReframeText(text) {
   const newEl = document.getElementById('reframe-new');
-  newEl.innerHTML = text.split(/(\s+|[，。；：、])/).filter(Boolean).map((word, i) =>
-    `<span class="word" style="animation-delay:${i * 0.04}s">${word}</span>`
-  ).join('');
+  if (!newEl) return;
+  newEl.innerHTML = text.split('\n\n').map(p => `<p>${formatReadingHtml(p, currentLang)}</p>`).join('');
 }
 
 async function fetchDeepSeekReframe(originalText, biasLabels) {
@@ -335,8 +375,8 @@ async function renderCompare() {
   const trad = ReadingEngine.getReading(journey.system, 'traditional', currentLang, journey.chartData);
   const modern = ReadingEngine.getReading(journey.system, 'modern', currentLang, journey.chartData);
 
-  document.getElementById('reframe-traditional').textContent = trad;
-  document.getElementById('reframe-modern').textContent = modern;
+  document.getElementById('reframe-traditional').innerHTML = formatReadingHtml(trad, currentLang);
+  document.getElementById('reframe-modern').innerHTML = formatReadingHtml(modern, currentLang);
 
   const newEl = document.getElementById('reframe-new');
   newEl.textContent = t('journey.s7.loading');
@@ -528,29 +568,22 @@ function setupConsentGate() {
   const gate = document.getElementById('consent-gate');
   const intro = document.getElementById('intro');
   const agreeBtn = document.getElementById('consent-agree');
-  const skipBtn = document.getElementById('consent-skip');
 
-  const enterIntro = () => {
+  const enterAfterConsent = () => {
     gate.classList.add('hidden');
-    intro.classList.remove('hidden');
-    initSite();
+    intro?.classList.add('hidden');
+    enterAppHome();
   };
 
   if (localStorage.getItem(CONSENT_KEY) === 'yes') {
-    gate.classList.add('hidden');
-    intro.classList.remove('hidden');
-    initSite();
+    enterAfterConsent();
     return;
   }
 
-  intro.classList.add('hidden');
+  intro?.classList.add('hidden');
   agreeBtn?.addEventListener('click', () => {
     localStorage.setItem(CONSENT_KEY, 'yes');
-    enterIntro();
-  });
-  skipBtn?.addEventListener('click', () => {
-    localStorage.setItem(CONSENT_KEY, 'yes');
-    enterIntro();
+    enterAfterConsent();
   });
 }
 

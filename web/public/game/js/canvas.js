@@ -1,12 +1,31 @@
 /* ═══ Canvas: Stars, Sand, Intro, Wanderer, Constellation, Radar ═══ */
 
-/** v1 lotus draft — normalized 0–1, origin top-left (point 1 = index 0 … point 20 = index 19). */
+/**
+ * v1 lotus draft — normalized 0–1, origin top-left.
+ * Calibrated to assets/lotus-constellation-draft.png ring centers (points 1–20).
+ * Index 0 = point 1 … index 19 = point 20.
+ */
 const LOTUS_CONSTELLATION_POINTS = [
-  [0.50, 0.06], [0.28, 0.14], [0.72, 0.14], [0.92, 0.38],
-  [0.72, 0.72], [0.50, 0.94], [0.28, 0.72], [0.08, 0.38],
-  [0.38, 0.24], [0.62, 0.24], [0.72, 0.34], [0.72, 0.58],
-  [0.62, 0.76], [0.38, 0.76], [0.28, 0.58], [0.28, 0.42],
-  [0.28, 0.34], [0.46, 0.44], [0.54, 0.44], [0.50, 0.52],
+  [0.5039, 0.0820], // 1  top
+  [0.2227, 0.1992], // 2  top-left
+  [0.7773, 0.1992], // 3  top-right
+  [0.9180, 0.4883], // 4  right
+  [0.7852, 0.7930], // 5  bottom-right
+  [0.5000, 0.8984], // 6  bottom
+  [0.2148, 0.7930], // 7  bottom-left
+  [0.0820, 0.4883], // 8  left
+  [0.4062, 0.2734], // 9
+  [0.5938, 0.2734], // 10
+  [0.7422, 0.3789], // 11
+  [0.7070, 0.5977], // 12
+  [0.5938, 0.7227], // 13
+  [0.3906, 0.7188], // 14
+  [0.2539, 0.6211], // 15
+  [0.3047, 0.5039], // 16
+  [0.2891, 0.3867], // 17
+  [0.4219, 0.4102], // 18
+  [0.5781, 0.4102], // 19
+  [0.5000, 0.4883], // 20 center
 ];
 
 const LOTUS_CONSTELLATION_EDGES = [
@@ -218,6 +237,10 @@ const CanvasFX = {
     const video = document.getElementById('intro-video');
     if (!intro || !video) { callback(); return; }
 
+    const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const maxWait = isWeChat ? 1200 : isMobile ? 4500 : 9000;
+
     const finish = () => {
       intro.classList.add('fade-out');
       setTimeout(() => {
@@ -227,10 +250,20 @@ const CanvasFX = {
       }, 600);
     };
 
+    if (isWeChat) {
+      finish();
+      return;
+    }
+
     video.currentTime = 0;
-    video.play().catch(() => finish());
+    const onReady = () => {
+      video.play().catch(() => finish());
+    };
+    if (video.readyState >= 2) onReady();
+    else video.addEventListener('canplay', onReady, { once: true });
     video.onended = finish;
-    setTimeout(finish, 12000);
+    video.onerror = finish;
+    setTimeout(finish, maxWait);
   },
 
   /* ── Wanderer silhouette ── */
@@ -313,8 +346,18 @@ const CanvasFX = {
   /* ── Radar chart ── */
   drawRadar(canvas, scores, lang) {
     if (!canvas) return;
+    const parent = canvas.parentElement;
+    const cssSize = Math.min(parent?.clientWidth || 320, 360);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(cssSize * dpr);
+    canvas.height = Math.floor(cssSize * dpr);
+    canvas.style.width = `${cssSize}px`;
+    canvas.style.height = `${cssSize}px`;
+
     const ctx = canvas.getContext('2d');
-    const w = canvas.width, h = canvas.height;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const w = cssSize;
+    const h = cssSize;
     const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.38;
     const n = scores.length;
 
@@ -346,12 +389,16 @@ const CanvasFX = {
       ctx.strokeStyle = 'rgba(201, 169, 98, 0.15)';
       ctx.stroke();
 
-      const lx = cx + Math.cos(angle) * (r + 24);
-      const ly = cy + Math.sin(angle) * (r + 24);
-      ctx.fillStyle = 'rgba(245, 240, 232, 0.6)';
-      ctx.font = '11px Noto Serif SC, serif';
+      const lx = cx + Math.cos(angle) * (r + 28);
+      const ly = cy + Math.sin(angle) * (r + 28);
+      ctx.fillStyle = 'rgba(245, 240, 232, 0.92)';
+      ctx.font = `600 ${Math.max(12, Math.round(cssSize * 0.038))}px "Noto Serif SC", "PingFang SC", serif`;
       ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.45)';
+      ctx.shadowBlur = 4;
       ctx.fillText(lang === 'zh' ? s.zh : s.en, lx, ly);
+      ctx.shadowBlur = 0;
     });
 
     // Data polygon
@@ -427,30 +474,27 @@ const CanvasFX = {
   drawConstellation(canvas, biases, unlocked, lang) {
     if (!canvas) return;
     const parent = canvas.parentElement;
-    const size = Math.min(parent.clientWidth, 720);
-    canvas.width = size;
-    canvas.height = size;
+    const cssSize = Math.min(parent?.clientWidth || 720, 720);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(cssSize * dpr);
+    canvas.height = Math.floor(cssSize * dpr);
+    canvas.style.width = `${cssSize}px`;
+    canvas.style.height = `${cssSize}px`;
     const ctx = canvas.getContext('2d');
-    const pad = size * 0.04;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const t = Date.now() * 0.001;
+    const size = cssSize;
     const cx = size / 2;
     const cy = size / 2;
 
     ctx.clearRect(0, 0, size, size);
 
-    const neb = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.48);
-    neb.addColorStop(0, 'rgba(201, 169, 98, 0.1)');
-    neb.addColorStop(0.55, 'rgba(90, 138, 122, 0.06)');
-    neb.addColorStop(1, 'transparent');
-    ctx.fillStyle = neb;
-    ctx.fillRect(0, 0, size, size);
-
-    const drawW = size - pad * 2;
-    const drawH = size - pad * 2;
+    // Lotus line art from draft image — blend into page, no dark box.
     if (this.lotusMapReady && this.lotusMapImage) {
       ctx.save();
-      ctx.globalAlpha = 0.92;
-      ctx.drawImage(this.lotusMapImage, pad, pad, drawW, drawH);
+      ctx.globalAlpha = 0.42;
+      ctx.globalCompositeOperation = 'screen';
+      ctx.drawImage(this.lotusMapImage, 0, 0, size, size);
       ctx.restore();
     }
 
@@ -458,8 +502,8 @@ const CanvasFX = {
     const mappedBiases = Array.from({ length: pointCount }, (_, i) => biases[i] || null);
 
     const positions = LOTUS_CONSTELLATION_POINTS.map(([nx, ny]) => ({
-      x: pad + nx * drawW,
-      y: pad + ny * drawH,
+      x: nx * size,
+      y: ny * size,
     }));
 
     LOTUS_CONSTELLATION_EDGES.forEach(([a, b], i) => {
@@ -481,23 +525,26 @@ const CanvasFX = {
       if (!b) return;
       const isUnlocked = unlocked.includes(b.id);
       const pos = positions[i];
-      if (isUnlocked) {
-        const gr = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 20);
-        gr.addColorStop(0, 'rgba(232, 213, 163, 0.65)');
-        gr.addColorStop(1, 'transparent');
-        ctx.fillStyle = gr;
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 16 + 5 * Math.sin(t * 2 + i), 0, Math.PI * 2);
-        ctx.fill();
-      }
-      this.drawStarPoint(
-        ctx,
-        pos.x,
-        pos.y,
-        isUnlocked ? 2.4 : 1.0,
-        isUnlocked ? 1 : 0.28,
-        i % 3 !== 0
-      );
+      // Locked nodes stay on the draft image only — no extra star offset.
+      if (!isUnlocked) return;
+
+      const pulse = 5 + 1.5 * Math.sin(t * 2 + i);
+      const gr = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, pulse * 2.2);
+      gr.addColorStop(0, 'rgba(255, 236, 190, 0.95)');
+      gr.addColorStop(0.35, 'rgba(232, 213, 163, 0.55)');
+      gr.addColorStop(1, 'transparent');
+      ctx.fillStyle = gr;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, pulse * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, 3.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#f5e6c8';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(201, 169, 98, 0.9)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
     });
 
     return positions;

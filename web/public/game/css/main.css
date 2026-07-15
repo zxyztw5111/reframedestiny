@@ -158,6 +158,13 @@ body {
 }
 .intro-skip:hover { color: var(--gold-light); border-color: var(--gold-dim); }
 
+/* Embedded in React shell: React cover already showed consent — hide game duplicate */
+html.embedded-boot #consent-gate,
+html.embedded-boot #intro,
+html.embedded-boot #intro-skip {
+  display: none !important;
+}
+
 /* ── Informed consent gate ── */
 .consent-gate {
   position: fixed;
@@ -1000,6 +1007,26 @@ body {
 #radar-canvas { max-width: 100%; height: auto; }
 .reading-body p { margin-bottom: 1rem; line-height: 1.75; }
 .reading-body p:last-child { margin-bottom: 0; }
+.reading-body .reading-section {
+  color: var(--gold-light);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.reading-body .reading-highlight {
+  color: #ffd89a;
+  font-weight: 600;
+  padding: 0 0.12em;
+  border-bottom: 1px solid rgba(255, 216, 154, 0.35);
+}
+.reading-body .reading-warn {
+  color: #ffb4a2;
+  font-weight: 600;
+}
+.reading-body .reading-emoji {
+  margin-right: 0.35em;
+}
+.reframe-text .reading-highlight { color: #b8e8d4; border-bottom-color: rgba(184, 232, 212, 0.35); }
+.reframe-text .reading-warn { color: #ffd0a8; }
 .journey-step-hint {
   font-size: 0.88rem;
   color: var(--gold);
@@ -1142,10 +1169,9 @@ body {
   margin: 0 auto 2rem;
   aspect-ratio: 1;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(201,169,98,0.08), transparent 42%),
-    radial-gradient(circle at 50% 52%, rgba(90,138,122,0.06), transparent 62%);
-  box-shadow: 0 0 90px rgba(201,169,98,0.14), inset 0 0 90px rgba(201,169,98,0.06);
+  overflow: hidden;
+  background: transparent;
+  box-shadow: 0 0 48px rgba(201,169,98,0.12);
 }
 #constellation-canvas { width: 100%; height: 100%; }
 .constellation-tooltip {

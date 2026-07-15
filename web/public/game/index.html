@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Reframe Destiny — AI × Digital Humanities × Narrative Research">
   <title>Reframe Destiny · 重塑命运</title>
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).get('embedded') === '1') {
+        document.documentElement.classList.add('embedded-boot');
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
@@ -32,7 +39,6 @@
         <li><strong data-i18n="consent.item4.title">数据用途</strong><span data-i18n="consent.item4.body">——你的回答只用于这个课堂研究，不会作别的用途。</span></li>
       </ul>
       <button type="button" class="btn-primary btn-primary--large" id="consent-agree" data-i18n="consent.agree">同意并继续</button>
-      <button type="button" class="intro-skip consent-skip" id="consent-skip" data-i18n="intro.skip">Skip · 跳过</button>
       <p class="consent-gate__decline" data-i18n="consent.decline">若不同意，直接关闭此页面即可。</p>
     </div>
   </div>

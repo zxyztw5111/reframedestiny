@@ -32,6 +32,12 @@ const BRANCH_BIAS = {
   戌: '戌土刑冲，传统说法爱提「波折、阻碍」',
 };
 
+function traitText(trait, lang, key) {
+  const block = trait[lang] || trait.zh;
+  if (key === undefined) return block;
+  return block[key] || '';
+}
+
 function baziReading(chart, lens, lang) {
   const dm = chart.dayMaster;
   const trait = EL_TRAITS[dm.el] || EL_TRAITS.earth;
@@ -44,8 +50,8 @@ function baziReading(chart, lens, lang) {
   if (lens === 'traditional') {
     if (lang === 'zh') {
       return [
-        `【命局总览】依你所输生辰，排出四柱「${gz}」。日主为${dm.zh}，五行属${EL_ZH[dm.el]}。传统命理会先给一句「总论」：${dm.zh}日主，${trait.zh.virtue}，但也容易被说成${trait.shadow}。`,
-        `【性格与强弱】${EL_ZH[dm.el]}命常被描述为「${trait.growth}」。若再套入性别模板，女命可能听到${trait.bias}；男命则可能听到相反的「不够有担当」。——同一套字，因性别而不同。`,
+        `【命局总览】依你所输生辰，排出四柱「${gz}」。日主为${dm.zh}，五行属${EL_ZH[dm.el]}。传统命理会先给一句「总论」：${dm.zh}日主，${traitText(trait, 'zh', 'virtue')}，但也容易被说成${traitText(trait, 'zh', 'shadow')}。`,
+        `【性格与强弱】${EL_ZH[dm.el]}命常被描述为「${traitText(trait, 'zh', 'growth')}」。若再套入性别模板，女命可能听到${traitText(trait, 'zh', 'bias')}；男命则可能听到相反的「不够有担当」。——同一套字，因性别而不同。`,
         `【情感与婚姻】时柱「${hourPillar}」、日支「${pillars[2]?.gz || ''}」是传统看婚恋的重点。常见断语包括：宜晚婚、夫妻宫有冲、桃花不旺/过旺。${branchNote ? branchNote + '。' : ''}这些说法往往预设了「婚姻是人生主轴」。`,
         `【事业与运势】年柱管早年、月柱管青年、日柱为自己、时柱管晚年。传统文本爱把「行运」说成命中注定，并用「克、冲、合」制造紧迫感——这正是我们要扫描的偏见叙事，而非你的真实能力上限。`,
         `【十神与性别话术】以日主${dm.zh}论：正官、七杀常被说成「夫星」；偏财、正财则联到「妻财」。女命听到「官杀混杂、婚姻不顺」的概率远高于男命；男命则常被要求「财星旺、能养家」。同一套十神名称，背后是不同的社会角色剧本。`,
@@ -53,8 +59,8 @@ function baziReading(chart, lens, lang) {
       ].join('\n\n');
     }
     return [
-      `[Overview] From your birth data: Four Pillars ${gz}. Day Master ${dm.en} (${dm.el}). Traditional texts open with a verdict: ${trait.en.virtue}, yet also ${trait.en.shadow}.`,
-      `[Character] ${dm.el} charts are read as ${trait.en.growth}. Gender templates add ${trait.en.bias} for women, or the opposite “not responsible enough” for men — same characters, different story.`,
+      `[Overview] From your birth data: Four Pillars ${gz}. Day Master ${dm.en} (${dm.el}). Traditional texts open with a verdict: ${traitText(trait, 'en', 'virtue')}, yet also ${traitText(trait, 'en', 'shadow')}.`,
+      `[Character] ${dm.el} charts are read as ${traitText(trait, 'en', 'growth')}. Gender templates add ${traitText(trait, 'en', 'bias')} for women, or the opposite “not responsible enough” for men — same characters, different story.`,
       `[Love & Marriage] Hour pillar ${hourPillar} and day pillar ${pillars[2]?.gz || ''} anchor traditional romance scripts: late marriage, palace clash, weak/strong peach blossom. These assume marriage is life's main axis.`,
       `[Career & Luck] Year/month/day/hour pillars map life stages. Traditional copy turns transits into fate sentences with “clash/harm” urgency — narrative bias to scan, not your real ceiling.`,
       `[Ten Gods & gender] With Day Master ${dm.en}, Officer and Seven Killings become husband stars for women; Wealth stars become wife/property for men. Women hear “mixed officers, rocky marriage” far more often — same labels, different social scripts.`,
@@ -63,12 +69,12 @@ function baziReading(chart, lens, lang) {
   }
   if (lens === 'modern') {
     return lang === 'zh'
-      ? `【现代视角】四柱「${gz}」，日主${dm.zh}。现代命理更关注心理动力：${trait.growth}是你可用的资源，${trait.shadow}是需要觉察的压力模式，而非「命中注定」。婚恋、事业节奏应结合你的现实选择，不宜套用「克夫」「晚婚」一类标签。`
-      : `【Modern lens】Pillars ${gz}, Day Master ${dm.en}. Modern readings focus on psychology: ${trait.en.growth} as resource, ${trait.en.shadow} as stress pattern — not fate. Timing in love/career follows your choices, not labels like "ke-fu" or "late marriage."`;
+      ? `【现代视角】四柱「${gz}」，日主${dm.zh}。现代命理更关注心理动力：${traitText(trait, 'zh', 'growth')}是你可用的资源，${traitText(trait, 'zh', 'shadow')}是需要觉察的压力模式，而非「命中注定」。婚恋、事业节奏应结合你的现实选择，不宜套用「克夫」「晚婚」一类标签。`
+      : `【Modern lens】Pillars ${gz}, Day Master ${dm.en}. Modern readings focus on psychology: ${traitText(trait, 'en', 'growth')} as resource, ${traitText(trait, 'en', 'shadow')} as stress pattern — not fate. Timing in love/career follows your choices, not labels like "ke-fu" or "late marriage."`;
   }
   return lang === 'zh'
-    ? `【重构】四柱「${gz}」，日主${dm.zh}——你拥有${trait.growth}的势能。传统里的${trait.bias}是社会性别脚本，不是命理必然。你可以阅读这些符号，但不必让它们定义你是谁、何时结婚、强还是弱。`
-    : `【Reframed】Pillars ${gz}, Day Master ${dm.en} — you carry ${trait.en.growth}. Traditional ${trait.en.bias} is social scripting, not cosmic law. Read the symbols; don't let them define you.`;
+    ? `【重构】四柱「${gz}」，日主${dm.zh}——你拥有${traitText(trait, 'zh', 'growth')}的势能。传统里的${traitText(trait, 'zh', 'bias')}是社会性别脚本，不是命理必然。你可以阅读这些符号，但不必让它们定义你是谁、何时结婚、强还是弱。`
+    : `【Reframed】Pillars ${gz}, Day Master ${dm.en} — you carry ${traitText(trait, 'en', 'growth')}. Traditional ${traitText(trait, 'en', 'bias')} is social scripting, not cosmic law. Read the symbols; don't let them define you.`;
 }
 
 function astroReading(chart, lens, lang) {

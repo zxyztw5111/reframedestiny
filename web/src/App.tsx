@@ -184,7 +184,7 @@ function JourneyGame() {
   return (
     <iframe
       title="Reframe Destiny Journey"
-      src="/game/index.html?embedded=1"
+      src="/game/?embedded=1"
       className="fixed inset-0 z-10 h-full w-full border-0 bg-[#05060a]"
     />
   )
