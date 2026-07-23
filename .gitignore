@@ -17,3 +17,4 @@ package-lock.json
 .env.local
 .env*.local
 .vercel
+.agents/skills/guizang-ppt-skill-repo/

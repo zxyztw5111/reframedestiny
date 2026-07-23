@@ -1386,7 +1386,7 @@
 </script>
 
 <canvas id="bg-grid" class="bg"></canvas>
-<div id="hint">← → navigate · B static · ESC index · 15 slides · slide 3 = live demo</div>
+<div id="hint">← → navigate · B static · ESC index · 15 slides · share this URL for full deck + demo</div>
 <button type="button" id="print-pdf-btn" title="Chrome 打印 → 另存为 PDF">Export PDF</button>
 
 <div id="deck">
@@ -1436,12 +1436,12 @@
 <section class="slide dark demo-fullscreen" data-layout="DEMO-FULL" data-animate="hero">
   <iframe class="demo-iframe demo-iframe--fullscreen" id="demo-fullscreen-iframe" src="about:blank" title="Reframe Destiny — lotus cover (site root)" loading="lazy" allow="autoplay; fullscreen; encrypted-media" referrerpolicy="no-referrer-when-downgrade"></iframe>
   <img class="demo-slide-photo demo-slide-photo--print" src="images/03-demo-lotus-slide.png" width="1920" height="1080" alt="" aria-hidden="true"/>
-  <a class="demo-open-tab" id="demo-open-tab" href="https://reframe-destiny.pages.dev/" target="_blank" rel="noopener noreferrer">Open lotus cover in new tab</a>
-  <button type="button" class="demo-open-tab" id="demo-mirror-btn" style="bottom:12vh;font-size:11px;opacity:.92">Switch embed · vercel.app</button>
+  <a class="demo-open-tab" id="demo-open-tab" href="https://reframe-destiny.pages.dev/" target="_blank" rel="noopener noreferrer">Open live demo in new tab</a>
+  <button type="button" class="demo-open-tab" id="demo-mirror-btn" style="bottom:12vh;font-size:11px;opacity:.92">Switch demo · lotus / game</button>
   <button type="button" class="demo-exit-btn" id="demo-exit-btn" aria-label="Continue to next slide">Continue slides →</button>
   <div class="demo-fullscreen-chrome">
-    <span class="t-meta" style="color:rgba(255,255,255,.85)">03 / 15 · LIVE DEMO · lotus cover (same as site home)</span>
-    <span class="t-meta" style="color:rgba(255,255,255,.55)">reframe-destiny.pages.dev/ · Enter → consent → /game/</span>
+    <span class="t-meta" style="color:rgba(255,255,255,.85)">03 / 15 · LIVE DEMO · same site, inside this deck</span>
+    <span class="t-meta" style="color:rgba(255,255,255,.55)">Share one URL · slides + motion + demo (needs internet)</span>
   </div>
 </section>
 
@@ -1946,6 +1946,27 @@ function go(n){
   syncSlideMedia(idx);
   lock=true;setTimeout(()=>lock=false,700);
 }
+(function initDemoEmbedOrigin(){
+  const host=location.hostname;
+  const isLocalDeck=host==='127.0.0.1'||host==='localhost';
+  const prod='https://reframe-destiny.pages.dev';
+  const isMainSite=host==='reframe-destiny.pages.dev'||host==='reframe-destiny.vercel.app';
+  const onMainSiteDefense=isMainSite&&location.pathname.startsWith('/defense');
+  if(onMainSiteDefense){
+    window.__demoEmbedBase=location.origin+'/';
+    window.__demoEmbedGame=location.origin+'/game/?embedded=1&showIntro=1';
+  }else{
+    window.__demoEmbedBase=prod+'/';
+    window.__demoEmbedGame=prod+'/game/?embedded=1&showIntro=1';
+  }
+  if(isLocalDeck){
+    window.__demoEmbedBase=prod+'/';
+    window.__demoEmbedGame=prod+'/game/?embedded=1&showIntro=1';
+  }
+  window.__demoEmbedMirror=window.__demoEmbedGame;
+  const tab=document.getElementById('demo-open-tab');
+  if(tab) tab.href=window.__demoEmbedBase;
+})();
 function syncSlideMedia(i){
   if(i!==2) return;
   const f=document.getElementById('demo-fullscreen-iframe');
@@ -1958,12 +1979,11 @@ function syncSlideMedia(i){
     }catch(e){}
   }, 150);
 }
-window.__demoEmbedBase='https://reframe-destiny.pages.dev/';
-window.__demoEmbedMirror='https://reframe-destiny.vercel.app/';
 document.getElementById('demo-mirror-btn')?.addEventListener('click',()=>{
-  window.__demoEmbedBase=window.__demoEmbedBase===window.__demoEmbedMirror
-    ? 'https://reframe-destiny.pages.dev/'
-    : window.__demoEmbedMirror;
+  const lotus=(window.__demoEmbedBase||'https://reframe-destiny.pages.dev/').replace(/\/game\/?.*$/,'/');
+  const game=window.__demoEmbedGame||'https://reframe-destiny.pages.dev/game/?embedded=1&showIntro=1';
+  const cur=window.__demoEmbedBase||lotus;
+  window.__demoEmbedBase=cur.includes('/game/')?lotus:game;
   syncSlideMedia(2);
 });
 slides.forEach((s,i)=>s.classList.toggle('is-active',i===0));
