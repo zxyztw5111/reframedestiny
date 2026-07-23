@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reframe Destiny · Poster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+@page { size: 841mm 594mm; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 841mm; height: 594mm; overflow: hidden; font-family: Inter, sans-serif; color: #e8ecff; }
+.wrap {
+  width: 841mm; height: 594mm; padding: 14mm 16mm;
+  background: #060414 url('../ppt/images/starfield-1.jpg') center/cover no-repeat;
+  position: relative;
+}
+.wrap::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(6,4,20,.92) 0%, rgba(20,10,50,.88) 45%, rgba(8,20,60,.9) 100%);
+}
+.wrap::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 78% 22%, rgba(155,123,255,.25), transparent 45%),
+              radial-gradient(circle at 12% 88%, rgba(110,200,232,.12), transparent 40%);
+}
+canvas#lotus { position: absolute; right: 8mm; bottom: 8mm; width: 280px; height: 280px; opacity: .55; z-index: 1; }
+.grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto 1fr 1fr auto; gap: 5mm; height: 100%; }
+.head { grid-column: 1 / -1; border-bottom: 2px solid rgba(110,200,232,.5); padding-bottom: 4mm; }
+.head h1 { font-family: "Playfair Display", serif; font-size: 42pt; letter-spacing: -.02em; }
+.head .sub { font-size: 14pt; color: #b8c4ff; margin-top: 2mm; }
+.head .meta { margin-top: 3mm; font-size: 11pt; color: #8899cc; display: flex; gap: 8mm; flex-wrap: wrap; }
+.box { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); padding: 4mm 5mm; backdrop-filter: blur(4px); }
+.box h2 { font-size: 13pt; text-transform: uppercase; letter-spacing: .12em; color: #6ec8e8; margin-bottom: 2.5mm; }
+.box p, .box li { font-size: 10.5pt; line-height: 1.45; color: #d4daf5; }
+.box ul { padding-left: 4mm; }
+.box strong { color: #fff; }
+.stat { display: grid; grid-template-columns: repeat(3,1fr); gap: 3mm; margin-top: 2mm; }
+.stat div { background: rgba(155,123,255,.15); border: 1px solid rgba(155,123,255,.35); padding: 2mm; text-align: center; }
+.stat .n { font-size: 18pt; font-weight: 700; color: #d4a853; }
+.stat .l { font-size: 8pt; text-transform: uppercase; letter-spacing: .08em; color: #aab; }
+.qr { grid-column: 3; grid-row: 4; display: flex; align-items: end; justify-content: end; gap: 4mm; }
+.qr img { width: 28mm; height: 28mm; background: #fff; padding: 2mm; }
+.foot { grid-column: 1 / 3; grid-row: 4; font-size: 10pt; color: #8899cc; align-self: end; }
+.span2 { grid-column: span 2; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<canvas id="lotus" width="400" height="400"></canvas>
+<div class="grid">
+  <header class="head">
+    <h1>Reframe Destiny · 命运重构</h1>
+    <p class="sub">Identifying and reframing gendered bias in BaZi &amp; astrological narratives · Cluster B · Generation AI 2026</p>
+    <div class="meta"><span>Xintian Zhang</span><span>Lead teacher: Lawted Wu</span><span>Social Science / Digital Humanities</span></div>
+  </header>
+
+  <section class="box">
+    <h2>Introduction</h2>
+    <p>Young people absorb gender roles from fate-talk: the same chart praises men as “ambitious” and women as “ke-fu” or “too strong.” We need <strong>reframing</strong>, not only prediction.</p>
+    <p style="margin-top:2mm"><strong>RQ:</strong> How does an AI-assisted site affect ability to identify and reframe gendered divination bias?</p>
+  </section>
+
+  <section class="box">
+    <h2>Literature</h2>
+    <ul>
+      <li>Gender as performative script (Butler, 1990)</li>
+      <li>Discourse &amp; power (Foucault, 1972)</li>
+      <li>AI oracles as authority (Bender et al., 2021; Cotter, 2022)</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Method</h2>
+    <p>Within-subjects pre/post · <strong>N = 19 paired</strong> (34 sessions, 23 journeys) · 5 interviews</p>
+    <p>Sites: <strong>pages.dev/game</strong> + <strong>vercel.app/game</strong></p>
+    <p>6 steps: choose chart → birth data (local) → traditional read → bias scanner → Court of Destiny → 3-column compare</p>
+  </section>
+
+  <section class="box span2">
+    <h2>Results</h2>
+    <div class="stat">
+      <div><div class="n">+0.31</div><div class="l">Bias awareness ΔM</div></div>
+      <div><div class="n">+0.47</div><div class="l">Reframe confidence</div></div>
+      <div><div class="n">+0.31</div><div class="l">Gender lens</div></div>
+    </div>
+    <p style="margin-top:3mm">Agency ΔM −0.11 · Stereotypes 0.00 · Astrology 13 / BaZi 10 · Interviews: 3-column compare most cited; onboarding requested</p>
+  </section>
+
+  <section class="box">
+    <h2>Limitations</h2>
+    <ul>
+      <li>Convenience sample; 4 journey completers without post-survey</li>
+      <li>Self-report; single ~15 min session</li>
+      <li>Descriptive statistics only</li>
+    </ul>
+  </section>
+
+  <section class="box">
+    <h2>Implications</h2>
+    <p>Embed critical literacy inside divination media. Require user reframing before AI text. Add step tutorial.</p>
+  </section>
+
+  <div class="foot">reframe-destiny.pages.dev/game/ · Anonymous research data · No birth PII stored</div>
+  <div class="qr">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Freframe-destiny.pages.dev%2Fgame%2F" alt="QR demo">
+    <div style="font-size:9pt;max-width:35mm;color:#aab">Scan to try the journey</div>
+  </div>
+</div>
+</div>
+<script>
+(function(){
+  const c=document.getElementById('lotus'),x=c.getContext('2d'),w=c.width,h=c.height;
+  let t=0;
+  function petal(a,r,rot){
+    x.save();x.translate(w/2,h/2);x.rotate(rot+t*0.002);
+    x.beginPath();
+    for(let i=0;i<=40;i++){const u=i/40*Math.PI*2;const px=Math.cos(u)*r*(0.3+0.7*Math.abs(Math.sin(u)));const py=Math.sin(u)*r*0.35;x.lineTo(px,py);}
+    x.closePath();x.fillStyle='rgba(232,160,191,0.35)';x.fill();x.restore();
+  }
+  function draw(){
+    x.clearRect(0,0,w,h);
+    for(let i=0;i<8;i++) petal(90,i*Math.PI/4);
+    x.fillStyle='rgba(212,168,83,0.5)';x.beginPath();x.arc(w/2,h/2,18,0,Math.PI*2);x.fill();
+    t++;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

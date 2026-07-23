@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reframe Destiny · SSF Style Poster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+@page { size: 1189mm 841mm; margin: 0; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1189mm;height:841mm;font-family:Inter,sans-serif;color:#1a1a2e;overflow:hidden}
+.poster{
+  width:1189mm;height:841mm;padding:10mm 12mm;
+  background:#0a1628 url('../ppt/images/starfield-1.jpg') center/cover;
+  display:grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap:5mm;
+  position:relative;
+}
+.poster::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(8,18,40,.93),rgba(12,28,68,.88));pointer-events:none}
+.wrap{position:relative;z-index:1;display:contents}
+.title-bar{
+  background:linear-gradient(90deg,#1e3a8a,#312e81);
+  color:#fff;padding:6mm 8mm;border-radius:2mm;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  border-left:8mm solid #60a5fa;
+}
+.title-bar h1{font-size:36pt;font-weight:800;letter-spacing:-.02em;line-height:1}
+.title-bar .en{font-size:14pt;font-weight:600;opacity:.9;margin-top:2mm}
+.title-bar .cluster{font-size:11pt;opacity:.75;text-align:right}
+.subtitle-row{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:4mm}
+.pill{
+  background:rgba(255,255,255,.95);padding:4mm 5mm;border-radius:2mm;
+  border-top:4px solid #3b82f6;font-size:10pt;line-height:1.45;
+}
+.pill h2{font-size:11pt;text-transform:uppercase;letter-spacing:.08em;color:#1d4ed8;margin-bottom:2mm}
+.main{
+  display:grid;grid-template-columns: repeat(6,1fr);grid-template-rows: repeat(2,1fr);gap:4mm;
+}
+.cell{
+  background:rgba(255,255,255,.94);padding:4mm 5mm;border-radius:2mm;
+  border:1px solid rgba(59,130,246,.25);overflow:hidden;
+}
+.cell h3{font-size:11pt;color:#1e40af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2mm;padding-bottom:1.5mm;border-bottom:2px solid #93c5fd}
+.cell p,.cell li{font-size:9.5pt;line-height:1.42;color:#334155}
+.cell ul{padding-left:4mm}
+.span2{grid-column:span 2}
+.span3{grid-column:span 3}
+.img-cell{padding:0;display:flex;flex-direction:column}
+.img-cell img{width:100%;flex:1;object-fit:cover;min-height:0}
+.img-cap{padding:2mm 4mm;font-size:8pt;background:#eff6ff;color:#1e3a8a}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:2mm;margin-top:2mm}
+.stats div{background:#dbeafe;padding:2mm;text-align:center;border-radius:1mm}
+.stats b{display:block;font-size:14pt;color:#1d4ed8}
+.stats span{font-size:7pt;text-transform:uppercase;color:#64748b}
+.footer{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(15,23,42,.85);color:#e2e8f0;padding:4mm 6mm;border-radius:2mm;font-size:9pt;
+}
+.qr{background:#fff;padding:2mm;border-radius:2mm}
+.qr img{width:22mm;height:22mm;display:block}
+</style>
+</head>
+<body>
+<div class="poster">
+<div class="wrap">
+  <header class="title-bar">
+    <div>
+      <h1>Reframe Destiny · 命运重构</h1>
+      <p class="en">Gendered narrative bias in BaZi &amp; Western astrology — critical reframing, not passive belief</p>
+    </div>
+    <div class="cluster">Cluster B · Generation AI 2026<br>Social Science</div>
+  </header>
+
+  <div class="subtitle-row">
+    <div class="pill">
+      <h2>Definition</h2>
+      <p><strong>Gendered fate-talk</strong> means the same birth chart is narrated with different moral labels by gender (e.g., men “ambitious,” women “ke-fu / too strong / late marriage”). <strong>Reframing destiny</strong> means tagging bias and rewriting the script in the Court of Destiny.</p>
+    </div>
+    <div class="pill">
+      <h2>Research question</h2>
+      <p>How does an AI-assisted bilingual website affect young people's ability to <strong>identify</strong> and <strong>reframe</strong> gendered bias in BaZi and astrological readings?</p>
+    </div>
+    <div class="pill">
+      <h2>Hypothesis</h2>
+      <p>One ~15-minute session increases <strong>bias awareness</strong> and <strong>reframe confidence</strong> on a matched five-item Likert scale (1–5).</p>
+    </div>
+  </div>
+
+  <div class="main">
+    <section class="cell span2">
+      <h3>Introduction</h3>
+      <p>Fortune-telling is a <strong>narrative industry</strong>. Youth meet BaZi and astrology on WeChat and Xiaohongshu. Workplace bias tools do not address <em>ke-fu</em> or marriage-centrism. AI fortune apps optimize insight, not critique. We built a bilingual journey on <strong>pages.dev/game</strong> and <strong>vercel.app/game</strong>.</p>
+    </section>
+    <section class="cell span2">
+      <h3>Literature review</h3>
+      <ul>
+        <li>Performative gender (Butler, 1990)</li>
+        <li>Discourse &amp; power (Foucault, 1972)</li>
+        <li>Situated knowledges (Haraway, 1988)</li>
+        <li>LLM narrative authority (Bender et al., 2021; Cotter, 2022)</li>
+      </ul>
+    </section>
+    <section class="cell img-cell span2">
+      <img src="../ppt/images/04-hero-cover.png" alt="Reframe Destiny UI">
+      <div class="img-cap">Live prototype · deep-space + lotus aesthetic</div>
+    </section>
+
+    <section class="cell span3">
+      <h3>Method</h3>
+      <p>Within-subjects pre/post · convenience sample · data closed <strong>2026-07-19</strong>. Consent → pre-survey → six steps: choose BaZi or astrology → local chart → <strong>traditional read first</strong> → bias scanner → Court of Destiny (one sentence) → three-column compare (traditional / modern / AI reframe) → post-survey. Five follow-up semi-structured interviews (WeChat). Anonymous Supabase logs; no birth PII stored.</p>
+      <div class="stats">
+        <div><b>34</b><span>Sessions</span></div>
+        <div><b>23</b><span>Journeys</span></div>
+        <div><b>19</b><span>Paired N</span></div>
+        <div><b>5</b><span>Interviews</span></div>
+        <div><b>~15m</b><span>Session</span></div>
+      </div>
+    </section>
+    <section class="cell img-cell span3">
+      <img src="../ppt/images/03-bazi-scene.png" alt="BaZi journey">
+      <div class="img-cap">Six-step critical literacy loop</div>
+    </section>
+
+    <section class="cell span3">
+      <h3>Result</h3>
+      <p>Paired <strong>N = 19</strong> (four journey completers missed post-survey). Mean change (ΔM): bias awareness <strong>+0.31</strong>; reframe confidence <strong>+0.47</strong>; gender lens <strong>+0.31</strong>; personal agency <strong>−0.11</strong>; spot stereotypes <strong>0.00</strong>. Journeys: astrology 13, BaZi 10. Top bias tags: ke-fu, virtuous-wife, chastity, moral judgment. Interviews: <strong>three-column compare</strong> most cited; 4/5 reported awareness shift; onboarding tutorial requested.</p>
+    </section>
+    <section class="cell span2">
+      <h3>Implications</h3>
+      <p>Embed reframing inside divination media. Require user-authored Court text <em>before</em> AI reframe. Add step tutorial. Teach gender lens without replacing one oracle with another.</p>
+    </section>
+    <section class="cell span1">
+      <h3>Limitation</h3>
+      <ul>
+        <li>Convenience sample</li>
+        <li>Self-report Likert</li>
+        <li>Single session</li>
+        <li>Descriptive stats only</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div><strong>Xintian Zhang · 张昕田</strong> · Lead teacher: Lawted Wu · Group: Reframe Destiny (individual project)</div>
+    <div class="qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Freframe-destiny.pages.dev%2Fgame%2F" alt="QR"></div>
+    <div>Scan to play · reframe-destiny.pages.dev/game/</div>
+  </footer>
+</div>
+</div>
+</body>
+</html>

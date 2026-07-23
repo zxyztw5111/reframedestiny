@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Social Science-张昕田-论文</title>
+<style>
+@page { size: letter; margin: 1in; }
+body { font: 12pt/1.6 "Times New Roman", Times, serif; color: #111; max-width: 6.5in; margin: 0 auto; padding: 0.5in; }
+h1 { font-size: 14pt; text-align: center; margin: 0 0 0.5em; font-weight: bold; }
+.meta { text-align: center; font-size: 12pt; margin-bottom: 1.5em; }
+h2 { font-size: 12pt; font-weight: bold; margin: 1.2em 0 0.4em; }
+h3 { font-size: 12pt; font-weight: bold; font-style: italic; margin: 1em 0 0.3em; }
+.abstract { margin: 1em 0; }
+.keywords { font-style: italic; margin-bottom: 1em; }
+p { margin: 0 0 0.65em; text-align: justify; }
+ul { margin: 0.2em 0 0.8em 1.2em; }
+.references { font-size: 11pt; hanging-pad: 1em; }
+.ref { margin-bottom: 0.45em; padding-left: 0.5in; text-indent: -0.5in; }
+</style>
+</head>
+<body>
+<h1>Reframe Destiny: An Interactive Tool for Identifying and Reframing Gendered Bias in BaZi and Astrological Narratives</h1>
+<p class="meta">Xintian Zhang<br>Generation AI 2026 · Lawted Wu</p>
+
+<div class="abstract">
+<p><strong>Abstract.</strong> Young people read a fortune-teller's script as a neutral map of their fate, quietly absorbing its gender roles: the same chart makes a man an "ambitious leader" and a woman "too strong" or "fated to harm her husband." Bias-detection tools target workplace language; fortune-telling apps optimize insight, not critique—neither offers a structured way to <em>reframe</em> gendered fate narratives for a new generation. We built <em>Reframe Destiny</em>, a short bilingual web journey: pick a BaZi or astrology chart, read one traditional gendered reading, and tag the bias you see—marriage centrism, husband-harming, fear. The reader then compares an AI-reframed version—a constrained teaching script, not an oracle—and writes one line in a "Court of Destiny." Using a pre/post five-item Likert scale in a convenience sample (<em>N</em> = 19 paired sessions; 23 journey completions; 34 total sessions), we tested whether players improved at spotting, questioning, and rewriting gendered fate-talk. Mean scores rose on bias awareness (Δ<em>M</em> = +0.31), reframing confidence (Δ<em>M</em> = +0.47), and gender lens (Δ<em>M</em> = +0.31), while personal agency changed little (Δ<em>M</em> = −0.11). Five semi-structured interviews indicated that side-by-side comparison most often supported noticing gender double standards, though one participant still treated differentiated wording as descriptive rather than discriminatory.</p>
+</div>
+<p class="keywords"><strong>Keywords:</strong> gender bias, divination, BaZi, astrology, narrative literacy, AI reframe</p>
+
+<h2>Introduction</h2>
+<p>Fortune-telling is a narrative industry. BaZi and Western astrology translate birth data into stories about marriage, strength, and moral worth. Feminist theory argues such stories help produce gender through repeated scripts (Butler, 1990). The same chart can label men "capable" and women "ke-fu" (husband-harming) or "too strong."</p>
+<p><strong>Research question.</strong> How does an AI-assisted interactive website affect young people's ability to identify and reframe gendered narrative bias in BaZi and Western astrological readings?</p>
+<p><strong>Hypothesis.</strong> After using Reframe Destiny, participants will show increased awareness of gender bias and greater confidence in reframing these narratives.</p>
+
+<h2>Literature Review</h2>
+<p>Performative gender (Butler, 1990) and situated knowledge (Haraway, 1988) explain why divination feels personal. Classical BaZi texts encode gendered marriage norms (Chinese Text Project, n.d.). Western marketing shows parallel defaults (THIS IS GENDERED, n.d.). Foucault (1972) frames discourse as power over what roles are imaginable. Algorithmic spirituality research warns that AI oracles can become external authorities (Cotter et al., 2022; Cearns, 2024; Nikolić, 2023). Under uncertainty, people seek divination (Vyse, 2018), but this study targets meta-linguistic awareness—not belief in fate. No common public tool combines BaZi and astrology with bias tagging and constrained AI reframing in one 15-minute session (Bender et al., 2021).</p>
+
+<h2>Method</h2>
+<h3>Participants and Procedure</h3>
+<p>We recruited 15–35-year-olds via classmates, WeChat, and Xiaohongshu. Collection closed July 19, 2026. Sessions included consent, pre-survey, ~15-minute journey, and post-survey.</p>
+<h3>Materials</h3>
+<p><em>Reframe Destiny</em> was deployed at https://reframe-destiny.pages.dev/game/ (Cloudflare) and https://reframe-destiny.vercel.app/game/ (Vercel). Six steps: choose system; enter birth data (computed locally); read traditional gendered text first; bias scanner; Court of Destiny (one sentence); three-column compare (traditional, modern, AI reframe). AI used a fixed teaching prompt with fallback text (Bender et al., 2021).</p>
+<h3>Measures</h3>
+<p>Five matched Likert items (1–5): bias awareness, reframe confidence, gender lens, personal agency, spot stereotypes.</p>
+<h3>Interviews</h3>
+<p>Five paired completers completed 10–15-minute semi-structured interviews (WeChat). Prompts covered baseline noticing, most helpful step, reframing vs AI authority, gender-switching, and redesign. Themes were coded and reported with quantitative results.</p>
+<h3>Design</h3>
+<p>Within-subjects pre/post design. Anonymous events logged to Supabase (session ID, no stored birth PII).</p>
+
+<h2>Results</h2>
+<p>119 rows deduplicated to 76 events across 34 sessions. Twenty-three completed the journey; 19 completed pre, journey, and post (four journey completers missed post-survey).</p>
+<p>Pre/post means (paired <em>N</em> = 19): bias awareness 3.74→4.05 (Δ<em>M</em> = +0.31); reframe confidence 3.79→4.26 (+0.47); gender lens 3.37→3.68 (+0.31); personal agency 4.74→4.63 (−0.11); spot stereotypes 4.32→4.32 (0.00). Journeys: astrology 13, BaZi 10. Eight non-empty Court reflections. Top user tags: moral judgment, chastity, ke-fu, virtuous-wife, submissive-role (<em>n</em> = 5 each).</p>
+<p><strong>Interview themes (<em>n</em> = 5).</strong> Four reported increased awareness of gender double standards; three named three-column compare as clearest; one emphasized bias scanner; two leaned on modern/AI to question tradition; all five said readings would change by gender; one requested step-by-step onboarding; one saw wording as descriptive, not bias.</p>
+
+<h2>Discussion</h2>
+<p>Results partially support the hypothesis: awareness and reframing confidence rose, but agency did not—<em>noticing</em> bias differs from <em>authoring</em> a reframed destiny. Interviews align: patriarchal scripts (ke-fu, late marriage) became visible when columns were juxtaposed. Several participants still deferred to modern/AI voices, suggesting future designs should require Court writing <em>before</em> AI reframe. Limitations: convenience sample, attrition (34 sessions → 19 paired), self-report, single session, descriptive stats only. Next: onboarding tutorial and stronger user-authored reframing before AI text.</p>
+
+<h2>References</h2>
+<div class="references">
+<p class="ref">Bender, E. M., Gebru, T., McMillan-Major, A., &amp; Shmitchell, S. (2021). On the dangers of stochastic parrots. <em>Proceedings of FAccT</em>, 610–623. https://doi.org/10.1145/3442188.3445922</p>
+<p class="ref">Butler, J. (1990). <em>Gender trouble</em>. Routledge.</p>
+<p class="ref">Cearns, M. (2024). Divining truth: The epistemology of artificial intelligence. <em>Journal of Extreme Anthropology</em>, <em>8</em>(2), 54–73. https://doi.org/10.5617/jea.11847</p>
+<p class="ref">Chinese Text Project. (n.d.). <em>San Ming Tong Hui</em>. https://ctext.org</p>
+<p class="ref">Cotter, K., et al. (2022). In FYP we trust: Algorithmic conspirituality. <em>International Journal of Communication</em>, <em>16</em>, 2911–2934.</p>
+<p class="ref">Foucault, M. (1972). <em>The archaeology of knowledge</em>. Pantheon.</p>
+<p class="ref">Haraway, D. (1988). Situated knowledges. <em>Feminist Studies</em>, <em>14</em>(3), 575–599. https://doi.org/10.2307/3178066</p>
+<p class="ref">Houlang Institute. (2025). <em>2025 youth metaphysics consumption report</em> [Industry report].</p>
+<p class="ref">Nikolić, M. (2023). An astrological genealogy of artificial intelligence. <em>European Journal of Cultural Studies</em>, <em>26</em>(2), 131–146.</p>
+<p class="ref">THIS IS GENDERED. (n.d.). Zodiac. https://thisisgendered.org/entry/zodiac/</p>
+<p class="ref">Vyse, S. A. (2018). <em>Believing in magic</em> (2nd ed.). Oxford University Press.</p>
+<p class="ref">Zhang, X. (2026). <em>Reframe Destiny</em> [Interactive prototype]. https://reframe-destiny.pages.dev/game/</p>
+</div>
+</body>
+</html>

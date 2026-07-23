@@ -1,0 +1,29 @@
+﻿id,created_at,submission_type,session_id,system,narrative_lens,bias_ids,scanner_scores,reflection_text,lang,survey_answers
+f9040d22-4f7b-4c93-bdf4-e1a3de6cfe36,2026-06-28 01:57:17.133391+00,journey_complete,,astrology,traditional,kefu|strongfate|xianqi,"[{""en"": ""Gender Bias"", ""zh"": ""性别偏见"", ""key"": ""gender"", ""score"": 0.8804974577336571}]",,zh,
+3483965c-c85e-4537-b67f-c4fc0ef3b1f4,2026-06-28 01:57:36.196048+00,journey_complete,,bazi,ai,kefu|fatalism|xianqi,,看不懂,zh,
+6853255e-a592-49f2-ac84-9e3726e47419,2026-06-28 01:57:45.571197+00,journey_complete,,bazi,modern,procreate|depend|wangfu,,有点东西啊，很厉害，好像还真和我挺像的,zh,
+45db27ae-f467-4b99-b509-f4f309d874e5,2026-06-28 01:58:36.352216+00,journey_complete,,astrology,traditional,submissive|moral|latemarriage,,,zh,
+fcb52ac2-2d13-42bc-824d-96054d4dc12b,2026-06-28 01:58:49.220289+00,journey_complete,,astrology,modern,xianqi|strongfate|genderrole,,,zh,
+8d8a70b1-33df-49f4-8118-21cda0968ef2,2026-06-28 02:07:57.835707+00,journey_complete,,astrology,ai,kefu|emotion|latemarriage,,,zh,
+98c6e3ee-1280-403b-9ac9-44e597871552,2026-06-28 02:08:45.110754+00,journey_complete,,bazi,modern,chastity|submissive|xianqi,,,zh,
+252fa0e2-877d-4cf2-b6c5-559e063a8e3d,2026-06-28 02:16:05.471581+00,archive_reflection,,,,,,我想要告诉自己算命算到最后都是人定胜天  易经的第一句话是天行健君子以自强不息 第二句是 地势坤 君子以厚德载物,zh,
+dd8a65e4-1cd5-4123-a02a-6a4c80b549c2,2026-06-28 02:16:08.783814+00,journey_complete,,bazi,modern,kefu|wangfu|fatalism,,"有点意思, 不清不白是一个道德框架",zh,
+671c6538-4c3f-4e5a-8ad0-b83cb4fd2bb5,2026-06-28 02:16:22.776636+00,journey_complete,,astrology,traditional,latemarriage|emotion|submissive,,,zh,
+d76c91c9-f100-4506-867b-e099619416cd,2026-06-28 06:22:21.607981+00,survey_pre,f223e82e-3676-43ac-b92f-49fcb10fc481,,,,,,zh,"{""gender_lens"": 5, ""bias_awareness"": 1, ""personal_agency"": 5, ""spot_stereotypes"": 3, ""reframe_confidence"": 1}"
+447dff88-6251-4cfc-a0c8-8ed4a465323c,2026-06-28 06:22:21.607981+00,survey_pre,f223e82e-3676-43ac-b92f-49fcb10fc481,,,,,,zh,"{""gender_lens"": 5, ""bias_awareness"": 1, ""personal_agency"": 5, ""spot_stereotypes"": 3, ""reframe_confidence"": 1}"
+6a891fae-b7e3-465c-99c6-d0ae0a16ff50,2026-06-28 06:22:21.85442+00,survey_pre,f223e82e-3676-43ac-b92f-49fcb10fc481,,,,,,zh,"{""gender_lens"": 5, ""bias_awareness"": 1, ""personal_agency"": 5, ""spot_stereotypes"": 3, ""reframe_confidence"": 1}"
+f835f59f-f138-460d-8ab3-e81fc48b8cea,2026-06-28 06:23:24.651948+00,journey_complete,f223e82e-3676-43ac-b92f-49fcb10fc481,bazi,traditional,marriage|beauty|filial,,很迷 cursor你改完怎么还变差了呢,zh,
+e1f93272-5e24-4cef-842f-e530aecc3b14,2026-06-28 06:23:31.417995+00,survey_post,f223e82e-3676-43ac-b92f-49fcb10fc481,,,,,,zh,"{""gender_lens"": 5, ""bias_awareness"": 5, ""personal_agency"": 5, ""spot_stereotypes"": 5, ""reframe_confidence"": 5}"
+fcdb904f-ef12-4c6f-9b2c-8fe6c5136a3e,2026-06-28 06:28:10.987796+00,survey_pre,57c88354-baab-461e-827d-4062198d32a6,,,,,,zh,"{""gender_lens"": 1, ""bias_awareness"": 1, ""personal_agency"": 1, ""spot_stereotypes"": 1, ""reframe_confidence"": 1}"
+1b9fb950-4a67-4b6c-9558-e677e7e065f3,2026-06-28 06:28:11.182277+00,survey_pre,57c88354-baab-461e-827d-4062198d32a6,,,,,,zh,"{""gender_lens"": 1, ""bias_awareness"": 1, ""personal_agency"": 1, ""spot_stereotypes"": 1, ""reframe_confidence"": 1}"
+41ce052b-205d-4d99-9536-7c0c2f11b77e,2026-06-28 06:39:04.05599+00,archive_reflection,,,,,,Wanderer prompt: 我不负责算命。我负责提问。\nUser answer: 你能回复我吗,zh,
+6ed09312-93e0-4641-8e0f-60467345da00,2026-06-28 06:39:16.999273+00,archive_reflection,,,,,,Wanderer prompt: 我不负责算命。我负责提问。\nUser answer: 那为什么你不能回复我,zh,
+199dca84-be21-42b8-9aa0-3c7f33d221cb,2026-06-28 06:39:24.0401+00,survey_pre,cf864e58-aa32-40cb-9967-cc4ba9a3e0ed,,,,,,zh,"{""gender_lens"": 5, ""bias_awareness"": 5, ""personal_agency"": 5, ""spot_stereotypes"": 5, ""reframe_confidence"": 5}"
+6a830b2c-2402-499f-bccd-3b2a1e7b4b7d,2026-06-28 06:39:49.97472+00,journey_complete,cf864e58-aa32-40cb-9967-cc4ba9a3e0ed,astrology,traditional,kefu|filial|xianqi,,,zh,
+69f705a4-3875-434f-ab92-cdb2afcbfcdd,2026-06-28 06:39:55.186013+00,survey_post,cf864e58-aa32-40cb-9967-cc4ba9a3e0ed,,,,,,zh,"{""gender_lens"": 5, ""bias_awareness"": 5, ""personal_agency"": 5, ""spot_stereotypes"": 5, ""reframe_confidence"": 5}"
+a470e2a6-b457-4258-ab74-efc73f451fb5,2026-06-29 16:59:00.461635+00,journey_complete,,bazi,ai,fatalism|self-labeling,"[{""id"": ""story"", ""zh"": ""把随机读成故事"", ""score"": 1}]",React version scaffold: anonymous research submission wiring check.,zh,
+7ed79f3f-aec2-4618-a8a9-e7118b4c07e4,2026-06-29 16:59:10.51869+00,journey_complete,,bazi,ai,fatalism|self-labeling,"[{""id"": ""story"", ""zh"": ""把随机读成故事"", ""score"": 1}]",React version scaffold: anonymous research submission wiring check.,zh,
+831c18d9-ff48-411c-9a8b-ff4afc4e1d78,2026-06-29 16:59:14.910222+00,journey_complete,,bazi,ai,fatalism|self-labeling,"[{""id"": ""story"", ""zh"": ""把随机读成故事"", ""score"": 1}]",React version scaffold: anonymous research submission wiring check.,zh,
+3e37d01b-069d-4119-bb7a-9f4635830723,2026-06-29 17:03:23.891197+00,journey_complete,,bazi,ai,fatalism|self-labeling,"[{""id"": ""story"", ""zh"": ""把随机读成故事"", ""score"": 1}]",React version scaffold: anonymous research submission wiring check.,zh,
+e568133a-6811-4de2-a9e6-d6d1f8463d72,2026-07-01 01:34:36.503997+00,journey_complete,,bazi,ai,fatalism|self-labeling,"[{""id"": ""story"", ""zh"": ""把随机读成故事"", ""score"": 1}]",React version scaffold: anonymous research submission wiring check.,zh,
+068ff386-844b-40dd-923c-efc7bbf55ee5,2026-07-05 01:45:05.613723+00,journey_complete,,bazi,ai,fatalism|self-labeling,"[{""id"": ""story"", ""zh"": ""把随机读成故事"", ""score"": 1}]",React version scaffold: anonymous research submission wiring check.,zh,

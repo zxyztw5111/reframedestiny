@@ -1,0 +1,2 @@
+﻿id,created_at,submission_type,session_id,system,narrative_lens,bias_ids,scanner_scores,reflection_text,lang,survey_answers,备注,清洗标记,清洗分类,清洗分类说明
+068ff386-844b-40dd-923c-efc7bbf55ee5,2026-07-05 01:45:05.613723+00,journey_complete,,bazi,ai,fatalism|self-labeling,"[{""id"": ""story"", ""zh"": ""把随机读成故事"", ""score"": 1}]",React version scaffold: anonymous research submission wiring check.,zh,,开发者 React 联调测试行，非真实被试,剔除,C1,测试/开发者数据

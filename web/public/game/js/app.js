@@ -571,8 +571,8 @@ function setupConsentGate() {
 
   const enterAfterConsent = () => {
     gate.classList.add('hidden');
-    intro?.classList.add('hidden');
-    enterAppHome();
+    intro?.classList.remove('hidden');
+    initSite();
   };
 
   if (localStorage.getItem(CONSENT_KEY) === 'yes') {
@@ -595,10 +595,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('intro-skip')?.addEventListener('click', skipIntroToHome);
 
   const embedded = new URLSearchParams(location.search).get('embedded') === '1';
-  if (embedded) {
+  const showIntro = new URLSearchParams(location.search).get('showIntro') === '1';
+  if (embedded && !showIntro) {
     document.getElementById('consent-gate')?.classList.add('hidden');
     document.getElementById('intro')?.classList.add('hidden');
     enterAppHome();
+  } else if (embedded && showIntro) {
+    document.getElementById('consent-gate')?.classList.add('hidden');
+    document.getElementById('intro')?.classList.remove('hidden');
+    initSite();
   } else {
     setupConsentGate();
   }

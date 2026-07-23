@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reframe Destiny · Research Defense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#060414;
+    --nebula:#140a32;
+    --ink:#f4f0ff;
+    --muted:#b8aed4;
+    --gold:#d4a853;
+    --rose:#e8a0bf;
+    --violet:#9b7bff;
+    --cyan:#6ec8e8;
+    --ember:#ff7b5c;
+    --serif:"Playfair Display","Noto Serif SC",Georgia,serif;
+    --sans:"Inter","Noto Sans SC",system-ui,sans-serif;
+    --mono:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:var(--ink);font-family:var(--sans)}
+  canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #hint{position:fixed;right:2vw;bottom:1.6vh;z-index:30;font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(244,240,255,.45)}
+  #deck{position:fixed;inset:0;display:flex;flex-wrap:nowrap;width:10000vw;height:100vh;transition:transform .85s cubic-bezier(.77,0,.175,1);z-index:5}
+  .slide{
+    width:100vw;height:100vh;flex:0 0 100vw;padding:6vh 6vw 8vh;
+    display:flex;flex-direction:column;position:relative;overflow:hidden;
+    background:linear-gradient(165deg,var(--void) 0%,var(--nebula) 55%,#1c1048 100%);
+  }
+  .slide::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 80% 60% at 70% 20%,rgba(155,123,255,.12),transparent 60%),
+               radial-gradient(ellipse 50% 40% at 10% 80%,rgba(212,168,83,.08),transparent 55%);
+  }
+  .inner{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;gap:2.4vh}
+  .kicker{font:500 11px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:.8vh}
+  .kicker.gold{color:var(--gold)} .kicker.rose{color:var(--rose)} .kicker.violet{color:var(--violet)}
+  .h-hero{font-family:var(--serif);font-weight:600;font-size:clamp(2.4rem,6.8vw,5.6rem);line-height:1.02;letter-spacing:-.02em}
+  .h-xl{font-family:var(--serif);font-size:clamp(1.8rem,4.2vw,3.2rem);line-height:1.08;font-weight:600}
+  .lead{font-size:clamp(1rem,1.35vw,1.2rem);line-height:1.55;color:var(--muted);max-width:62ch}
+  .lead strong{color:var(--ink);font-weight:500}
+  .lead .gold{color:var(--gold)} .lead .rose{color:var(--rose)} .lead .violet{color:var(--violet)} .lead .cyan{color:var(--cyan)}
+  .meta{font:500 11px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:rgba(244,240,255,.5)}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:3vw;flex:1;align-items:stretch}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6vw}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2vw}
+  .card{
+    border:1px solid rgba(244,240,255,.12);background:rgba(255,255,255,.04);
+    padding:2.2vh 1.4vw;backdrop-filter:blur(6px)
+  }
+  .card.gold{border-color:rgba(212,168,83,.35);background:rgba(212,168,83,.08)}
+  .card.rose{border-color:rgba(232,160,191,.35);background:rgba(232,160,191,.08)}
+  .card.violet{border-color:rgba(155,123,255,.35);background:rgba(155,123,255,.1)}
+  .card.cyan{border-color:rgba(110,200,232,.35);background:rgba(110,200,232,.08)}
+  .card h3{font-family:var(--serif);font-size:clamp(1rem,1.5vw,1.25rem);margin-bottom:.8vh}
+  .card p{font-size:max(15px,1vw);line-height:1.5;color:var(--muted)}
+  .card .tag{font:600 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;margin-bottom:1vh;display:block}
+  .frame{overflow:hidden;border:1px solid rgba(244,240,255,.15);background:#000}
+  .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .frame.r-16x9{aspect-ratio:16/9}
+  .frame.r-16x10{aspect-ratio:16/10}
+  .frame.r-21x9{aspect-ratio:21/9;max-height:42vh}
+  .demo-wrap{flex:1;min-height:0;border:1px solid rgba(155,123,255,.35);background:rgba(0,0,0,.35);overflow:hidden}
+  .demo-wrap iframe{width:100%;height:100%;border:0;background:#000}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:end;padding-top:2vh;border-top:1px solid rgba(244,240,255,.12)}
+  .chart-box{background:rgba(0,0,0,.25);border:1px solid rgba(244,240,255,.1);padding:2vh 1.6vw}
+  .chart-title{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6vh}
+  .legend{display:flex;flex-wrap:wrap;gap:1.2vw;margin-top:1.2vh;font-size:12px;color:var(--muted)}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:.4em;vertical-align:middle}
+  .legend .pre::before{background:var(--violet)} .legend .post::before{background:var(--gold)}
+  .pie-legend .a::before{background:var(--violet)} .pie-legend .b::before{background:var(--rose)} .pie-legend .c::before{background:var(--gold)}
+  .persona{display:flex;gap:1vw;align-items:center}
+  .persona .avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:1.2rem;border:1px solid currentColor}
+  .persona .avatar.gold{color:var(--gold);background:rgba(212,168,83,.12)}
+  .persona .avatar.rose{color:var(--rose);background:rgba(232,160,191,.12)}
+  .persona .avatar.cyan{color:var(--cyan);background:rgba(110,200,232,.12)}
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1vw;margin-top:2vh}
+  .stat{background:rgba(255,255,255,.05);padding:1.6vh 1vw;text-align:center;border-top:2px solid var(--gold)}
+  .stat .nb{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.4rem);color:var(--gold)}
+  .stat .lbl{font-size:12px;color:var(--muted);margin-top:.4vh}
+  .cite{font-size:max(13px,.85vw);color:var(--muted);font-style:italic}
+  .bar-row{display:grid;grid-template-columns:9em 1fr 4em;gap:.8vw;align-items:center;margin:.9vh 0}
+  .bar-track{height:2.2vh;background:rgba(255,255,255,.08)}
+  .bar-fill{height:100%}
+  code{font-family:var(--mono);font-size:.9em;color:var(--cyan)}
+
+  @media print {
+    body{overflow:visible!important}
+    #hint,#stars{display:none!important}
+    #deck{transform:none!important;width:100%!important;height:auto!important;flex-direction:column!important;display:block!important}
+    .slide{page-break-after:always;width:100vw;height:100vh;flex:none!important}
+  }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div id="hint">← → · ESC index · B static</div>
+<div id="deck">
+
+<!-- 00 Full-screen demo -->
+<section class="slide" style="padding:0">
+  <iframe src="https://reframe-destiny.pages.dev/game/?embedded=1" title="Demo" style="position:absolute;inset:0;width:100%;height:100%;border:0;z-index:3"></iframe>
+  <div class="inner" style="pointer-events:none;justify-content:flex-end;padding:4vh 6vw">
+    <span class="meta">01 / 12 · LIVE DEMO · press →</span>
+  </div>
+</section>
+
+<!-- 01 Cover -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker gold">Generation AI 2026 · Research Defense</div>
+    <div class="grid-2" style="flex:1;align-items:center">
+      <div>
+        <h1 class="h-hero">Reframe<br/><span style="color:var(--gold);font-style:italic">Destiny</span></h1>
+        <p class="lead" style="margin-top:2vh">An interactive tool for identifying and reframing <span class="rose">gendered bias</span> in BaZi and astrological narratives</p>
+        <p class="meta" style="margin-top:3vh">Xintian Zhang · 张昕田 · Lawted Wu</p>
+      </div>
+      <div class="frame r-16x10"><img src="images/01-cover-cosmic.png" alt="Cosmic lotus cover"></div>
+    </div>
+    <div class="foot"><span class="meta">01 / 11</span><span class="meta">Question the story, not yourself</span></div>
+  </div>
+</section>
+
+<!-- 02 Problem -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker rose">The Hook</div>
+    <h2 class="h-xl">Same chart. <span style="color:var(--gold)">Different gender script.</span></h2>
+    <div class="grid-2" style="margin-top:2vh">
+      <div class="card rose">
+        <span class="tag" style="color:var(--rose)">For her</span>
+        <h3>“Too strong” · “Late marriage” · <em>ke-fu</em></h3>
+        <p>Marriage centrism, fear narrative, moral judgment — read as destiny.</p>
+      </div>
+      <div class="card gold">
+        <span class="tag" style="color:var(--gold)">For him</span>
+        <h3>“Ambitious leader” · “Natural authority”</h3>
+        <p>The same technical chart becomes a praise script, not a warning.</p>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:2vh">Bias tools scan workplaces; AI fortune apps optimize <span class="violet">insight</span>, not <span class="cyan">critique</span>. Neither teaches young readers to talk back.</p>
+    <div class="foot"><span class="meta">02 / 11</span><span class="meta">Divination as narrative industry</span></div>
+  </div>
+</section>
+
+<!-- 03 Demo (early) -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker violet">Live Artifact · Demo</div>
+    <h2 class="h-xl">Meet <span style="color:var(--violet)">Reframe Destiny</span></h2>
+    <p class="lead">~15 min bilingual journey: read → tag bias → write back → compare AI reframe. <strong>Try it now ↓</strong></p>
+    <div class="demo-wrap" style="margin-top:1.6vh">
+      <!-- ★ Replace demo URL: edit iframe src below ★ -->
+      <iframe src="https://reframe-destiny.pages.dev" title="Reframe Destiny live demo" loading="lazy"></iframe>
+    </div>
+    <p class="meta" style="margin-top:1vh">Replace URL: search <code>iframe src</code> · also: reframe-destiny.vercel.app</p>
+    <div class="foot"><span class="meta">03 / 11</span><span class="meta">Consent → pre-survey → journey → post-survey</span></div>
+  </div>
+</section>
+
+<!-- 04 Literature -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker cyan">Literature Review</div>
+    <h2 class="h-xl">Four anchors in the <span style="color:var(--cyan)">theory stack</span></h2>
+    <div class="grid-4" style="margin-top:2vh;flex:1">
+      <div class="card violet">
+        <span class="tag" style="color:var(--violet)">Butler 1990</span>
+        <h3>Gender Trouble</h3>
+        <p>Gender is performative repetition — divination restates norms in second person.</p>
+        <p class="cite">Butler, J. (1990). Routledge.</p>
+      </div>
+      <div class="card cyan">
+        <span class="tag" style="color:var(--cyan)">Foucault 1972</span>
+        <h3>Discourse & Power</h3>
+        <p>What can be said — and by whom — shapes which social roles feel imaginable.</p>
+        <p class="cite">Foucault, M. (1972). Pantheon.</p>
+      </div>
+      <div class="card gold">
+        <span class="tag" style="color:var(--gold)">Haraway 1988</span>
+        <h3>Situated Knowledges</h3>
+        <p>Who speaks (master, app, AI) and for whom shapes plausible readings.</p>
+        <p class="cite">Feminist Studies, 14(3).</p>
+      </div>
+      <div class="card rose">
+        <span class="tag" style="color:var(--rose)">Bender et al. 2021</span>
+        <h3>Stochastic Parrots</h3>
+        <p>LLMs can become narrative authorities — not neutral oracles.</p>
+        <p class="cite">Proc. FAccT, 610–623.</p>
+      </div>
+    </div>
+    <div class="foot"><span class="meta">04 / 11</span><span class="meta">Gap: no public tool combines BaZi + astrology + bias tagging + reframe</span></div>
+  </div>
+</section>
+
+<!-- 05 RQ -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker gold">Research Question</div>
+    <h2 class="h-xl" style="max-width:20ch">How does an AI-assisted site affect bias literacy?</h2>
+    <div class="grid-2" style="margin-top:3vh;flex:1">
+      <div class="card" style="border-color:rgba(212,168,83,.4)">
+        <span class="tag" style="color:var(--gold)">RQ</span>
+        <p class="lead" style="color:var(--ink);max-width:none">How does an AI-assisted interactive website affect young people's ability to <span class="rose">identify</span> and <span class="violet">reframe</span> gendered narrative bias in BaZi and Western astrological readings?</p>
+      </div>
+      <div class="card violet">
+        <span class="tag" style="color:var(--violet)">Hypothesis</span>
+        <p class="lead" style="color:var(--ink);max-width:none">After one session, participants will show higher <strong>bias awareness</strong> and <strong>reframe confidence</strong> on a matched 5-item Likert scale (1–5).</p>
+      </div>
+    </div>
+    <div class="foot"><span class="meta">05 / 11</span><span class="meta">Within-subjects pre/post design</span></div>
+  </div>
+</section>
+
+<!-- 06 Target users -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker rose">Study Targets</div>
+    <h2 class="h-xl">Who we recruit · <span style="color:var(--rose)">N = 15–25</span></h2>
+    <div class="stat-row">
+      <div class="stat"><div class="nb">15–35</div><div class="lbl">Age range</div></div>
+      <div class="stat" style="border-color:var(--rose)"><div class="nb" style="color:var(--rose)">3*</div><div class="lbl">Paired pilot (Jul 11)</div></div>
+      <div class="stat" style="border-color:var(--violet)"><div class="nb" style="color:var(--violet)">~15m</div><div class="lbl">Single session</div></div>
+      <div class="stat" style="border-color:var(--cyan)"><div class="nb" style="color:var(--cyan)">2</div><div class="lbl">Systems: BaZi + astrology</div></div>
+    </div>
+    <div class="grid-3" style="margin-top:3vh;flex:1">
+      <div class="card gold">
+        <div class="persona"><div class="avatar gold">A</div><div><h3>Digital native</h3><p class="meta">15–22 · student</p></div></div>
+        <p style="margin-top:1.2vh;font-size:15px;color:var(--muted)">Uses Xiaohongshu / WeChat for BaZi &amp; zodiac content; first encounter with critical reframe.</p>
+      </div>
+      <div class="card rose">
+        <div class="persona"><div class="avatar rose">B</div><div><h3>Young professional</h3><p class="meta">23–30</p></div></div>
+        <p style="margin-top:1.2vh;font-size:15px;color:var(--muted)">Has tried AI fortune apps; curious whether readings encode gender scripts.</p>
+      </div>
+      <div class="card cyan">
+        <div class="persona"><div class="avatar cyan">C</div><div><h3>Bilingual reader</h3><p class="meta">Any · EN/ZH UI</p></div></div>
+        <p style="margin-top:1.2vh;font-size:15px;color:var(--muted)">Moves between Chinese BaZi discourse and Western astrology in youth media.</p>
+      </div>
+    </div>
+    <p class="meta">Recruitment: classmates · WeChat · Xiaohongshu · convenience sample</p>
+    <div class="foot"><span class="meta">06 / 11</span><span class="meta">*Pilot N=3 complete pre/journey/post — recruiting continues</span></div>
+  </div>
+</section>
+
+<!-- 07 Method -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker violet">Method</div>
+    <h2 class="h-xl">Read · Tag · Write · Compare</h2>
+    <div class="grid-2" style="flex:1;margin-top:1vh">
+      <div>
+        <div class="card cyan" style="margin-bottom:1.2vh"><span class="tag" style="color:var(--cyan)">01 Pre</span><p>5-item Likert baseline</p></div>
+        <div class="card violet" style="margin-bottom:1.2vh"><span class="tag" style="color:var(--violet)">02 Journey</span><p>Choose system → local chart → traditional reading → bias scanner → Court of Destiny → three-column reframe</p></div>
+        <div class="card gold"><span class="tag" style="color:var(--gold)">03 Post</span><p>Same 5 items · anonymous Supabase rows linked by session_id</p></div>
+        <p class="meta" style="margin-top:1.6vh">No server-stored birth IDs · simulated educational readings · AI reframe under teaching prompt</p>
+      </div>
+      <div class="frame r-16x10"><img src="images/03-bazi-scene.png" alt="BaZi input scene — replace with your screenshot in images/03-bazi-scene.png"></div>
+    </div>
+    <div class="foot"><span class="meta">07 / 11</span><span class="meta">Replace image: drop real site screenshot as images/03-bazi-scene.png</span></div>
+  </div>
+</section>
+
+<!-- 08 Findings charts -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker gold">Findings · Pilot</div>
+    <h2 class="h-xl">Results <span style="color:var(--gold)">(N = 19 paired)</span></h2>
+    <div class="grid-2" style="flex:1;margin-top:1vh;gap:2vw">
+      <div class="chart-box">
+        <div class="chart-title">Line · Pre vs Post means (5-point Likert)</div>
+        <svg viewBox="0 0 420 220" width="100%" height="auto" aria-label="Pre post line chart">
+          <line x1="50" y1="180" x2="400" y2="180" stroke="rgba(244,240,255,.2)" stroke-width="1"/>
+          <line x1="50" y1="30" x2="50" y2="180" stroke="rgba(244,240,255,.2)" stroke-width="1"/>
+          <text x="52" y="25" fill="#b8aed4" font-size="10" font-family="JetBrains Mono">5</text>
+          <text x="52" y="185" fill="#b8aed4" font-size="10" font-family="JetBrains Mono">1</text>
+          <!-- bias_awareness 3.33→4.33 -->
+          <polyline fill="none" stroke="#9b7bff" stroke-width="2.5" points="80,123 80,123 140,93"/>
+          <circle cx="80" cy="123" r="5" fill="#9b7bff"/><circle cx="140" cy="93" r="5" fill="#d4a853"/>
+          <text x="70" y="205" fill="#b8aed4" font-size="9" font-family="Inter">Aware</text>
+          <!-- reframe 2.67→3.67 -->
+          <polyline fill="none" stroke="#9b7bff" stroke-width="2.5" points="170,146 230,106"/>
+          <circle cx="170" cy="146" r="5" fill="#9b7bff"/><circle cx="230" cy="106" r="5" fill="#d4a853"/>
+          <text x="158" y="205" fill="#b8aed4" font-size="9" font-family="Inter">Reframe</text>
+          <!-- agency 4→3.67 down -->
+          <polyline fill="none" stroke="#ff7b5c" stroke-width="2.5" points="260,90 320,106"/>
+          <circle cx="260" cy="90" r="5" fill="#9b7bff"/><circle cx="320" cy="106" r="5" fill="#ff7b5c"/>
+          <text x="248" y="205" fill="#b8aed4" font-size="9" font-family="Inter">Agency↓</text>
+          <!-- gender_lens 3.33→4 -->
+          <polyline fill="none" stroke="#9b7bff" stroke-width="2.5" points="350,123 390,100"/>
+          <circle cx="350" cy="123" r="5" fill="#9b7bff"/><circle cx="390" cy="100" r="5" fill="#d4a853"/>
+          <text x="342" y="205" fill="#b8aed4" font-size="9" font-family="Inter">Lens</text>
+        </svg>
+        <div class="legend"><span class="pre">Pre M</span><span class="post">Post M</span><span style="color:#ff7b5c">Agency Δ = −0.33</span></div>
+        <p class="meta" style="margin-top:1vh">ΔM: awareness +1.0 · confidence +1.0 · agency −0.33 · no p-values at N=3</p>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">Pie · Session funnel (11 sessions, deduped)</div>
+        <svg viewBox="0 0 200 200" width="180" height="180" style="display:block;margin:0 auto" aria-label="Funnel pie chart">
+          <!-- 5 pre-only 45.5%, 3 journey-only 27.3%, 3 full 27.3% -->
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#9b7bff" stroke-width="70" stroke-dasharray="199 440" transform="rotate(-90 100 100)"/>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#e8a0bf" stroke-width="70" stroke-dasharray="120 440" stroke-dashoffset="-199" transform="rotate(-90 100 100)"/>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#d4a853" stroke-width="70" stroke-dasharray="120 440" stroke-dashoffset="-319" transform="rotate(-90 100 100)"/>
+          <circle cx="100" cy="100" r="42" fill="#140a32"/>
+          <text x="100" y="96" text-anchor="middle" fill="#f4f0ff" font-size="22" font-family="Playfair Display">11</text>
+          <text x="100" y="114" text-anchor="middle" fill="#b8aed4" font-size="10" font-family="JetBrains Mono">sessions</text>
+        </svg>
+        <div class="legend pie-legend" style="justify-content:center">
+          <span class="a">Pre only · n=5</span>
+          <span class="b">Journey, no post · n=3</span>
+          <span class="c">Full paired · n=3</span>
+        </div>
+        <p class="meta" style="margin-top:1vh;text-align:center">31 raw rows → 11 duplicates removed → 20 events</p>
+      </div>
+    </div>
+    <div class="foot"><span class="meta">08 / 11</span><span class="meta">Data: Supabase Jul 11, 2026 · rules fixed before collection</span></div>
+  </div>
+</section>
+
+<!-- 09 Findings detail -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker rose">Findings · Journey layer</div>
+    <h2 class="h-xl">What users <span style="color:var(--rose)">tagged</span> vs what the scanner scored</h2>
+    <div class="grid-2" style="flex:1;margin-top:1vh">
+      <div>
+        <p class="lead" style="margin-bottom:2vh">Among <strong>n = 6</strong> journey completions: astrology 4 · BaZi 2 · all traditional lens.</p>
+        <div class="bar-row"><span style="font-size:14px">Heteronormativity</span><div class="bar-track"><div class="bar-fill" style="width:74%;background:var(--violet)"></div></div><span class="meta">0.74</span></div>
+        <div class="bar-row"><span style="font-size:14px">Moral judgment</span><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--rose)"></div></div><span class="meta">0.72</span></div>
+        <div class="bar-row"><span style="font-size:14px">Gender bias</span><div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--cyan)"></div></div><span class="meta">0.44</span></div>
+        <p class="meta" style="margin-top:2vh">Top user tags: virtuous-wife · gender-role · chastity (each n=2)</p>
+      </div>
+      <div class="frame r-16x9"><img src="images/08-constellation-data.png" alt="Constellation bias map"></div>
+    </div>
+    <div class="foot"><span class="meta">09 / 11</span><span class="meta">Court of Destiny: 2/6 wrote reflections — one deferred to AI authority</span></div>
+  </div>
+</section>
+
+<!-- 10 Conclusion -->
+<section class="slide">
+  <div class="inner">
+    <div class="kicker gold">Conclusion</div>
+    <h2 class="h-xl">Seeing bias ≠ <span style="color:var(--ember)">talking back</span></h2>
+    <div class="grid-3" style="margin-top:3vh;flex:1">
+      <div class="card gold">
+        <span class="tag" style="color:var(--gold)">Implication</span>
+        <h3>Embed critique inside divination media</h3>
+        <p>Tagging + side-by-side reframing can live where youth already read fate.</p>
+      </div>
+      <div class="card violet">
+        <span class="tag" style="color:var(--violet)">Partial support</span>
+        <h3>Hypothesis</h3>
+        <p>Awareness &amp; confidence rose (+1.0 ΔM); personal agency did not (+/−0.33).</p>
+      </div>
+      <div class="card rose">
+        <span class="tag" style="color:var(--rose)">Honest limits</span>
+        <h3>N = 3 paired</h3>
+        <p>50% post attrition · self-report · single session · no inferential stats yet.</p>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:2vh"><span class="gold">Next:</span> recruit to N ≥ 15 · reduce post drop-off · 3–5 short interviews</p>
+    <div class="foot"><span class="meta">10 / 11</span><span class="meta">Fortune-telling can stay — bias must be named</span></div>
+  </div>
+</section>
+
+<!-- 11 Thank you -->
+<section class="slide">
+  <div class="inner" style="justify-content:center;align-items:center;text-align:center">
+    <div class="kicker violet">Thank You</div>
+    <h1 class="h-hero" style="font-size:clamp(3rem,8vw,6rem)">Questions?</h1>
+    <p class="lead" style="margin-top:2vh;max-width:40ch">Xintian Zhang · 张昕田<br/><span class="violet">reframe-destiny.pages.dev</span> · Generation AI 2026</p>
+    <div class="frame r-21x9" style="margin-top:3vh;width:min(72vw,960px)"><img src="images/01-cover-cosmic.png" alt="Closing visual"></div>
+    <div class="foot" style="width:100%"><span class="meta">11 / 11</span><span class="meta">Script: defense-script-en.md</span></div>
+  </div>
+</section>
+
+</div>
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=[...deck.children];
+  let idx=0, staticMode=false;
+  function go(i){idx=Math.max(0,Math.min(slides.length-1,i));deck.style.transform=`translateX(-${idx*100}vw)`;}
+  window.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(idx+1);}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(idx-1);}
+    if(e.key==='Escape'){const n=prompt(`Jump to slide (1-${slides.length})`,idx+1);if(n){const t=parseInt(n,10)-1;if(!isNaN(t))go(t);}}
+    if(e.key==='b'||e.key==='B'){staticMode=!staticMode;document.body.classList.toggle('low-power',staticMode);}
+  });
+  window.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>20)go(idx+(e.deltaY>0?1:-1));},{passive:true});
+
+  const c=document.getElementById('stars'),x=c.getContext('2d');let W,H,stars=[];
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;stars=Array.from({length:180},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.2,a:Math.random()}));}
+  function draw(){
+    if(staticMode)return;
+    x.clearRect(0,0,W,H);
+    for(const s of stars){
+      s.a+=.003;s.y+=.08;if(s.y>H)s.y=0;
+      x.fillStyle=`rgba(244,240,255,${.25+.45*Math.abs(Math.sin(s.a))})`;
+      x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  resize();draw();addEventListener('resize',resize);
+})();
+</script>
+</body>
+</html>

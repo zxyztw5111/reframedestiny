@@ -1,0 +1,125 @@
+% Reframe Destiny — APA 7 (replaces Overleaf shortsample.tex)
+% Compiler: pdfLaTeX + Biber
+% Also upload bibliography.bib to the same folder.
+
+\documentclass[stu,12pt,floatsintext]{apa7}
+
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+\addbibresource{bibliography.bib}
+
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+
+\title{Reframe Destiny: An Interactive Tool for Identifying and Reframing Gendered Bias in BaZi and Astrological Narratives}
+\shorttitle{Reframe Destiny}
+\author{Xintian Zhang}
+\duedate{August 2026}
+\affiliation{Generation AI 2026 Research Project}
+\course{Generation AI: AI for Social Sciences}
+\professor{Lawted Wu}
+
+\abstract{%
+Young people often read a fortune-teller's script as a neutral map of their fate, quietly absorbing its gender roles: the same chart makes a man an ``ambitious leader'' and a woman ``too strong'' or ``fated to harm her husband.'' Bias-detection tools target workplace language; fortune-telling apps optimize insight, not critique---neither hands a young reader the move to talk back. We built \textit{Reframe Destiny}, a bilingual browser journey in which participants choose a BaZi or Western astrology chart, read one traditional gendered reading, tag the bias they see (marriage centrism, husband-harming, fear narrative), compare modern and AI-reframed teaching scripts (not a live oracle), and write one line in a ``Court of Destiny.'' Using a matched pre/post five-item Likert scale ($N = 15$--$25$ planned), we test whether participants improve at spotting, questioning, and rewriting gendered fate-talk. We expect bias awareness and reframing confidence to rise; results are pending data collection.%
+}
+
+\keywords{gender bias, divination, BaZi, astrology, narrative literacy, AI reframe, digital humanities}
+
+\begin{document}
+\maketitle
+
+Fortune-telling is not only a prediction industry; it is a \emph{narrative} industry. Whether in Chinese BaZi (``Eight Characters'') or Western astrology, practitioners and apps translate birth information into stories about who a person is, whom they should marry, and how strong they are allowed to be. Feminist theorists have long argued that such stories do not merely describe gender---they help produce it through repeated cultural scripts \parencite{butler1990}. The same technical chart can therefore yield different moral verdicts depending on whether the reader is coded as male or female: ambition becomes ``leadership'' for men and \emph{ke-fu} (husband-harming) risk for women; emotional depth becomes ``charisma'' or ``instability'' along parallel gender lines.
+
+Young people in China increasingly encounter these narratives through digital channels. Industry surveys report that a majority of youth have tried AI-assisted fortune-telling, with BaZi and astrology among the most common modalities \parencite{houlang2025}. Yet critical tools rarely meet users where they actually read fate. Workplace-oriented bias detectors scan job ads, not \emph{shang-guan} female labels or ``late marriage'' tropes. AI divination products optimize personalization and companionship rather than teaching readers to question narrative authority \parencite{bender2021}. Digital-humanities exhibitions have exposed ritual mechanics but seldom combine gender critique with a hands-on reframe workflow in one short session.
+
+This gap motivates \textit{Reframe Destiny} (``reshaping fate''), an interactive website that treats divination as discourse to be read critically---not as metaphysical truth to be proved or dismissed. The design follows a single pedagogical loop: \emph{read a traditional gendered text, name the bias, compare alternative framings, write one line back.} The tool is deliberately bilingual (Chinese/English) because BaZi discourse and global astrology circulate together in youth media ecosystems.
+
+\subsection{Research Question and Hypothesis}
+
+\textbf{Research question.} How does an AI-assisted interactive website affect young people's ability to identify and reframe gendered narrative bias in traditional BaZi and Western astrological readings?
+
+\textbf{Hypothesis.} I hypothesize that after using Reframe Destiny, young people will show increased awareness of gender bias in divination narratives and greater confidence in reframing these narratives for themselves.
+
+\subsection{Literature Review}
+
+\textbf{Gender and divination as narrative.}
+\textcite{butler1990} accounts for gender as performative repetition, which helps explain why divination texts feel personal: they restate normative scripts in second-person form. \textcite{haraway1988} adds that knowledge is situated---who speaks (master, app, AI) and for whom (gendered addressee) shapes what counts as a plausible reading. In BaZi, classical compilations such as \textit{San Ming Tong Hui} encode wife- and motherhood-centered judgments for women's charts \parencite{ctext_sanming}. Contemporary SEO fortune-telling and AI BaZi products recycle fear labels (``fierce fate,'' ``husband harm'') rather than removing them \parencite{tencent2025}. Western astrology shows parallel heteronormative defaults in Mars--Venus rules and zodiac marketing \parencite{thisisgendered_zodiac}.
+
+\textbf{Discourse, power, and algorithmic spirituality.}
+\textcite{foucault1972} frames discourse as that which constrains what can be said and by whom. Applied to divination, the issue is not only whether a chart is ``accurate'' but which social roles the reading makes imaginable. Recent work on algorithmic spirituality shows how recommendation systems and AI chat oracles can function as external authorities \parencite{cotter2022,cearns2024}. \textcite{nikolic2023} traces genealogical links between pattern-making in astrology and machine learning, warning that predictive systems can inherit stereotyped training narratives. For youth, short-form platforms repackage traditional gender roles as ``feminine/masculine energy,'' blending spirituality with prescriptive relationship norms \parencite{teenVogue2022}.
+
+\textbf{Psychology of belief and youth practice.}
+People often turn to divination under uncertainty \parencite{vyse2018}. Ethnographic work cautions against assuming women are ``more superstitious'' by nature; gendered use patterns may reflect social roles and anxiety-sharing norms rather than essential traits \parencite{xing2019}. For this study, the relevant psychological outcome is not belief in fate per se but \emph{meta-linguistic awareness}: can participants name a stereotype label and rewrite it?
+
+\textbf{Comparable tools and the remaining gap.}
+Comparable projects include bias-tagging games in hiring contexts, critical divination exhibits, and mechanically transparent ritual works. AI fortune apps optimize engagement. No widely available public prototype combines BaZi \emph{and} Western astrology with gender-bias tagging and constrained AI reframing in a 15-minute critical literacy journey aimed at adolescents and young adults. Reframe Destiny occupies this middle position: critical without being dismissive, interactive without claiming oracle authority \parencite{bender2021}.
+
+\section{Method}
+
+\subsection{Participants}
+
+We planned to recruit \textbf{15--25} participants aged \textbf{15--35} (men and women) who had encountered BaZi, astrology, or similar fate narratives. Recruitment was conducted through classmates, WeChat groups, and Xiaohongshu study invitations (final channels to be reported in the results section). Each participant completed consent, the pre-survey, one full journey ($\sim$15 minutes), and the post-survey in a single sitting. Inferential claims will be limited to this convenience sample.
+
+\subsection{Materials}
+
+We deployed \textit{Reframe Destiny}, a bilingual web application accessible at \url{https://reframe-destiny.vercel.app} \parencite{reframeDestiny2026}. On first visit after entering the journey, participants saw an informed-consent screen stating that participation was voluntary and anonymous, that no names or server-stored birth data were collected, that participation was optional, that participants could leave at any time, and that responses were used only for class research. Participants proceeded only after clicking ``I understand and agree to enter.'' The site supported Chinese or English UI throughout.
+
+The core experience was a \textbf{six-step journey}: (1) choose BaZi or Western astrology; (2) enter birth date, time, and city (used locally in the browser to compute chart positions; not transmitted as identifiable records); (3) read a \textbf{traditional} gender-differentiated interpretation generated from the computed chart; (4) use an interactive ``bias scanner'' to identify gendered labels; (5) write one open sentence in a ``Court of Destiny'' text box; and (6) view a three-column comparison of traditional, modern, and AI-reframed readings. Participants did \emph{not} choose a ``modern'' or ``AI'' lens before seeing the traditional text, because the pedagogical goal is to encounter bias in classical framing first.
+
+Traditional readings were generated from real calendar and astronomy libraries in the browser (Four Pillars via lunar calendar conversion; natal positions via astronomical ephemeris). Wording templates were authored to surface gender-differentiated tropes (e.g., marriage centrism, ke-fu, fear narrative) while labeling them as narrative material for critique. AI reframes were produced through a server-side large-language-model proxy under a fixed teaching prompt when available; if the proxy failed, the site displayed a curated fallback reframe. The tool was positioned as a critical literacy intervention, not live fortune-telling \parencite{bender2021}.
+
+\subsection{Measures}
+
+Before the narrative task, the site administered a five-item pre-survey; after journey completion, it administered the same five items as a post-survey. The dependent variables were five matched Likert items (1 = strongly disagree, 5 = strongly agree):
+
+\begin{itemize}
+  \item \textit{bias\_awareness}: noticing gender bias in divination language;
+  \item \textit{reframe\_confidence}: confidence in rewriting or questioning biased fate narratives;
+  \item \textit{gender\_lens}: asking whether the same reading would apply if gender differed;
+  \item \textit{personal\_agency}: rejecting the idea that fate-talk should decide who one must become;
+  \item \textit{spot\_stereotypes}: recognizing stereotype labels such as ``ke-fu,'' ``late marriage,'' or ``too strong.''
+\end{itemize}
+
+Open responses from the Court of Destiny were coded inductively into themes such as marriage centrism, ke-fu narrative, fear narrative, agency/reframe, or no critique named.
+
+\subsection{Design}
+
+This was a \textbf{within-subjects pre/post survey design}. The independent variable was exposure to the Reframe Destiny interactive journey (absent at pre-test; present between pre- and post-test). Outcomes will be analyzed by comparing pre- versus post-survey responses overall and by item, and by thematically coding Court of Destiny sentences. For the Likert items, we will compute descriptive statistics (means per item at pre- and post-test) and examine paired change within this sample; claims will be limited to $N = 15$--$25$.
+
+\subsection{Procedure}
+
+Upon completion, the site logged anonymous rows to a Supabase table (\texttt{research\_submissions}), including submission type (\texttt{survey\_pre}, \texttt{journey\_complete}, \texttt{survey\_post}), a session identifier linking surveys, chosen system, identified bias IDs, scanner scores, reflection text, survey answers, and UI language. Prior simulation data were cleared before formal collection. Each complete session should produce three linked rows (pre-survey, journey, post-survey) sharing one \texttt{session\_id}.
+
+\section{Results}
+
+\subsection{Descriptive Statistics}
+
+\textit{[Results pending data collection. Do not interpret placeholder text as findings.]}
+
+Pre/post Likert means by item, paired mean change, distribution of identified bias tags, and coded themes from Court of Destiny reflections will be reported after the target collection window. Data collection target: July 2026.
+
+\subsection{Inferential Statistics}
+
+No inferential statistics are reported here. Paired comparisons and effect summaries will be added once $N \geq 15$ complete sessions are confirmed in Supabase.
+
+\section{Discussion}
+
+\textit{[Discussion draft framework---to be revised once results are available.]}
+
+If hypothesis trends hold, Reframe Destiny would suggest that a short, structured confrontation with traditional gendered fate-talk---followed by explicit labeling and rewrite practice---can increase critical literacy without requiring participants to reject divination entirely. Such an outcome would align with discourse-oriented feminist accounts \parencite{butler1990,foucault1972} and with cautions about LLMs as narrative authorities \parencite{bender2021}.
+
+Alternative outcomes are also informative. Null or mixed Likert changes would prompt questions about dose (one 15-minute session), wording of survey items, or participant prior exposure. Rich Court of Destiny text with flat survey movement would suggest behavioral expression of critique without self-report shift.
+
+\subsection{Limitations}
+
+Limitations include a small convenience sample, self-report measures, single-session exposure, and template-dependent readings that cannot represent every regional divination style. The AI reframe path depends on server availability; fallback text may reduce variation. Results will not generalize beyond the studied age range and recruitment channels.
+
+\subsection{Implications}
+
+For educators and designers, the project demonstrates how ``talk-back'' interfaces can be embedded directly inside divination media rather than segregated into separate media-literacy lectures. For researchers, it offers a reproducible artifact and schema for studying gendered narrative bias in cross-cultural fate systems.
+
+\printbibliography
+
+\end{document}
