@@ -1,2 +1,4 @@
-# React SPA: static files (e.g. /game/*) are served first; unmatched paths fall back to index.html
-/*    /index.html   200
+# /game/* and /defense/* are static folders in dist (from public/). SPA fallback last.
+/defense/*  /defense/:splat  200
+/game/*     /game/:splat     200
+/*          /index.html      200
